@@ -1,14 +1,10 @@
 import type { NextPage } from "next";
 import { useMemo, useState } from "react";
-import { useDragDropManager, useDrop } from "react-dnd";
 import isEqual from "lodash.isequal";
-import {
-  Color,
-  ForegroundColorViewModifier,
-} from "../components/ForegroundColorViewModifier";
-import { TextView } from "../components/TextView";
-import * as Dialog from "@radix-ui/react-dialog";
+import { Color } from "../components/ForegroundColorViewModifier";
 import styles from "./styles/index.module.scss";
+import { Preview } from "../components/Preview";
+import { Canvas } from "../components/Canvas";
 
 interface ForegroundColorViewModifierModel {
   type: "foregroundColor";
@@ -32,16 +28,6 @@ export type ViewModel = TextViewModel;
 const Home: NextPage = () => {
   const [views, setViews] = useState<ViewModel[]>([]);
 
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: "view",
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
-    drop(item, monitor) {
-      setViews((views) => [...views, item as ViewModel]);
-    },
-  }));
-
   const matched = useMemo(() => {
     return isEqual(views, [
       {
@@ -59,8 +45,6 @@ const Home: NextPage = () => {
     ]);
   }, [views]);
 
-  const [open, setOpen] = useState(false);
-
   return (
     <div className={styles["page"]}>
       <h1>How would you write the following code in SwiftUI?</h1>
@@ -74,144 +58,15 @@ const Home: NextPage = () => {
       </code>
 
       <div className={styles["play-area"]}>
-        <div
-          ref={drop}
-          className={styles["canvas"]}
-          style={{ boxShadow: isOver ? "inset 0 0 0 3px #2868E4" : "none" }}
-        >
-          {!views.length && <p>Drag views onto the canvas.</p>}
+        <Canvas views={views} onViewsChange={setViews} />
 
-          <div className={styles["views"]}>
-            {views.map((view, index) => {
-              switch (view.type) {
-                case "Text": {
-                  return (
-                    <TextView
-                      key={index}
-                      value={view.props.value}
-                      onChange={(value) => {
-                        setViews((views) => {
-                          return [
-                            ...views.slice(0, index),
-                            { ...views[index], props: { value } },
-                            ...views.slice(index + 1),
-                          ];
-                        });
-                      }}
-                      onModifier={(modifier) => {
-                        setViews((views) => {
-                          return [
-                            ...views.slice(0, index),
-                            {
-                              ...views[index],
-                              modifiers: [...views[index].modifiers, modifier],
-                            },
-                            ...views.slice(index + 1),
-                          ];
-                        });
-                      }}
-                      onRemove={() => {
-                        setViews((views) => {
-                          return [
-                            ...views.slice(0, index),
-                            ...views.slice(index + 1),
-                          ];
-                        });
-                      }}
-                    >
-                      {view.modifiers.map((modifier, mIndex) => {
-                        switch (modifier.type) {
-                          case "foregroundColor": {
-                            return (
-                              <ForegroundColorViewModifier
-                                key={mIndex}
-                                value={modifier.props.value}
-                                onChange={(value) => {
-                                  setViews((views) => {
-                                    return [
-                                      ...views.slice(0, index),
-                                      {
-                                        ...views[index],
-                                        modifiers: [
-                                          ...view.modifiers.slice(0, mIndex),
-                                          { ...modifier, props: { value } },
-                                          ...view.modifiers.slice(mIndex + 1),
-                                        ],
-                                      },
-                                      ...views.slice(index + 1),
-                                    ];
-                                  });
-                                }}
-                                onRemove={() => {
-                                  setViews((views) => {
-                                    return [
-                                      ...views.slice(0, index),
-                                      {
-                                        ...views[index],
-                                        modifiers: [
-                                          ...view.modifiers.slice(0, mIndex),
-                                          ...view.modifiers.slice(mIndex + 1),
-                                        ],
-                                      },
-                                      ...views.slice(index + 1),
-                                    ];
-                                  });
-                                }}
-                              />
-                            );
-                          }
-                          default: {
-                            return null;
-                          }
-                        }
-                      })}
-                    </TextView>
-                  );
-                }
-                default: {
-                  return null;
-                }
-              }
-            })}
-          </div>
+        <div>
+          {views.length ? (
+            views.map((view, index) => <Preview key={index} view={view} />)
+          ) : (
+            <Preview />
+          )}
         </div>
-
-        <Dialog.Root open={open} onOpenChange={setOpen}>
-          <Dialog.Trigger>Add</Dialog.Trigger>
-
-          <Dialog.Portal>
-            {/* <Dialog.Overlay /> */}
-            <Dialog.Content className={styles["modal"]}>
-              <div className={styles["toolbox"]}>
-                <h2>Views</h2>
-                <ul>
-                  <li>
-                    <TextView preview value="" onDrag={() => setOpen(false)} />
-                    <p>
-                      <strong>Text</strong>
-                    </p>
-                    <p>Display text content.</p>
-                  </li>
-                </ul>
-
-                <h2>View Modifiers</h2>
-                <ul>
-                  <li>
-                    <ForegroundColorViewModifier
-                      preview
-                      value="red"
-                      onDrag={() => setOpen(false)}
-                    />
-                    <p>
-                      <strong>Foreground Color</strong>
-                    </p>
-                    <p>Set the color of foreground elements.</p>
-                  </li>
-                </ul>
-              </div>
-            </Dialog.Content>
-          </Dialog.Portal>
-        </Dialog.Root>
       </div>
 
       <p>{matched ? "✅ Success!" : "❌ Not quite"}</p>
