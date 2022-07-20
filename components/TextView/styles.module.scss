@@ -29,6 +29,10 @@
     margin-inline: 5px;
     border-radius: 5px;
     font-size: 13.5px;
+
+    &::placeholder {
+      color: lightgray;
+    }
   }
 
   button {
@@ -46,7 +50,6 @@
 
   div[aria-hidden="true"] {
     position: absolute;
-    cursor: none;
     user-select: none;
     opacity: 0;
 
