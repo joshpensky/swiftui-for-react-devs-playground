@@ -40,6 +40,10 @@
     cursor: pointer;
     opacity: 0;
     transition: ease-out 100ms;
+
+    &:focus {
+      opacity: 1;
+    }
   }
 
   &:hover {
