@@ -1,0 +1,30 @@
+.container {
+  align-items: baseline;
+  background-color: #97D05F;
+  display: flex;
+  padding: 15px;
+  border-radius: 15px;
+  border-top-left-radius: 0px;
+  position: relative;
+
+  &:not(:last-child):not(.preview) {
+    border-bottom-left-radius: 0px;
+  }
+
+  pre {
+    margin: 0;
+  }
+
+  button {
+    position: absolute;
+    right: -5px;
+    transform: translateX(100%);
+    background-color: red;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    color: white;
+    cursor: pointer;
+  }
+}

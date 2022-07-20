@@ -1,0 +1,72 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  min-height: 100vh;
+  flex: 1;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.code {
+  align-self: flex-start;
+  pre {
+    background-color: #262626;
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+  }
+}
+
+.play-area {
+  display: flex;
+  gap: 15px;
+  flex: 1;
+}
+
+.canvas {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  min-height: 500px;
+  flex: 1;
+  width: 100%;
+  background-color: #EDEDED;
+  border-radius: 20px;
+  gap: 20px;
+
+  > p {
+    color: gray;
+  }
+}
+
+.toolbox {
+  display: flex;
+  flex-direction: column;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      border: 1px solid gray;
+      border-radius: 5px;
+      padding: 15px;
+
+      p {
+        margin: 0;
+
+        &:first-of-type {
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+}

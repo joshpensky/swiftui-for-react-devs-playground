@@ -1,0 +1,40 @@
+.view {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+
+  > *:not(:first-child) {
+    margin-left: 30px;
+  }
+}
+
+.container {
+  align-items: baseline;
+  background-color: #FFC328;
+  display: flex;
+  padding: 15px;
+  border-radius: 15px;
+  position: relative;
+
+  pre {
+    margin: 0;
+  }
+
+  input {
+    width: 175px;
+  }
+
+  button {
+    position: absolute;
+    right: -5px;
+    transform: translateX(100%);
+    background-color: red;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    color: white;
+    cursor: pointer;
+  }
+}
