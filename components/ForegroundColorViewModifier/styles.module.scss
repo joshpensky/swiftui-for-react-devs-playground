@@ -2,7 +2,7 @@
   align-items: baseline;
   background-color: #97D05F;
   display: flex;
-  padding: 15px;
+  padding: 12px 15px;
   border-radius: 15px;
   border-top-left-radius: 0px;
   position: relative;
@@ -13,6 +13,17 @@
 
   pre {
     margin: 0;
+  }
+
+  select {
+    border: none;
+    padding: 5px;
+    margin-inline: 5px;
+    border-radius: 5px;
+
+    &:disabled {
+      opacity: 1;
+    }
   }
 
   button {

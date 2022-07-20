@@ -10,10 +10,10 @@
 }
 
 .container {
-  align-items: baseline;
+  align-items: center;
   background-color: #FFC328;
   display: flex;
-  padding: 15px;
+  padding: 12px 15px;
   border-radius: 15px;
   position: relative;
 
@@ -23,6 +23,12 @@
 
   input {
     width: 175px;
+    border: none;
+    background-color: white;
+    padding: 5px;
+    margin-inline: 5px;
+    border-radius: 5px;
+    font-size: 13.5px;
   }
 
   button {
@@ -36,5 +42,17 @@
     height: 20px;
     color: white;
     cursor: pointer;
+  }
+
+  div[aria-hidden="true"] {
+    position: absolute;
+    cursor: none;
+    user-select: none;
+    opacity: 0;
+
+    pre {
+      font-size: 13.5px;
+      font-family: inherit;
+    }
   }
 }

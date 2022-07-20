@@ -1,4 +1,4 @@
-import { PropsWithChildren, useId, useState } from "react";
+import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { ViewModifierModel } from "../../pages";
 import styles from "./styles.module.scss";
@@ -46,6 +46,15 @@ export function TextView({
     },
   }));
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const widthRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const rect = widthRef.current?.getBoundingClientRect();
+    if (inputRef.current) {
+      inputRef.current.style.width = `${(rect?.width ?? 0) + 10}px`;
+    }
+  }, [value]);
+
   return (
     <div
       ref={drag}
@@ -62,6 +71,7 @@ export function TextView({
       >
         <pre>Text(&quot;</pre>
         <input
+          ref={inputRef}
           id={id}
           name={id}
           type="text"
@@ -73,6 +83,10 @@ export function TextView({
           disabled={preview}
         />
         <pre>&quot;)</pre>
+
+        <div ref={widthRef} aria-hidden="true">
+          <pre>{value || "Content"}</pre>
+        </div>
 
         {!preview && (
           <button type="button" onClick={() => onRemove?.()}>
