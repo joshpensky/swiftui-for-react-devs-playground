@@ -78,97 +78,99 @@ const Home: NextPage = () => {
         >
           {!views.length && <p>Drag views onto the canvas.</p>}
 
-          {views.map((view, index) => {
-            switch (view.type) {
-              case "Text": {
-                return (
-                  <TextView
-                    key={index}
-                    value={view.props.value}
-                    onChange={(value) => {
-                      setViews((views) => {
-                        return [
-                          ...views.slice(0, index),
-                          { ...views[index], props: { value } },
-                          ...views.slice(index + 1),
-                        ];
-                      });
-                    }}
-                    onModifier={(modifier) => {
-                      setViews((views) => {
-                        return [
-                          ...views.slice(0, index),
-                          {
-                            ...views[index],
-                            modifiers: [...views[index].modifiers, modifier],
-                          },
-                          ...views.slice(index + 1),
-                        ];
-                      });
-                    }}
-                    onRemove={() => {
-                      setViews((views) => {
-                        return [
-                          ...views.slice(0, index),
-                          ...views.slice(index + 1),
-                        ];
-                      });
-                    }}
-                  >
-                    {view.modifiers.map((modifier, mIndex) => {
-                      switch (modifier.type) {
-                        case "foregroundColor": {
-                          return (
-                            <ForegroundColorViewModifier
-                              key={mIndex}
-                              value={modifier.props.value}
-                              onChange={(value) => {
-                                setViews((views) => {
-                                  return [
-                                    ...views.slice(0, index),
-                                    {
-                                      ...views[index],
-                                      modifiers: [
-                                        ...view.modifiers.slice(0, mIndex),
-                                        { ...modifier, props: { value } },
-                                        ...view.modifiers.slice(mIndex + 1),
-                                      ],
-                                    },
-                                    ...views.slice(index + 1),
-                                  ];
-                                });
-                              }}
-                              onRemove={() => {
-                                setViews((views) => {
-                                  return [
-                                    ...views.slice(0, index),
-                                    {
-                                      ...views[index],
-                                      modifiers: [
-                                        ...view.modifiers.slice(0, mIndex),
-                                        ...view.modifiers.slice(mIndex + 1),
-                                      ],
-                                    },
-                                    ...views.slice(index + 1),
-                                  ];
-                                });
-                              }}
-                            />
-                          );
+          <div className={styles["views"]}>
+            {views.map((view, index) => {
+              switch (view.type) {
+                case "Text": {
+                  return (
+                    <TextView
+                      key={index}
+                      value={view.props.value}
+                      onChange={(value) => {
+                        setViews((views) => {
+                          return [
+                            ...views.slice(0, index),
+                            { ...views[index], props: { value } },
+                            ...views.slice(index + 1),
+                          ];
+                        });
+                      }}
+                      onModifier={(modifier) => {
+                        setViews((views) => {
+                          return [
+                            ...views.slice(0, index),
+                            {
+                              ...views[index],
+                              modifiers: [...views[index].modifiers, modifier],
+                            },
+                            ...views.slice(index + 1),
+                          ];
+                        });
+                      }}
+                      onRemove={() => {
+                        setViews((views) => {
+                          return [
+                            ...views.slice(0, index),
+                            ...views.slice(index + 1),
+                          ];
+                        });
+                      }}
+                    >
+                      {view.modifiers.map((modifier, mIndex) => {
+                        switch (modifier.type) {
+                          case "foregroundColor": {
+                            return (
+                              <ForegroundColorViewModifier
+                                key={mIndex}
+                                value={modifier.props.value}
+                                onChange={(value) => {
+                                  setViews((views) => {
+                                    return [
+                                      ...views.slice(0, index),
+                                      {
+                                        ...views[index],
+                                        modifiers: [
+                                          ...view.modifiers.slice(0, mIndex),
+                                          { ...modifier, props: { value } },
+                                          ...view.modifiers.slice(mIndex + 1),
+                                        ],
+                                      },
+                                      ...views.slice(index + 1),
+                                    ];
+                                  });
+                                }}
+                                onRemove={() => {
+                                  setViews((views) => {
+                                    return [
+                                      ...views.slice(0, index),
+                                      {
+                                        ...views[index],
+                                        modifiers: [
+                                          ...view.modifiers.slice(0, mIndex),
+                                          ...view.modifiers.slice(mIndex + 1),
+                                        ],
+                                      },
+                                      ...views.slice(index + 1),
+                                    ];
+                                  });
+                                }}
+                              />
+                            );
+                          }
+                          default: {
+                            return null;
+                          }
                         }
-                        default: {
-                          return null;
-                        }
-                      }
-                    })}
-                  </TextView>
-                );
+                      })}
+                    </TextView>
+                  );
+                }
+                default: {
+                  return null;
+                }
               }
-              default: {
-                return null;
-              }
-            }
-          })}
+            })}
+          </div>
         </div>
 
         <div className={styles["toolbox"]}>

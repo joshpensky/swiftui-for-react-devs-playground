@@ -28,8 +28,9 @@
 
   button {
     position: absolute;
-    right: -5px;
-    transform: translateX(100%);
+    top: 50%;
+    right: 0;
+    transform: translate(50%, -50%);
     background-color: red;
     border: none;
     border-radius: 50%;
@@ -37,5 +38,13 @@
     height: 20px;
     color: white;
     cursor: pointer;
+    opacity: 0;
+    transition: ease-out 100ms;
+  }
+
+  &:hover {
+    button {
+      opacity: 1;
+    }
   }
 }
