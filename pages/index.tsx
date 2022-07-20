@@ -1,12 +1,13 @@
 import type { NextPage } from "next";
 import { useMemo, useState } from "react";
-import { useDrop } from "react-dnd";
+import { useDragDropManager, useDrop } from "react-dnd";
 import isEqual from "lodash.isequal";
 import {
   Color,
   ForegroundColorViewModifier,
 } from "../components/ForegroundColorViewModifier";
 import { TextView } from "../components/TextView";
+import * as Dialog from "@radix-ui/react-dialog";
 import styles from "./styles/index.module.scss";
 
 interface ForegroundColorViewModifierModel {
@@ -57,6 +58,8 @@ const Home: NextPage = () => {
       },
     ]);
   }, [views]);
+
+  const [open, setOpen] = useState(false);
 
   return (
     <div className={styles["page"]}>
@@ -173,29 +176,42 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        <div className={styles["toolbox"]}>
-          <h2>Views</h2>
-          <ul>
-            <li>
-              <TextView preview value="" />
-              <p>
-                <strong>Text</strong>
-              </p>
-              <p>Display text content.</p>
-            </li>
-          </ul>
+        <Dialog.Root open={open} onOpenChange={setOpen}>
+          <Dialog.Trigger>Add</Dialog.Trigger>
 
-          <h2>View Modifiers</h2>
-          <ul>
-            <li>
-              <ForegroundColorViewModifier preview value="red" />
-              <p>
-                <strong>Foreground Color</strong>
-              </p>
-              <p>Set the color of foreground elements.</p>
-            </li>
-          </ul>
-        </div>
+          <Dialog.Portal>
+            {/* <Dialog.Overlay /> */}
+            <Dialog.Content className={styles["modal"]}>
+              <div className={styles["toolbox"]}>
+                <h2>Views</h2>
+                <ul>
+                  <li>
+                    <TextView preview value="" onDrag={() => setOpen(false)} />
+                    <p>
+                      <strong>Text</strong>
+                    </p>
+                    <p>Display text content.</p>
+                  </li>
+                </ul>
+
+                <h2>View Modifiers</h2>
+                <ul>
+                  <li>
+                    <ForegroundColorViewModifier
+                      preview
+                      value="red"
+                      onDrag={() => setOpen(false)}
+                    />
+                    <p>
+                      <strong>Foreground Color</strong>
+                    </p>
+                    <p>Set the color of foreground elements.</p>
+                  </li>
+                </ul>
+              </div>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>
       </div>
 
       <p>{matched ? "✅ Success!" : "❌ Not quite"}</p>

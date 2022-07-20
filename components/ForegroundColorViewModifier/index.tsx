@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import cx from "classnames";
 import { useDrag } from "react-dnd";
 import styles from "./styles.module.scss";
@@ -8,15 +8,17 @@ export type Color = "red" | "green" | "blue";
 export function ForegroundColorViewModifier({
   value,
   onChange,
+  onDrag,
   onRemove,
   preview,
 }: PropsWithChildren<{
   preview?: boolean;
   value: Color;
   onChange?(value: Color): void;
+  onDrag?(): void;
   onRemove?(): void;
 }>) {
-  const [collected, drag] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: "view-modifier",
     item: {
       type: "foregroundColor",
@@ -32,17 +34,19 @@ export function ForegroundColorViewModifier({
     }),
   }));
 
+  useEffect(() => {
+    if (isDragging) {
+      onDrag?.();
+    }
+  }, [isDragging]);
+
   return (
     <div
       ref={drag}
       className={cx(styles["container"], preview && styles["preview"])}
       style={{
-        opacity: collected.isDragging ? 0.5 : 1,
-        cursor: preview
-          ? collected.isDragging
-            ? "grabbing"
-            : "grab"
-          : "default",
+        opacity: isDragging ? 0.5 : 1,
+        cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
       }}
     >
       <pre>.foregroundColor(</pre>

@@ -6,6 +6,7 @@ import styles from "./styles.module.scss";
 export function TextView({
   children,
   onChange,
+  onDrag,
   onModifier,
   onRemove,
   value,
@@ -13,6 +14,7 @@ export function TextView({
 }: PropsWithChildren<{
   preview?: boolean;
   onChange?(value: string): void;
+  onDrag?(): void;
   onModifier?(modifier: ViewModifierModel): void;
   onRemove?(): void;
   value: string;
@@ -35,6 +37,12 @@ export function TextView({
       isDragging: monitor.isDragging(),
     }),
   }));
+
+  useEffect(() => {
+    if (isDragging) {
+      onDrag?.();
+    }
+  }, [isDragging]);
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "view-modifier",
