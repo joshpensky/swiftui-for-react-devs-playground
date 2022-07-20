@@ -45,7 +45,7 @@ const Home: NextPage = () => {
     return isEqual(views, [
       {
         type: "Text",
-        props: { value: "Lorem ipsum dolor sit amet." },
+        props: { value: "This is my great text!" },
         modifiers: [
           {
             type: "foregroundColor",
@@ -65,7 +65,7 @@ const Home: NextPage = () => {
       <code className={styles["code"]}>
         <pre>
           {`<p style={{ color: ‘blue’ }}>
-  Lorem ipsum dolor sit amet.
+  This is my great text!
 </p>`}
         </pre>
       </code>
@@ -198,7 +198,7 @@ const Home: NextPage = () => {
         </div>
       </div>
 
-      <p>{matched ? "✅ Good" : "❌ Bad"}</p>
+      <p>{matched ? "✅ Success!" : "❌ Not quite"}</p>
 
       <details>
         <summary>JSON representation</summary>
