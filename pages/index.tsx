@@ -9,6 +9,7 @@ import { Preview } from "../components/Preview";
 import { Canvas } from "../components/Canvas";
 
 interface ForegroundColorViewModifierModel {
+  id: string;
   type: "foregroundColor";
   props: {
     value: Color;
@@ -37,6 +38,7 @@ const code = `
 const Home: NextPage = () => {
   const [views, setViews] = useState<ViewModel[]>([]);
 
+  // TODO: how to match with random IDs?
   const matched = useMemo(() => {
     return isEqual(views, [
       {

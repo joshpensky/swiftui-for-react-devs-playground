@@ -13,7 +13,9 @@ export function TextView({
   onRemove,
   value,
   preview,
+  id: propsId,
 }: PropsWithChildren<{
+  id?: string;
   preview?: boolean;
   onChange?(value: string): void;
   onDrag?(): void;
@@ -21,7 +23,9 @@ export function TextView({
   onRemove?(): void;
   value: string;
 }>) {
-  const id = useId();
+  const _id = useId();
+  let id = propsId ?? _id;
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "view",
@@ -29,12 +33,23 @@ export function TextView({
       id,
       type: "Text",
       props: {
-        value: "",
+        value: "Text",
       },
       modifiers: [],
     },
     canDrag(monitor) {
       return !!preview;
+    },
+    end(draggedItem, monitor) {
+      if (monitor.didDrop()) {
+        setTimeout(() => {
+          const input = document.getElementById(id);
+          if (input instanceof HTMLInputElement) {
+            input.focus();
+            input.setSelectionRange(0, input.value.length);
+          }
+        }, 100);
+      }
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -57,7 +72,6 @@ export function TextView({
     },
   }));
 
-  const inputRef = useRef<HTMLInputElement>(null);
   const widthRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const rect = widthRef.current?.getBoundingClientRect();

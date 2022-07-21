@@ -60,6 +60,7 @@ export function Canvas({
                         }}
                       >
                         <TextView
+                          id={view.id}
                           value={view.props.value}
                           onChange={(value) => {
                             onViewsChange((views) => {
@@ -99,7 +100,8 @@ export function Canvas({
                               case "foregroundColor": {
                                 return (
                                   <ForegroundColorViewModifier
-                                    key={mIndex}
+                                    key={modifier.id}
+                                    id={modifier.id}
                                     value={modifier.props.value}
                                     onChange={(value) => {
                                       onViewsChange((views) => {
