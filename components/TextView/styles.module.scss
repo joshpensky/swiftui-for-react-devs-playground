@@ -33,13 +33,17 @@
     &::placeholder {
       color: lightgray;
     }
+
+    &:disabled {
+      pointer-events: none;
+    }
   }
 
   button {
     position: absolute;
     top: 50%;
-    right: 0px;
-    transform: translate(50%, -50%);
+    right: -5px;
+    transform: translate(100%, -50%);
     background-color: red;
     border: none;
     border-radius: 50%;
@@ -50,12 +54,21 @@
     opacity: 0;
     transition: ease-out 100ms;
 
+    &::before {
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      left: -5px;
+      top: 0;
+    }
+
     &:focus {
       opacity: 1;
     }
   }
 
-  &:hover {
+  .view:not(.dropping) &:hover {
     button {
       opacity: 1;
     }

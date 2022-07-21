@@ -5,8 +5,9 @@
   flex-direction: column;
   position: absolute;
   inset: 0;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  overflow: hidden;
+  border-top-left-radius: 19px;
+  border-bottom-left-radius: 19px;
 
   > p {
     color: gray;

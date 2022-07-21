@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
-import { getEmptyImage } from "react-dnd-html5-backend";
+import cx from "classnames";
 import { ViewModifierModel } from "../../pages";
 import styles from "./styles.module.scss";
 
@@ -45,10 +45,6 @@ export function TextView({
     }
   }, [isDragging]);
 
-  useEffect(() => {
-    dragPreview(getEmptyImage(), { captureDraggingState: false });
-  }, []);
-
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "view-modifier",
     collect: (monitor) => ({
@@ -71,7 +67,7 @@ export function TextView({
   return (
     <div
       ref={drag}
-      className={styles["view"]}
+      className={cx(styles["view"], isOver && styles["dropping"])}
       style={{
         opacity: isDragging ? 0.5 : 1,
         cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",

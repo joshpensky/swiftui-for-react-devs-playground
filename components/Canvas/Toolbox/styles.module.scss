@@ -24,6 +24,24 @@
   left: 0;
   right: 0;
   background-color: white;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.handle {
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+
+  &::before {
+    content: '';
+    height: 4px;
+    width: 80px;
+    border-radius: 2px;
+    background-color: #929292;
+  }
 }
 
 .toolbox {
