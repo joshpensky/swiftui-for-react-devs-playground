@@ -1,12 +1,10 @@
-import type { NextPage } from "next";
-import { useMemo, useState } from "react";
-import { useDragDropManager, useDrop } from "react-dnd";
+import { useState } from "react";
+import { useDrop } from "react-dnd";
 import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
 import { TextView } from "../TextView";
-import * as Dialog from "@radix-ui/react-dialog";
-import * as Tabs from "@radix-ui/react-tabs";
 import styles from "./styles.module.scss";
 import { ViewModel } from "../../pages";
+import { Toolbox } from "./Toolbox";
 
 export function Canvas({
   views,
@@ -27,8 +25,7 @@ export function Canvas({
     },
   }));
 
-  const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState("views");
+  const [toolbarOpen, setToolbarOpen] = useState(false);
 
   return (
     <div
@@ -132,60 +129,7 @@ export function Canvas({
         })}
       </div>
 
-      <Dialog.Root open={open} onOpenChange={setOpen}>
-        <Dialog.Trigger className={styles["modal-trigger"]}>Add</Dialog.Trigger>
-
-        <Dialog.Portal>
-          <Dialog.Overlay className={styles["modal-overlay"]} />
-          <Dialog.Content className={styles["modal"]}>
-            <div className={styles["toolbox"]}>
-              <Tabs.Root
-                value={tab}
-                onValueChange={setTab}
-                orientation="horizontal"
-              >
-                <Tabs.List aria-label="Block Types">
-                  <Tabs.Trigger value="views">Views</Tabs.Trigger>
-                  <Tabs.Trigger value="view-modifiers">
-                    View Modifiers
-                  </Tabs.Trigger>
-                </Tabs.List>
-
-                <Tabs.Content value="views">
-                  <ul>
-                    <li>
-                      <TextView
-                        preview
-                        value=""
-                        onDrag={() => setOpen(false)}
-                      />
-                      <p>
-                        <strong>Text</strong>
-                      </p>
-                      <p>Display text content.</p>
-                    </li>
-                  </ul>
-                </Tabs.Content>
-                <Tabs.Content value="view-modifiers">
-                  <ul>
-                    <li>
-                      <ForegroundColorViewModifier
-                        preview
-                        value="red"
-                        onDrag={() => setOpen(false)}
-                      />
-                      <p>
-                        <strong>Foreground Color</strong>
-                      </p>
-                      <p>Set the color of foreground elements.</p>
-                    </li>
-                  </ul>
-                </Tabs.Content>
-              </Tabs.Root>
-            </div>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
+      <Toolbox open={toolbarOpen} onOpenChange={setToolbarOpen} />
     </div>
   );
 }

@@ -12,16 +12,23 @@
 
 .code {
   align-self: flex-start;
+  
   pre {
-    background-color: #262626;
-    color: white;
-    padding: 20px;
-    border-radius: 15px;
+    padding: 20px !important;
+    border-radius: 15px !important;
   }
 }
 
 .play-area {
   display: flex;
-  gap: 15px;
+  gap: 30px;
   flex: 1;
+}
+
+.previews {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 700px;
+  overflow: auto;
 }

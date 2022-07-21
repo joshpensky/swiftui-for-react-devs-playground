@@ -1,6 +1,8 @@
 import type { NextPage } from "next";
 import { useMemo, useState } from "react";
 import isEqual from "lodash.isequal";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Color } from "../components/ForegroundColorViewModifier";
 import styles from "./styles/index.module.scss";
 import { Preview } from "../components/Preview";
@@ -24,6 +26,12 @@ interface TextViewModel {
 }
 
 export type ViewModel = TextViewModel;
+
+const code = `
+<p style={{ color: 'blue' }}>
+  This is my great text!
+</p>
+`.trim();
 
 const Home: NextPage = () => {
   const [views, setViews] = useState<ViewModel[]>([]);
@@ -49,18 +57,16 @@ const Home: NextPage = () => {
     <div className={styles["page"]}>
       <h1>How would you write the following code in SwiftUI?</h1>
 
-      <code className={styles["code"]}>
-        <pre>
-          {`<p style={{ color: ‘blue’ }}>
-  This is my great text!
-</p>`}
-        </pre>
-      </code>
+      <div className={styles["code"]}>
+        <SyntaxHighlighter language="jsx" style={vscDarkPlus}>
+          {code}
+        </SyntaxHighlighter>
+      </div>
 
       <div className={styles["play-area"]}>
         <Canvas views={views} onViewsChange={setViews} />
 
-        <div>
+        <div className={styles["previews"]}>
           {views.length ? (
             views.map((view, index) => <Preview key={index} view={view} />)
           ) : (
