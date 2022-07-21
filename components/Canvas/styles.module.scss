@@ -3,12 +3,10 @@
   justify-content: center;
   display: flex;
   flex-direction: column;
-  min-height: 500px;
-  flex: 1;
-  width: 100%;
-  background-color: #EDEDED;
-  border-radius: 20px;
-  position: relative;
+  position: absolute;
+  inset: 0;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 
   > p {
     color: gray;

@@ -64,9 +64,13 @@ const Home: NextPage = () => {
       </div>
 
       <div className={styles["play-area"]}>
-        <Canvas views={views} onViewsChange={setViews} />
+        <div className={styles["canvas"]}>
+          <h2>Canvas</h2>
+          <Canvas views={views} onViewsChange={setViews} />
+        </div>
 
         <div className={styles["previews"]}>
+          <h2>Preview</h2>
           {views.length ? (
             views.map((view, index) => <Preview key={index} view={view} />)
           ) : (

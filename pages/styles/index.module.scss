@@ -1,6 +1,7 @@
 .page {
   display: flex;
   flex-direction: column;
+  gap: 10px;
   padding: 15px;
   min-height: 100vh;
   flex: 1;
@@ -21,14 +22,36 @@
 
 .play-area {
   display: flex;
-  gap: 30px;
   flex: 1;
+  background-color: #EDEDED;
+  border: 1px solid #929292;
+  border-radius: 20px;
+  overflow: hidden;
+
+  h2 {
+    margin: 0;
+    font-size: 14px;
+    color: #747474;
+  }
+}
+
+.canvas {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  position: relative;
+
+  h2 {
+    padding: 20px 0 20px 20px;
+  }
 }
 
 .previews {
+  border-left: 1px solid #929292;
   display: flex;
   flex-direction: column;
   gap: 20px;
   max-height: 700px;
+  padding: 20px;
   overflow: auto;
 }
