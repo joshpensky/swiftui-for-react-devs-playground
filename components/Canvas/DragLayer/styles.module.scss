@@ -11,10 +11,11 @@
   align-items: flex-start;
   z-index: 1000;
   pointer-events: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .item {
-  transform: translate(var(--x), var(--y)) rotate(5deg);
-  opacity: 0.9;
   transform-origin: top left;
 }

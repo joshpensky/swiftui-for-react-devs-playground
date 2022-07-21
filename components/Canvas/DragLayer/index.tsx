@@ -1,10 +1,11 @@
-import { useDragLayer, XYCoord } from "react-dnd";
-import cx from "classnames";
+import { useDragLayer } from "react-dnd";
 import { ViewModel, ViewModifierModel } from "../../../pages";
 import { ForegroundColorViewModifier } from "../../ForegroundColorViewModifier";
 import { TextView } from "../../TextView";
 import styles from "./styles.module.scss";
-import { CSSProperties, useEffect } from "react";
+import cx from "classnames";
+import { useEffect } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 export function DragLayer() {
   const { itemType, isDragging, item, currentOffset } = useDragLayer(
@@ -50,19 +51,24 @@ export function DragLayer() {
   }
 
   return (
-    <div className={styles["layer"]}>
-      <div
-        className={styles["item"]}
-        style={
-          {
-            "--x": `${currentOffset?.x ?? 0}px`,
-            "--y": `${currentOffset?.y ?? 0}px`,
-          } as CSSProperties
-        }
+    <motion.ul className={styles["layer"]}>
+      <motion.li
+        className={cx(styles["item"], "dragging")}
+        animate={{
+          x: currentOffset?.x ?? 0,
+          y: currentOffset?.y ?? 0,
+          opacity: 0.9,
+        }}
+        exit={{ opacity: 0, transition: { duration: 0.2 } }}
+        transition={{
+          duration: 0,
+          layout: { duration: 0.2 },
+        }}
+        layoutId={item.id}
         hidden={!currentOffset}
       >
         {renderItem()}
-      </div>
-    </div>
+      </motion.li>
+    </motion.ul>
   );
 }

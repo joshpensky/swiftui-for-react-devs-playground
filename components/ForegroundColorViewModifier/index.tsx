@@ -42,7 +42,7 @@ export function ForegroundColorViewModifier({
           if (select instanceof HTMLSelectElement) {
             select.focus();
           }
-        }, 100);
+        }, 10);
       }
     },
     collect: (monitor) => ({
@@ -61,7 +61,6 @@ export function ForegroundColorViewModifier({
       ref={drag}
       className={cx(styles["container"], preview && styles["preview"])}
       style={{
-        opacity: isDragging ? 0.5 : 1,
         cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
       }}
     >

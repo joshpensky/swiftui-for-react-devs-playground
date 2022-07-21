@@ -25,6 +25,7 @@ export function TextView({
 }>) {
   const _id = useId();
   let id = propsId ?? _id;
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -48,7 +49,7 @@ export function TextView({
             input.focus();
             input.setSelectionRange(0, input.value.length);
           }
-        }, 100);
+        }, 10);
       }
     },
     collect: (monitor) => ({
@@ -83,16 +84,20 @@ export function TextView({
   return (
     <div
       ref={drag}
-      className={cx(styles["view"], isOver && styles["dropping"])}
+      className={cx(
+        styles["view"],
+        preview && styles["preview"],
+        isDragging && styles["dragging"],
+        isOver && styles["dropping"]
+      )}
       style={{
-        opacity: isDragging ? 0.5 : 1,
         cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
       }}
     >
       <div
         ref={drop}
         className={styles["container"]}
-        style={{ boxShadow: isOver ? "inset 0 0 0 3px #2868E4" : "none" }}
+        style={{ boxShadow: isOver ? "inset 0 0 0 3px #2868E4" : undefined }}
       >
         <pre>Text(&quot;</pre>
         <input

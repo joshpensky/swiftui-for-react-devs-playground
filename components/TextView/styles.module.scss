@@ -17,6 +17,10 @@
   border-radius: 15px;
   position: relative;
 
+  :global(.dragging) & {
+    box-shadow: 2px 4px 10px 0 rgba(0, 0, 0, 0.15);
+  }
+
   pre {
     margin: 0;
   }
