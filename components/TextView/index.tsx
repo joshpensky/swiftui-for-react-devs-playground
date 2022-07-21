@@ -1,6 +1,7 @@
 import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
+import { motion } from "framer-motion";
 import { ViewModifierModel } from "../../pages";
 import styles from "./styles.module.scss";
 
@@ -22,9 +23,10 @@ export function TextView({
 }>) {
   const id = useId();
 
-  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: "view",
     item: {
+      id,
       type: "Text",
       props: {
         value: "",

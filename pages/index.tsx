@@ -18,6 +18,7 @@ interface ForegroundColorViewModifierModel {
 export type ViewModifierModel = ForegroundColorViewModifierModel;
 
 interface TextViewModel {
+  id: string;
   type: "Text";
   props: {
     value: string;

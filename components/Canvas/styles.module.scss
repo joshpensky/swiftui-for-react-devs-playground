@@ -1,17 +1,22 @@
 .canvas {
-  align-items: center;
-  justify-content: center;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  inset: 0;
+  flex: 1;
+  padding: 60px 20px 20px;
   overflow: hidden;
   border-top-left-radius: 19px;
   border-bottom-left-radius: 19px;
 
   > p {
+    margin: auto;
     color: gray;
   }
+}
+
+.views-container {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .views {
@@ -19,4 +24,7 @@
   align-items: flex-start;
   flex-direction: column;
   gap: 3px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }

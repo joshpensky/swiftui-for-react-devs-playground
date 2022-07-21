@@ -6,6 +6,8 @@ import styles from "./styles.module.scss";
 import { ViewModel } from "../../pages";
 import { Toolbox } from "./Toolbox";
 import { DragLayer } from "./DragLayer";
+import { AnimateSharedLayout, LayoutGroup, motion } from "framer-motion";
+import { v4 } from "uuid";
 
 export function Canvas({
   views,
@@ -34,103 +36,133 @@ export function Canvas({
       className={styles["canvas"]}
       style={{ boxShadow: isOver ? "inset 0 0 0 3px #2868E4" : "none" }}
     >
-      {!views.length && <p>Drag views onto the canvas.</p>}
-
       <DragLayer />
 
-      <div className={styles["views"]}>
-        {views.map((view, index) => {
-          switch (view.type) {
-            case "Text": {
-              return (
-                <TextView
-                  key={index}
-                  value={view.props.value}
-                  onChange={(value) => {
-                    onViewsChange((views) => {
-                      return [
-                        ...views.slice(0, index),
-                        { ...views[index], props: { value } },
-                        ...views.slice(index + 1),
-                      ];
-                    });
-                  }}
-                  onModifier={(modifier) => {
-                    onViewsChange((views) => {
-                      return [
-                        ...views.slice(0, index),
-                        {
-                          ...views[index],
-                          modifiers: [...views[index].modifiers, modifier],
-                        },
-                        ...views.slice(index + 1),
-                      ];
-                    });
-                  }}
-                  onRemove={() => {
-                    onViewsChange((views) => {
-                      return [
-                        ...views.slice(0, index),
-                        ...views.slice(index + 1),
-                      ];
-                    });
-                  }}
-                >
-                  {view.modifiers.map((modifier, mIndex) => {
-                    switch (modifier.type) {
-                      case "foregroundColor": {
-                        return (
-                          <ForegroundColorViewModifier
-                            key={mIndex}
-                            value={modifier.props.value}
-                            onChange={(value) => {
-                              onViewsChange((views) => {
-                                return [
-                                  ...views.slice(0, index),
-                                  {
-                                    ...views[index],
-                                    modifiers: [
-                                      ...view.modifiers.slice(0, mIndex),
-                                      { ...modifier, props: { value } },
-                                      ...view.modifiers.slice(mIndex + 1),
-                                    ],
-                                  },
-                                  ...views.slice(index + 1),
-                                ];
-                              });
-                            }}
-                            onRemove={() => {
-                              onViewsChange((views) => {
-                                return [
-                                  ...views.slice(0, index),
-                                  {
-                                    ...views[index],
-                                    modifiers: [
-                                      ...view.modifiers.slice(0, mIndex),
-                                      ...view.modifiers.slice(mIndex + 1),
-                                    ],
-                                  },
-                                  ...views.slice(index + 1),
-                                ];
-                              });
-                            }}
-                          />
-                        );
-                      }
-                      default: {
-                        return null;
-                      }
-                    }
-                  })}
-                </TextView>
-              );
-            }
-            default: {
-              return null;
-            }
-          }
-        })}
-      </div>
+      {!views.length ? (
+        <motion.p>Drag views onto the canvas.</motion.p>
+      ) : (
+        <div className={styles["views-container"]}>
+          <LayoutGroup>
+            <motion.ul className={styles["views"]} layout>
+              {views.map((view, index) => {
+                switch (view.type) {
+                  case "Text": {
+                    return (
+                      <motion.li
+                        key={view.id}
+                        layout="position"
+                        initial={{ y: 10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                          type: "spring",
+                          bounce: 0,
+                          duration: 0.5,
+                        }}
+                      >
+                        <TextView
+                          value={view.props.value}
+                          onChange={(value) => {
+                            onViewsChange((views) => {
+                              return [
+                                ...views.slice(0, index),
+                                { ...views[index], props: { value } },
+                                ...views.slice(index + 1),
+                              ];
+                            });
+                          }}
+                          onModifier={(modifier) => {
+                            onViewsChange((views) => {
+                              return [
+                                ...views.slice(0, index),
+                                {
+                                  ...views[index],
+                                  modifiers: [
+                                    ...views[index].modifiers,
+                                    modifier,
+                                  ],
+                                },
+                                ...views.slice(index + 1),
+                              ];
+                            });
+                          }}
+                          onRemove={() => {
+                            onViewsChange((views) => {
+                              return [
+                                ...views.slice(0, index),
+                                ...views.slice(index + 1),
+                              ];
+                            });
+                          }}
+                        >
+                          {view.modifiers.map((modifier, mIndex) => {
+                            switch (modifier.type) {
+                              case "foregroundColor": {
+                                return (
+                                  <ForegroundColorViewModifier
+                                    key={mIndex}
+                                    value={modifier.props.value}
+                                    onChange={(value) => {
+                                      onViewsChange((views) => {
+                                        return [
+                                          ...views.slice(0, index),
+                                          {
+                                            ...views[index],
+                                            modifiers: [
+                                              ...view.modifiers.slice(
+                                                0,
+                                                mIndex
+                                              ),
+                                              { ...modifier, props: { value } },
+                                              ...view.modifiers.slice(
+                                                mIndex + 1
+                                              ),
+                                            ],
+                                          },
+                                          ...views.slice(index + 1),
+                                        ];
+                                      });
+                                    }}
+                                    onRemove={() => {
+                                      onViewsChange((views) => {
+                                        return [
+                                          ...views.slice(0, index),
+                                          {
+                                            ...views[index],
+                                            modifiers: [
+                                              ...view.modifiers.slice(
+                                                0,
+                                                mIndex
+                                              ),
+                                              ...view.modifiers.slice(
+                                                mIndex + 1
+                                              ),
+                                            ],
+                                          },
+                                          ...views.slice(index + 1),
+                                        ];
+                                      });
+                                    }}
+                                  />
+                                );
+                              }
+                              default: {
+                                return null;
+                              }
+                            }
+                          })}
+                        </TextView>
+                      </motion.li>
+                    );
+                  }
+                  default: {
+                    return null;
+                  }
+                }
+              })}
+            </motion.ul>
+          </LayoutGroup>
+        </div>
+      )}
 
       <Toolbox open={toolbarOpen} onOpenChange={setToolbarOpen} />
     </div>
