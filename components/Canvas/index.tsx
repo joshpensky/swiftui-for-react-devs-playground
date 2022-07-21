@@ -5,6 +5,7 @@ import { TextView } from "../TextView";
 import styles from "./styles.module.scss";
 import { ViewModel } from "../../pages";
 import { Toolbox } from "./Toolbox";
+import { DragLayer } from "./DragLayer";
 
 export function Canvas({
   views,
@@ -34,6 +35,8 @@ export function Canvas({
       style={{ boxShadow: isOver ? "inset 0 0 0 3px #2868E4" : "none" }}
     >
       {!views.length && <p>Drag views onto the canvas.</p>}
+
+      <DragLayer />
 
       <div className={styles["views"]}>
         {views.map((view, index) => {

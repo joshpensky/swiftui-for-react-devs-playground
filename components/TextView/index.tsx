@@ -1,5 +1,6 @@
 import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import { getEmptyImage } from "react-dnd-html5-backend";
 import { ViewModifierModel } from "../../pages";
 import styles from "./styles.module.scss";
 
@@ -21,7 +22,7 @@ export function TextView({
 }>) {
   const id = useId();
 
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type: "view",
     item: {
       type: "Text",
@@ -43,6 +44,10 @@ export function TextView({
       onDrag?.();
     }
   }, [isDragging]);
+
+  useEffect(() => {
+    dragPreview(getEmptyImage(), { captureDraggingState: false });
+  }, []);
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "view-modifier",

@@ -2,6 +2,7 @@ import { PropsWithChildren, useEffect } from "react";
 import cx from "classnames";
 import { useDrag } from "react-dnd";
 import styles from "./styles.module.scss";
+import { getEmptyImage } from "react-dnd-html5-backend";
 
 export type Color = "red" | "green" | "blue";
 
@@ -18,7 +19,7 @@ export function ForegroundColorViewModifier({
   onDrag?(): void;
   onRemove?(): void;
 }>) {
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, dragPreview] = useDrag(() => ({
     type: "view-modifier",
     item: {
       type: "foregroundColor",
@@ -33,6 +34,10 @@ export function ForegroundColorViewModifier({
       isDragging: monitor.isDragging(),
     }),
   }));
+
+  useEffect(() => {
+    dragPreview(getEmptyImage(), { captureDraggingState: false });
+  }, []);
 
   useEffect(() => {
     if (isDragging) {
