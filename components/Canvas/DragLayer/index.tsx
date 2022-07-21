@@ -1,11 +1,12 @@
 import { useDragLayer } from "react-dnd";
-import { ViewModel, ViewModifierModel } from "../../../pages";
+import { IView, IViewModifier } from "../../../pages";
 import { ForegroundColorViewModifier } from "../../ForegroundColorViewModifier";
 import { TextView } from "../../TextView";
 import styles from "./styles.module.scss";
 import cx from "classnames";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { FontViewModifier } from "../../FontViewModifier";
 
 export function DragLayer() {
   const { itemType, isDragging, item, currentOffset } = useDragLayer(
@@ -24,7 +25,7 @@ export function DragLayer() {
   function renderItem() {
     switch (itemType) {
       case "view": {
-        const view = item as ViewModel;
+        const view = item as IView;
         switch (view.type) {
           case "Text": {
             return <TextView preview value="" />;
@@ -33,8 +34,11 @@ export function DragLayer() {
       }
 
       case "view-modifier": {
-        const modifier = item as ViewModifierModel;
+        const modifier = item as IViewModifier;
         switch (modifier.type) {
+          case "font": {
+            return <FontViewModifier preview value="body" />;
+          }
           case "foregroundColor": {
             return <ForegroundColorViewModifier preview value="red" />;
           }

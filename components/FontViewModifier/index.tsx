@@ -2,9 +2,9 @@ import { PropsWithChildren, useEffect, useId } from "react";
 import cx from "classnames";
 import { useDrag } from "react-dnd";
 import styles from "./styles.module.scss";
-import { Color } from "../../pages";
+import { Font } from "../../pages";
 
-export function ForegroundColorViewModifier({
+export function FontViewModifier({
   value,
   onChange,
   onDrag,
@@ -14,8 +14,8 @@ export function ForegroundColorViewModifier({
 }: PropsWithChildren<{
   id?: string;
   preview?: boolean;
-  value: Color;
-  onChange?(value: Color): void;
+  value: Font;
+  onChange?(value: Font): void;
   onDrag?(): void;
   onRemove?(): void;
 }>) {
@@ -26,9 +26,9 @@ export function ForegroundColorViewModifier({
     type: "view-modifier",
     item: {
       id,
-      type: "foregroundColor",
+      type: "font",
       props: {
-        value: "red",
+        value: "body",
       },
     },
     canDrag(monitor) {
@@ -63,17 +63,16 @@ export function ForegroundColorViewModifier({
         cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
       }}
     >
-      <pre>.foregroundColor(</pre>
+      <pre>.font(</pre>
       <select
         id={id}
         name={id}
         value={value}
-        onChange={(evt) => onChange?.(evt.target.value as Color)}
+        onChange={(evt) => onChange?.(evt.target.value as Font)}
         disabled={preview}
       >
-        <option value="red">.red</option>
-        <option value="green">.green</option>
-        <option value="blue">.blue</option>
+        <option value="body">.body</option>
+        <option value="title">.title</option>
       </select>
       <pre>)</pre>
 

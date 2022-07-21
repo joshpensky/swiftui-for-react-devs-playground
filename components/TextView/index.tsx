@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
 import { motion } from "framer-motion";
-import { ViewModifierModel } from "../../pages";
+import { IViewModifier } from "../../pages";
 import styles from "./styles.module.scss";
 
 export function TextView({
@@ -19,7 +19,7 @@ export function TextView({
   preview?: boolean;
   onChange?(value: string): void;
   onDrag?(): void;
-  onModifier?(modifier: ViewModifierModel): void;
+  onModifier?(modifier: IViewModifier): void;
   onRemove?(): void;
   value: string;
 }>) {
@@ -69,7 +69,7 @@ export function TextView({
       isOver: !preview && monitor.isOver(),
     }),
     drop(item, monitor) {
-      onModifier?.(item as ViewModifierModel);
+      onModifier?.(item as IViewModifier);
     },
   }));
 
@@ -96,8 +96,7 @@ export function TextView({
     >
       <div
         ref={drop}
-        className={styles["container"]}
-        style={{ boxShadow: isOver ? "inset 0 0 0 3px #2868E4" : undefined }}
+        className={cx(styles["container"], isOver && styles["dropping"])}
       >
         <pre>Text(&quot;</pre>
         <input

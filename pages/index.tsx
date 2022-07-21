@@ -3,12 +3,13 @@ import { useMemo, useState } from "react";
 import isEqual from "lodash.isequal";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { Color } from "../components/ForegroundColorViewModifier";
 import styles from "./styles/index.module.scss";
 import { Preview } from "../components/Preview";
 import { Canvas } from "../components/Canvas";
 
-interface ForegroundColorViewModifierModel {
+export type Color = "red" | "green" | "blue";
+
+interface IForegroundColorViewModifier {
   id: string;
   type: "foregroundColor";
   props: {
@@ -16,18 +17,28 @@ interface ForegroundColorViewModifierModel {
   };
 }
 
-export type ViewModifierModel = ForegroundColorViewModifierModel;
+export type Font = "body" | "title";
 
-interface TextViewModel {
+interface IFontViewModifier {
+  id: string;
+  type: "font";
+  props: {
+    value: Font;
+  };
+}
+
+export type IViewModifier = IFontViewModifier | IForegroundColorViewModifier;
+
+interface ITextView {
   id: string;
   type: "Text";
   props: {
     value: string;
   };
-  modifiers: ViewModifierModel[];
+  modifiers: IViewModifier[];
 }
 
-export type ViewModel = TextViewModel;
+export type IView = ITextView;
 
 const code = `
 <p style={{ color: 'blue' }}>
@@ -36,11 +47,27 @@ const code = `
 `.trim();
 
 const Home: NextPage = () => {
-  const [views, setViews] = useState<ViewModel[]>([]);
+  const [views, setViews] = useState<IView[]>([]);
 
-  // TODO: how to match with random IDs?
   const matched = useMemo(() => {
-    return isEqual(views, [
+    // Remove unique IDs from views
+    const strippedViews = views.map(({ id, ...view }) => ({
+      ...view,
+      modifiers: [...view.modifiers]
+        .reverse()
+        .reduce((acc, { id, ...modifier }) => {
+          // Evaluate modifiers in reverse order, only keeping the first of a given type
+          let mIndex = acc.findIndex((m) => m.type === modifier.type);
+          if (mIndex >= 0) {
+            acc[mIndex] = modifier;
+          } else {
+            acc.push(modifier);
+          }
+          return acc;
+        }, [] as Omit<IViewModifier, "id">[]),
+    }));
+
+    return isEqual(strippedViews, [
       {
         type: "Text",
         props: { value: "This is my great text!" },

@@ -5,7 +5,10 @@ import { TouchBackend } from "react-dnd-touch-backend";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <DndProvider backend={TouchBackend} options={{ enableMouseEvents: true }}>
+    <DndProvider
+      backend={TouchBackend}
+      options={{ enableKeyboardEvents: true, enableMouseEvents: true }}
+    >
       <Component {...pageProps} />
     </DndProvider>
   );

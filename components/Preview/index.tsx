@@ -1,8 +1,7 @@
-import { CSSProperties } from "react";
-import { ViewModel } from "../../pages";
+import { IView } from "../../pages";
 import styles from "./styles.module.scss";
 
-export function Preview({ view }: { view?: ViewModel }) {
+export function Preview({ view }: { view?: IView }) {
   return (
     <div className={styles["phone"]}>
       <div className={styles["left-buttons"]} />
@@ -12,6 +11,19 @@ export function Preview({ view }: { view?: ViewModel }) {
             const styles: Record<string, any> = {};
             [...view.modifiers].reverse().forEach((modifier) => {
               switch (modifier.type) {
+                case "font": {
+                  switch (modifier.props.value) {
+                    case "title": {
+                      styles["--font"] = "32px sans-serif";
+                      break;
+                    }
+                    default: {
+                      styles["--font"] = "16px sans-serif";
+                      break;
+                    }
+                  }
+                  break;
+                }
                 case "foregroundColor": {
                   styles["--color"] = modifier.props.value;
                   break;

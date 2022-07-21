@@ -11,6 +11,11 @@
     margin: auto;
     color: gray;
   }
+
+  &.dropping {
+    box-shadow: inset 0 0 0 3px #2868E4;
+    background-color: rgba(#2868E4, 0.1);
+  }
 }
 
 .views-container {
