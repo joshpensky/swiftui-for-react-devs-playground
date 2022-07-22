@@ -507,7 +507,284 @@ describe("Editor", () => {
     });
   });
 
+  describe(".updateView(id:view:)", () => {
+    test("throws on invalid view ID", () => {
+      expect(() =>
+        new Editor().updateView("abc123", {
+          id: "abc123",
+          type: "Text",
+          props: {
+            value: "Text",
+          },
+          modifiers: [],
+        })
+      ).toThrowError();
+    });
+
+    test("updates a top-level view", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+        ]).updateView("abc123", {
+          id: "abc123",
+          type: "Text",
+          props: {
+            value: "Different text",
+          },
+          modifiers: [],
+        })
+      ).toEqual(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Different text",
+            },
+            modifiers: [],
+          },
+        ])
+      );
+    });
+
+    test("updates a nested view", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Text",
+                  props: {
+                    value: "Text",
+                  },
+                  modifiers: [],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ]).updateView("abc125", {
+          id: "abc125",
+          type: "Text",
+          props: {
+            value: "Different text",
+          },
+          modifiers: [],
+        })
+      ).toEqual(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Text",
+                  props: {
+                    value: "Different text",
+                  },
+                  modifiers: [],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ])
+      );
+    });
+  });
+
+  describe(".updateModifier(id:modifier:)", () => {
+    test("throws on invalid view ID", () => {
+      expect(() =>
+        new Editor().updateModifier("def123", {
+          id: "def123",
+          type: "font",
+          props: {
+            value: "body",
+          },
+        })
+      ).toThrowError();
+    });
+
+    test("updates modifier on top-level view", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [
+              {
+                id: "def123",
+                type: "font",
+                props: {
+                  value: "body",
+                },
+              },
+            ],
+          },
+        ]).updateModifier("def123", {
+          id: "def123",
+          type: "font",
+          props: {
+            value: "title",
+          },
+        })
+      ).toEqual(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [
+              {
+                id: "def123",
+                type: "font",
+                props: {
+                  value: "title",
+                },
+              },
+            ],
+          },
+        ])
+      );
+    });
+
+    test("updates modifier on nested view", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Text",
+                  props: {
+                    value: "Text",
+                  },
+                  modifiers: [
+                    {
+                      id: "def123",
+                      type: "font",
+                      props: {
+                        value: "body",
+                      },
+                    },
+                    {
+                      id: "def124",
+                      type: "foregroundColor",
+                      props: {
+                        value: "red",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ]).updateModifier("def124", {
+          id: "def124",
+          type: "foregroundColor",
+          props: {
+            value: "green",
+          },
+        })
+      ).toEqual(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Text",
+                  props: {
+                    value: "Text",
+                  },
+                  modifiers: [
+                    {
+                      id: "def123",
+                      type: "font",
+                      props: {
+                        value: "body",
+                      },
+                    },
+                    {
+                      id: "def124",
+                      type: "foregroundColor",
+                      props: {
+                        value: "green",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ])
+      );
+    });
+  });
+
   describe(".removeView(id:)", () => {
+    test("throws on invalid view ID", () => {
+      expect(() => new Editor().removeView("abc123")).toThrowError();
+    });
+
     test("removes top-level view from editor", () => {
       expect(
         new Editor([
@@ -576,6 +853,10 @@ describe("Editor", () => {
   });
 
   describe(".removeModifier(id:)", () => {
+    test("throws on invalid view ID", () => {
+      expect(() => new Editor().removeModifier("def123")).toThrowError();
+    });
+
     test("removes modifier on top-level view from editor", () => {
       expect(
         new Editor([

@@ -159,15 +159,78 @@ export class Editor {
     return null;
   }
 
-  // TODO:
-  // updateView(id: string, view: IView): Editor {
+  /**
+   * Updates a view in the tree. Does not update modifiers.
+   *
+   * @param id the ID of the view to update
+   * @param view the new view data
+   * @returns a cloned editor with the new view
+   */
+  updateView(id: string, view: IView): Editor {
+    const response = this.findView(id);
+    if (!response) {
+      throw new Error("View not found.");
+    }
 
-  // }
+    const views = cloneDeep(this._views);
 
-  // TODO:
-  // updateModifier(id: string, modifier: IViewModifier): Editor {
+    let currentLevel = views;
+    response.viewPath.forEach((index, i) => {
+      let currentView = currentLevel[index];
+      if (i === response.viewPath.length - 1) {
+        currentLevel[index] = {
+          ...view,
+          modifiers: currentView.modifiers, // Don't update the modifiers!
+        };
+      } else {
+        if (currentView.type === "VStack") {
+          currentLevel = currentView.props.children;
+        } else {
+          throw new Error("Invalid path.");
+        }
+      }
+    });
 
-  // }
+    return new Editor(views);
+  }
+
+  /**
+   * Updates a view modifier in the tree.
+   *
+   * @param id the ID of the view modifier to update
+   * @param modifier the new view modifier data
+   * @returns a cloned editor with the new view modifier
+   */
+  updateModifier(id: string, modifier: IViewModifier): Editor {
+    const response = this.findModifier(id);
+    if (!response) {
+      throw new Error("View not found.");
+    }
+
+    const views = cloneDeep(this._views);
+
+    let currentLevel = views;
+    response.viewPath.forEach((index, i) => {
+      let currentView = currentLevel[index];
+      if (i === response.viewPath.length - 1) {
+        currentView.modifiers = currentView.modifiers.map((currentModifier) => {
+          if (currentModifier.id === id) {
+            return modifier;
+          } else {
+            return currentModifier;
+          }
+        });
+      } else {
+        if (currentView.type === "VStack") {
+          currentLevel = currentView.props.children;
+        } else {
+          throw new Error("Invalid path.");
+        }
+      }
+    });
+
+    return new Editor(views);
+  }
 
   /**
    * Removes a view from the tree.
@@ -178,7 +241,7 @@ export class Editor {
   removeView(id: string): Editor {
     const response = this.findView(id);
     if (!response) {
-      return this;
+      throw new Error("View not found.");
     }
 
     const views = cloneDeep(this._views);
@@ -209,7 +272,7 @@ export class Editor {
   removeModifier(id: string): Editor {
     const response = this.findModifier(id);
     if (!response) {
-      return this;
+      throw new Error("View not found.");
     }
 
     const views = cloneDeep(this._views);

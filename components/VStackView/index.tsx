@@ -20,7 +20,6 @@ export function VStackView({
   onDrag,
   onRemove,
   onChild,
-  onChildChange,
   onModifier,
   preview,
   id: propsId,
@@ -30,7 +29,6 @@ export function VStackView({
   content: IView[];
   onDrag?(): void;
   onChild?(view: IView): void;
-  onChildChange?(action: SetStateAction<IView[]>): void;
   onModifier?(modifier: IViewModifier): void;
   onRemove?(): void;
 }>) {

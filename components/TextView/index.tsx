@@ -63,15 +63,18 @@ export function TextView({
     }
   }, [isDragging, onDrag]);
 
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: "view-modifier",
-    collect: (monitor) => ({
-      isOver: !preview && monitor.isOver(),
+  const [{ isOver }, drop] = useDrop(
+    () => ({
+      accept: "view-modifier",
+      collect: (monitor) => ({
+        isOver: !preview && monitor.isOver(),
+      }),
+      drop(item, monitor) {
+        onModifier?.(item as IViewModifier);
+      },
     }),
-    drop(item, monitor) {
-      onModifier?.(item as IViewModifier);
-    },
-  }));
+    [onModifier]
+  );
 
   const widthRef = useRef<HTMLDivElement>(null);
   useEffect(() => {

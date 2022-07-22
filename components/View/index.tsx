@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import { createContext, useContext } from "react";
 import { IView } from "../../types";
 import { TextView } from "../TextView";
 import { VStackView } from "../VStackView";
@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import styles from "./styles.module.scss";
 import { FontViewModifier } from "../FontViewModifier";
 import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
-import { Editor, EditorContext } from "../../models/Editor";
+import { EditorContext } from "../../models/Editor";
 
 export const ZIndexContext = createContext(0);
 
@@ -38,23 +38,12 @@ export function View({ view }: { view: IView }) {
                         id={modifier.id}
                         value={modifier.props.value}
                         onChange={(value) => {
-                          // onViewsChange((views) => {
-                          //   return [
-                          //     ...views.slice(0, index),
-                          //     {
-                          //       ...views[index],
-                          //       modifiers: [
-                          //         ...view.modifiers.slice(0, mIndex),
-                          //         {
-                          //           ...modifier,
-                          //           props: { value },
-                          //         },
-                          //         ...view.modifiers.slice(mIndex + 1),
-                          //       ],
-                          //     },
-                          //     ...views.slice(index + 1),
-                          //   ];
-                          // });
+                          onEditorChange(
+                            editor.updateModifier(modifier.id, {
+                              ...modifier,
+                              props: { value },
+                            })
+                          );
                         }}
                         onRemove={() => {
                           onEditorChange(editor.removeModifier(modifier.id));
@@ -69,23 +58,12 @@ export function View({ view }: { view: IView }) {
                         id={modifier.id}
                         value={modifier.props.value}
                         onChange={(value) => {
-                          // onViewsChange((views) => {
-                          //   return [
-                          //     ...views.slice(0, index),
-                          //     {
-                          //       ...views[index],
-                          //       modifiers: [
-                          //         ...view.modifiers.slice(0, mIndex),
-                          //         {
-                          //           ...modifier,
-                          //           props: { value },
-                          //         },
-                          //         ...view.modifiers.slice(mIndex + 1),
-                          //       ],
-                          //     },
-                          //     ...views.slice(index + 1),
-                          //   ];
-                          // });
+                          onEditorChange(
+                            editor.updateModifier(modifier.id, {
+                              ...modifier,
+                              props: { value },
+                            })
+                          );
                         }}
                         onRemove={() => {
                           onEditorChange(editor.removeModifier(modifier.id));
@@ -120,25 +98,6 @@ export function View({ view }: { view: IView }) {
                 onChild={(child) => {
                   onEditorChange(editor.insertView(child, view.id));
                 }}
-                onChildChange={(action) => {
-                  // onViewsChange((views) => {
-                  //   return [
-                  //     ...views.slice(0, index),
-                  //     {
-                  //       ...(views[index] as IVStackView),
-                  //       props: {
-                  //         children:
-                  //           typeof action === "function"
-                  //             ? action(
-                  //                 (views[index] as IVStackView).props.children
-                  //               )
-                  //             : action,
-                  //       },
-                  //     },
-                  //     ...views.slice(index + 1),
-                  //   ];
-                  // });
-                }}
                 onModifier={(modifier) => {
                   onEditorChange(editor.insertModifier(modifier, view.id));
                 }}
@@ -157,16 +116,12 @@ export function View({ view }: { view: IView }) {
                 id={view.id}
                 value={view.props.value}
                 onChange={(value) => {
-                  // onViewsChange((views) => {
-                  //   return [
-                  //     ...views.slice(0, index),
-                  //     {
-                  //       ...(views[index] as ITextView),
-                  //       props: { value },
-                  //     },
-                  //     ...views.slice(index + 1),
-                  //   ];
-                  // });
+                  onEditorChange(
+                    editor.updateView(view.id, {
+                      ...view,
+                      props: { value },
+                    })
+                  );
                 }}
                 onModifier={(modifier) => {
                   onEditorChange(editor.insertModifier(modifier, view.id));
