@@ -75,7 +75,7 @@ export function VStackView({
     [onChild]
   );
 
-  const [{ isModifierOver }, modifierDrop] = useDrop(
+  const [{ isModifierOver: isModifierOverTop }, modifierDropTop] = useDrop(
     () => ({
       accept: "view-modifier",
       collect: (monitor) => ({
@@ -90,6 +90,23 @@ export function VStackView({
     }),
     [onModifier]
   );
+  const [{ isModifierOver: isModifierOverBottom }, modifierDropBottom] =
+    useDrop(
+      () => ({
+        accept: "view-modifier",
+        collect: (monitor) => ({
+          isModifierOver: !preview && monitor.isOver({ shallow: true }),
+        }),
+        canDrop(item, monitor) {
+          return monitor.isOver({ shallow: true });
+        },
+        drop(item, monitor) {
+          onModifier?.(item as IViewModifier);
+        },
+      }),
+      [onModifier]
+    );
+  const isModifierOver = isModifierOverTop || isModifierOverBottom;
 
   const zIndex = useContext(ZIndexContext);
 
@@ -99,60 +116,62 @@ export function VStackView({
       className={cx(
         styles["view"],
         preview && styles["preview"],
-        isDragging && styles["dragging"]
+        isDragging && styles["dragging"],
+        isModifierOver && styles["modifier-dropping"]
       )}
       style={{
         cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
       }}
     >
-      <div
-        ref={modifierDrop}
-        className={cx(
-          styles["container"],
-          isModifierOver && styles["dropping"]
-        )}
-      >
-        <pre>VStack {`{`}</pre>
+      <div className={styles["wrapper"]}>
+        <div ref={modifierDropTop} className={cx(styles["container"])}>
+          <div className={styles["dropzone"]} />
 
-        {!preview && (
-          <button type="button" onClick={() => onRemove?.()}>
-            –
-          </button>
-        )}
-      </div>
+          <pre>VStack {`{`}</pre>
 
-      <div className={cx(styles["children"])}>
-        <div
-          ref={drop}
-          className={cx(styles["children-drop"], isOver && styles["dropping"])}
-          style={{ "--z-index": zIndex } as CSSProperties}
-        >
-          {!!content.length && (
-            <motion.ul className={styles["views"]} /*layout*/>
-              {content.map((view, index) => (
-                <motion.li
-                  key={view.id}
-                  // layout="position"
-                  // layoutId={view.id}
-                  transition={{
-                    type: "spring",
-                    bounce: 0,
-                    duration: 0.25,
-                  }}
-                >
-                  <View view={view} />
-                </motion.li>
-              ))}
-            </motion.ul>
+          {!preview && (
+            <button type="button" onClick={() => onRemove?.()}>
+              –
+            </button>
           )}
+        </div>
+
+        <div className={cx(styles["children"])}>
+          <div
+            ref={drop}
+            className={cx(
+              styles["children-drop"],
+              isOver && styles["dropping"]
+            )}
+            style={{ "--z-index": zIndex } as CSSProperties}
+          >
+            {!!content.length && (
+              <motion.ul className={styles["views"]} /*layout*/>
+                {content.map((view, index) => (
+                  <motion.li
+                    key={view.id}
+                    // layout="position"
+                    // layoutId={view.id}
+                    transition={{
+                      type: "spring",
+                      bounce: 0,
+                      duration: 0.25,
+                    }}
+                  >
+                    <View view={view} />
+                  </motion.li>
+                ))}
+              </motion.ul>
+            )}
+          </div>
+        </div>
+
+        <div ref={modifierDropBottom} className={cx(styles["container"])}>
+          <pre>{`}`}</pre>
         </div>
       </div>
 
-      <div className={cx(styles["container"])}>
-        <pre>{`}`}</pre>
-      </div>
-
-      <div className={styles["modifiers"]}>{children}</div>
+      {children && <div className={styles["modifiers"]}>{children}</div>}
     </div>
   );
 }
