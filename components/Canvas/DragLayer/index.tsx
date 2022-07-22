@@ -7,6 +7,7 @@ import cx from "classnames";
 import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FontViewModifier } from "../../FontViewModifier";
+import { VStackView } from "../../VStackView";
 
 export function DragLayer() {
   const { itemType, isDragging, item, currentOffset } = useDragLayer(
@@ -29,6 +30,9 @@ export function DragLayer() {
         switch (view.type) {
           case "Text": {
             return <TextView preview value="" />;
+          }
+          case "VStack": {
+            return <VStackView preview content={[]} />;
           }
         }
       }

@@ -9,10 +9,12 @@ import {
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { ForegroundColorViewModifier } from "../../ForegroundColorViewModifier";
 import { TextView } from "../../TextView";
+import { VStackView } from "../../VStackView";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Tabs from "@radix-ui/react-tabs";
 import styles from "./styles.module.scss";
 import { FontViewModifier } from "../../FontViewModifier";
+import { LibraryPreview } from "./LibraryPreview";
 
 export function Library({
   open,
@@ -61,13 +63,16 @@ export function Library({
                 }
               }}
             >
+              <Dialog.Title className="sr-only">Library</Dialog.Title>
+
               <motion.div
                 className={styles["handle"]}
                 ref={dragHandleRef}
                 dragListener
                 onPointerDown={(evt) => controls.start(evt)}
               />
-              <div className={styles["toolbox"]}>
+
+              <div className={styles["content"]}>
                 <Tabs.Root
                   value={tab}
                   onValueChange={setTab}
@@ -102,21 +107,38 @@ export function Library({
                     >
                       <Tabs.List className={styles["block-list"]}>
                         <Tabs.Trigger value="text">Text</Tabs.Trigger>
+                        <Tabs.Trigger value="vstack">
+                          Vertical Stack
+                        </Tabs.Trigger>
                       </Tabs.List>
 
                       <div className={styles["block-preview"]}>
                         <Tabs.Content value="text">
-                          <header className={styles["block-preview__header"]}>
-                            <h3>Text</h3>
-                            <p>Display text content.</p>
-                          </header>
-                          <div className={styles["block-preview__body"]}>
+                          <LibraryPreview
+                            title="Text"
+                            description="Display text content."
+                            docs="https://developer.apple.com/documentation/swiftui/text"
+                          >
                             <TextView
                               preview
                               value=""
                               onDrag={() => onOpenChange(false)}
                             />
-                          </div>
+                          </LibraryPreview>
+                        </Tabs.Content>
+
+                        <Tabs.Content value="vstack">
+                          <LibraryPreview
+                            title="Vertical Stack"
+                            description="Align views vertically."
+                            docs="https://developer.apple.com/documentation/swiftui/vstack"
+                          >
+                            <VStackView
+                              preview
+                              content={[]}
+                              onDrag={() => onOpenChange(false)}
+                            />
+                          </LibraryPreview>
                         </Tabs.Content>
                       </div>
                     </Tabs.Root>
@@ -138,30 +160,31 @@ export function Library({
 
                       <div className={styles["block-preview"]}>
                         <Tabs.Content value="font">
-                          <header className={styles["block-preview__header"]}>
-                            <h3>Font</h3>
-                            <p>Set the default font for text in this view.</p>
-                          </header>
-                          <div className={styles["block-preview__body"]}>
+                          <LibraryPreview
+                            title="Font"
+                            description="Set the default font for text in this view."
+                            docs="https://developer.apple.com/documentation/swiftui/view/font(_:)"
+                          >
                             <FontViewModifier
                               preview
                               value="body"
                               onDrag={() => onOpenChange(false)}
                             />
-                          </div>
+                          </LibraryPreview>
                         </Tabs.Content>
+
                         <Tabs.Content value="foregroundColor">
-                          <header className={styles["block-preview__header"]}>
-                            <h3>Foreground Color</h3>
-                            <p>Set the color of foreground elements.</p>
-                          </header>
-                          <div className={styles["block-preview__body"]}>
+                          <LibraryPreview
+                            title="Foreground Color"
+                            description="Set the color of foreground elements."
+                            docs="https://developer.apple.com/documentation/SwiftUI/View/foregroundColor(_:)"
+                          >
                             <ForegroundColorViewModifier
                               preview
                               value="red"
                               onDrag={() => onOpenChange(false)}
                             />
-                          </div>
+                          </LibraryPreview>
                         </Tabs.Content>
                       </div>
                     </Tabs.Root>

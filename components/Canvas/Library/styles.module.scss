@@ -16,6 +16,7 @@
   background-color: rgba(0, 0, 0, 0.3);
   position: absolute;
   inset: 0;
+  z-index: 100;
 }
 
 .modal {
@@ -26,6 +27,18 @@
   background-color: #EDEDED;
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
+  z-index: 200;
+
+  &::after {
+    content: '';
+    height: 100px;
+    width: 100%;
+    position: absolute;
+    bottom: 1px;
+    left: 0;
+    transform: translateY(100%);
+    background-color: #EDEDED;
+  }
 }
 
 .handle {
@@ -48,7 +61,7 @@
   }
 }
 
-.toolbox {
+.content {
   display: flex;
   flex-direction: column;
 }
@@ -129,31 +142,5 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-  }
-
-  .block-preview__header {
-    display: flex;
-    flex-direction: column;
-    padding: 15px 20px;
-    border-bottom: 1px solid #EDEDED;
-    width: 100%;
-    gap: 5px;
-
-    p, h3 {
-      margin: 0;
-      font-size: 16px;
-    }
-  
-    p {
-      color: #636363;
-    }
-  }
-
-  .block-preview__body {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
   }
 }

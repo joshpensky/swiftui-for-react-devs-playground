@@ -64,5 +64,11 @@
     color: var(--color, black);
     font: var(--font, 16px sans-serif);
     text-align: center;
+    margin: 0;
+  }
+
+  .vstack {
+    display: flex;
+    flex-direction: column;
   }
 }

@@ -2,11 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 3px;
-
-  > *:not(:first-child) {
-    margin-left: 15px;
-  }
 }
 
 .container {
@@ -15,7 +10,9 @@
   display: flex;
   padding: 12px 15px;
   border-radius: 15px;
+  min-width: 18px + 30px;
   position: relative;
+  z-index: 2;
 
   &.dropping {
     &::after {
@@ -26,6 +23,14 @@
       background-color: rgba(#2868E4, 0.25);
       border-radius: 15px;
     }
+  }
+
+  &:nth-child(1) {
+    border-bottom-left-radius: 0;
+  }
+
+  &:nth-child(3) {
+    border-top-left-radius: 0;
   }
 
   pre {
@@ -96,4 +101,72 @@
       font-family: inherit;
     }
   }
+}
+
+.children {
+  border-left: 15px solid #FFC328;
+  padding: 3px;
+  position: relative;
+  width: 100%;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 36px;
+    width: 18px;
+    border-radius: 18px 0 0 0;
+    box-shadow: 0px -18px 0 0 #FFC328;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 36px;
+    width: 18px;
+    border-radius: 0 0 0 18px;
+    box-shadow: 0px 18px 0 0 #FFC328;
+  }
+}
+
+.children-drop {
+  width: 100%;
+  min-height: 44px;
+  position: relative;
+  z-index: calc(3 + var(--z-index, 0));
+
+  &.dropping {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      box-shadow: inset 0 0 0 3px #2868E4;
+      background-color: rgba(#2868E4, 0.25);
+      border-radius: 15px;
+      width: 100%;
+      z-index: inherit;
+    }
+  }
+}
+
+.views {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 3px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 4;
+}
+
+
+.modifiers {
+  margin-left: 15px;
+  margin-top: 3px;
 }

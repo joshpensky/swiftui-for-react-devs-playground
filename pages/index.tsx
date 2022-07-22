@@ -9,7 +9,7 @@ import { Canvas } from "../components/Canvas";
 
 export type Color = "red" | "green" | "blue";
 
-interface IForegroundColorViewModifier {
+export interface IForegroundColorViewModifier {
   id: string;
   type: "foregroundColor";
   props: {
@@ -19,7 +19,7 @@ interface IForegroundColorViewModifier {
 
 export type Font = "body" | "title";
 
-interface IFontViewModifier {
+export interface IFontViewModifier {
   id: string;
   type: "font";
   props: {
@@ -29,7 +29,7 @@ interface IFontViewModifier {
 
 export type IViewModifier = IFontViewModifier | IForegroundColorViewModifier;
 
-interface ITextView {
+export interface ITextView {
   id: string;
   type: "Text";
   props: {
@@ -38,7 +38,16 @@ interface ITextView {
   modifiers: IViewModifier[];
 }
 
-export type IView = ITextView;
+export interface IVStackView {
+  id: string;
+  type: "VStack";
+  props: {
+    children: IView[];
+  };
+  modifiers: IViewModifier[];
+}
+
+export type IView = IVStackView | ITextView;
 
 const code = `
 <p style={{ color: 'blue' }}>
