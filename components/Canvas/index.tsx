@@ -4,7 +4,7 @@ import cx from "classnames";
 import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
 import { TextView } from "../TextView";
 import styles from "./styles.module.scss";
-import { IView, ITextView, IVStackView } from "../../pages";
+import { IView, ITextView, IVStackView } from "../../types";
 import { Library } from "./Library";
 import { DragLayer } from "./DragLayer";
 import { LayoutGroup, motion } from "framer-motion";

@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useId } from "react";
 import cx from "classnames";
 import { useDrag } from "react-dnd";
 import styles from "./styles.module.scss";
-import { Color } from "../../pages";
+import { Color } from "../../types";
 
 export function ForegroundColorViewModifier({
   value,

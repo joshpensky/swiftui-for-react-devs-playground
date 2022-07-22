@@ -1,5 +1,5 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { ITextView, IView, IVStackView } from "../../pages";
+import { ITextView, IView, IVStackView } from "../../types";
 import { TextView } from "../TextView";
 import { VStackView } from "../VStackView";
 import { motion } from "framer-motion";

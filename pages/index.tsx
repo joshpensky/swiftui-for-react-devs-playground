@@ -6,48 +6,7 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from "./styles/index.module.scss";
 import { Preview } from "../components/Preview";
 import { Canvas } from "../components/Canvas";
-
-export type Color = "red" | "green" | "blue";
-
-export interface IForegroundColorViewModifier {
-  id: string;
-  type: "foregroundColor";
-  props: {
-    value: Color;
-  };
-}
-
-export type Font = "body" | "title";
-
-export interface IFontViewModifier {
-  id: string;
-  type: "font";
-  props: {
-    value: Font;
-  };
-}
-
-export type IViewModifier = IFontViewModifier | IForegroundColorViewModifier;
-
-export interface ITextView {
-  id: string;
-  type: "Text";
-  props: {
-    value: string;
-  };
-  modifiers: IViewModifier[];
-}
-
-export interface IVStackView {
-  id: string;
-  type: "VStack";
-  props: {
-    children: IView[];
-  };
-  modifiers: IViewModifier[];
-}
-
-export type IView = IVStackView | ITextView;
+import { IView, IViewModifier } from "../types";
 
 const code = `
 <p style={{ color: 'blue' }}>

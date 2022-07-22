@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { IView } from "../../pages";
+import { IView } from "../../types";
 import styles from "./styles.module.scss";
 
 export function Preview({ view }: { view?: IView }) {

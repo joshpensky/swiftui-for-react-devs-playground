@@ -6,12 +6,10 @@ import {
   useContext,
   useEffect,
   useId,
-  useRef,
-  useState,
 } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
-import { IView, IViewModifier } from "../../pages";
+import { IView, IViewModifier } from "../../types";
 import styles from "./styles.module.scss";
 import { motion } from "framer-motion";
 import { View, ZIndexContext } from "../View";
