@@ -53,7 +53,7 @@ export function FontViewModifier({
     if (isDragging) {
       onDrag?.();
     }
-  }, [isDragging]);
+  }, [isDragging, onDrag]);
 
   return (
     <div

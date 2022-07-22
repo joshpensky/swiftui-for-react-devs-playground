@@ -53,7 +53,7 @@ export function ForegroundColorViewModifier({
     if (isDragging) {
       onDrag?.();
     }
-  }, [isDragging]);
+  }, [isDragging, onDrag]);
 
   return (
     <div

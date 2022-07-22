@@ -61,7 +61,7 @@ export function TextView({
     if (isDragging) {
       onDrag?.();
     }
-  }, [isDragging]);
+  }, [isDragging, onDrag]);
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "view-modifier",
