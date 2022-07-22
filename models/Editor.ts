@@ -1,6 +1,7 @@
 import { SetStateAction, createContext, useState, Dispatch } from "react";
 import cloneDeep from "lodash.clonedeep";
 import { IView, IViewModifier } from "../types";
+import isEqual from "lodash.isequal";
 
 export type BlockType = "view" | "view-modifier";
 
@@ -9,6 +10,11 @@ interface FindResponse<T> {
   item: T;
 }
 
+type IAnonymousViewModifier = Omit<IViewModifier, "id">;
+type IAnonymousView = Omit<IView, "id" | "modifiers"> & {
+  modifiers: IAnonymousViewModifier[];
+};
+
 export class Editor {
   private _views: IView[];
 
@@ -16,8 +22,34 @@ export class Editor {
     this._views = initialViews;
   }
 
-  get views() {
+  get views(): IView[] {
     return this._views;
+  }
+
+  get anonymousViews(): IAnonymousView[] {
+    const views = cloneDeep(this._views);
+
+    let viewsToVisit: IView[] = [...views];
+    while (viewsToVisit.length) {
+      const view = viewsToVisit.pop();
+      if (!view) {
+        break;
+      }
+
+      // @ts-ignore
+      delete view.id;
+      view.modifiers = view.modifiers.map((modifier) => {
+        // @ts-ignore
+        delete modifier.id;
+        return modifier;
+      });
+
+      if (view.type === "VStack") {
+        viewsToVisit.unshift(...view.props.children);
+      }
+    }
+
+    return views;
   }
 
   /**
@@ -295,6 +327,16 @@ export class Editor {
     });
 
     return new Editor(views);
+  }
+
+  /**
+   * Checks exact structure equality between two editors.
+   *
+   * @param editor the other editor to compare
+   * @returns whether the editors' structures matches
+   */
+  equals(editor: Editor): boolean {
+    return isEqual(this.anonymousViews, editor.anonymousViews);
   }
 }
 

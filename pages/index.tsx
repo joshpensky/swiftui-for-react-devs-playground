@@ -7,7 +7,7 @@ import styles from "./styles/index.module.scss";
 import { Preview } from "../components/Preview";
 import { Canvas } from "../components/Canvas";
 import { IView, IViewModifier } from "../types";
-import { useEditor } from "../models/Editor";
+import { Editor, useEditor } from "../models/Editor";
 
 const code = `
 <p style={{ color: 'blue' }}>
@@ -19,38 +19,27 @@ const Home: NextPage = () => {
   const [editor, setEditor] = useEditor();
 
   const matched = useMemo(() => {
-    // Remove unique IDs from views
-    const strippedViews = editor.views.map(({ id, ...view }) => ({
-      ...view,
-      modifiers: [...view.modifiers]
-        .reverse()
-        .reduce((acc, { id, ...modifier }) => {
-          // Evaluate modifiers in reverse order, only keeping the first of a given type
-          let mIndex = acc.findIndex((m) => m.type === modifier.type);
-          if (mIndex >= 0) {
-            acc[mIndex] = modifier;
-          } else {
-            acc.push(modifier);
-          }
-          return acc;
-        }, [] as Omit<IViewModifier, "id">[]),
-    }));
-
-    return isEqual(strippedViews, [
-      {
-        type: "Text",
-        props: { value: "This is my great text!" },
-        modifiers: [
-          {
-            type: "foregroundColor",
-            props: {
-              value: "blue",
-            },
+    return editor.equals(
+      new Editor([
+        {
+          id: "anon",
+          type: "Text",
+          props: {
+            value: "This is my great text!",
           },
-        ],
-      },
-    ]);
-  }, [editor.views]);
+          modifiers: [
+            {
+              id: "anon",
+              type: "foregroundColor",
+              props: {
+                value: "blue",
+              },
+            },
+          ],
+        },
+      ])
+    );
+  }, [editor]);
 
   return (
     <div className={styles["page"]}>

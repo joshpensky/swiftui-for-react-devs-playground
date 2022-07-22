@@ -1,6 +1,78 @@
 import { Editor } from "./Editor";
 
 describe("Editor", () => {
+  describe(".anonymousViews", () => {
+    test("strips all IDs from views and modifiers", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Text",
+                  props: {
+                    value: "Text",
+                  },
+                  modifiers: [
+                    {
+                      id: "def123",
+                      type: "font",
+                      props: {
+                        value: "body",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ]).anonymousViews
+      ).toEqual([
+        {
+          type: "Text",
+          props: {
+            value: "Text",
+          },
+          modifiers: [],
+        },
+        {
+          type: "VStack",
+          props: {
+            children: [
+              {
+                type: "Text",
+                props: {
+                  value: "Text",
+                },
+                modifiers: [
+                  {
+                    type: "font",
+                    props: {
+                      value: "body",
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+          modifiers: [],
+        },
+      ]);
+    });
+  });
+
   describe(".insertView(view:parentId:)", () => {
     test("throws on unknown parent ID", () => {
       expect(() =>
@@ -988,6 +1060,130 @@ describe("Editor", () => {
           },
         ])
       );
+    });
+  });
+
+  describe(".equals(editor:)", () => {
+    test("equality for empty editors", () => {
+      expect(new Editor().equals(new Editor())).toBeTruthy();
+    });
+
+    test("equality for same editor structure", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [
+              {
+                id: "def123",
+                type: "font",
+                props: {
+                  value: "body",
+                },
+              },
+            ],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Text",
+                  props: {
+                    value: "Text",
+                  },
+                  modifiers: [],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ]).equals(
+          new Editor([
+            {
+              id: "abc456",
+              type: "Text",
+              props: {
+                value: "Text",
+              },
+              modifiers: [
+                {
+                  id: "def456",
+                  type: "font",
+                  props: {
+                    value: "body",
+                  },
+                },
+              ],
+            },
+            {
+              id: "abc457",
+              type: "VStack",
+              props: {
+                children: [
+                  {
+                    id: "abc458",
+                    type: "Text",
+                    props: {
+                      value: "Text",
+                    },
+                    modifiers: [],
+                  },
+                ],
+              },
+              modifiers: [],
+            },
+          ])
+        )
+      ).toBeTruthy();
+    });
+
+    test("inequality for different editor values", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [
+              {
+                id: "def123",
+                type: "font",
+                props: {
+                  value: "body",
+                },
+              },
+            ],
+          },
+        ]).equals(
+          new Editor([
+            {
+              id: "abc456",
+              type: "Text",
+              props: {
+                value: "Text",
+              },
+              modifiers: [
+                {
+                  id: "def456",
+                  type: "font",
+                  props: {
+                    value: "title",
+                  },
+                },
+              ],
+            },
+          ])
+        )
+      ).toBeFalsy();
     });
   });
 });
