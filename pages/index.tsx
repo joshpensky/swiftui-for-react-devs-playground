@@ -7,6 +7,7 @@ import styles from "./styles/index.module.scss";
 import { Preview } from "../components/Preview";
 import { Canvas } from "../components/Canvas";
 import { IView, IViewModifier } from "../types";
+import { useEditor } from "../models/Editor";
 
 const code = `
 <p style={{ color: 'blue' }}>
@@ -15,11 +16,11 @@ const code = `
 `.trim();
 
 const Home: NextPage = () => {
-  const [views, setViews] = useState<IView[]>([]);
+  const [editor, setEditor] = useEditor();
 
   const matched = useMemo(() => {
     // Remove unique IDs from views
-    const strippedViews = views.map(({ id, ...view }) => ({
+    const strippedViews = editor.views.map(({ id, ...view }) => ({
       ...view,
       modifiers: [...view.modifiers]
         .reverse()
@@ -49,7 +50,7 @@ const Home: NextPage = () => {
         ],
       },
     ]);
-  }, [views]);
+  }, [editor.views]);
 
   return (
     <div className={styles["page"]}>
@@ -64,13 +65,15 @@ const Home: NextPage = () => {
       <div className={styles["play-area"]}>
         <div className={styles["canvas"]}>
           <h2>Canvas</h2>
-          <Canvas views={views} onViewsChange={setViews} />
+          <Canvas editor={editor} onEditorChange={setEditor} />
         </div>
 
         <div className={styles["previews"]}>
           <h2>Preview</h2>
-          {views.length ? (
-            views.map((view, index) => <Preview key={index} view={view} />)
+          {editor.views.length ? (
+            editor.views.map((view, index) => (
+              <Preview key={index} view={view} />
+            ))
           ) : (
             <Preview />
           )}
@@ -81,7 +84,7 @@ const Home: NextPage = () => {
 
       <details>
         <summary>JSON representation</summary>
-        <pre>{JSON.stringify(views, null, 2)}</pre>
+        <pre>{JSON.stringify(editor.views, null, 2)}</pre>
       </details>
     </div>
   );

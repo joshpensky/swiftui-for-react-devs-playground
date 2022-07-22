@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { SetStateAction, createContext, useState, Dispatch } from "react";
 import cloneDeep from "lodash.clonedeep";
 import { IView, IViewModifier } from "../types";
 
@@ -159,6 +159,16 @@ export class Editor {
     return null;
   }
 
+  // TODO:
+  // updateView(id: string, view: IView): Editor {
+
+  // }
+
+  // TODO:
+  // updateModifier(id: string, modifier: IViewModifier): Editor {
+
+  // }
+
   /**
    * Removes a view from the tree.
    *
@@ -226,5 +236,9 @@ export class Editor {
 }
 
 export function useEditor() {
-  const [editor, setEditor] = useState(new Editor());
+  return useState(new Editor());
 }
+
+export const EditorContext = createContext<
+  [Editor, Dispatch<SetStateAction<Editor>>]
+>([new Editor(), () => {}]);

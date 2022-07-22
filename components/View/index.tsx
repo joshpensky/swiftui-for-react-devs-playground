@@ -1,23 +1,18 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
-import { ITextView, IView, IVStackView } from "../../types";
+import { IView } from "../../types";
 import { TextView } from "../TextView";
 import { VStackView } from "../VStackView";
 import { motion } from "framer-motion";
 import styles from "./styles.module.scss";
 import { FontViewModifier } from "../FontViewModifier";
 import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
+import { Editor, EditorContext } from "../../models/Editor";
 
 export const ZIndexContext = createContext(0);
 
-export function View({
-  view,
-  index,
-  onViewsChange,
-}: {
-  view: IView;
-  index: number;
-  onViewsChange: Dispatch<SetStateAction<IView[]>>;
-}) {
+export function View({ view }: { view: IView }) {
+  const [editor, onEditorChange] = useContext(EditorContext);
+
   let modifiers = null;
   if (view.modifiers.length) {
     modifiers = (
@@ -43,38 +38,26 @@ export function View({
                         id={modifier.id}
                         value={modifier.props.value}
                         onChange={(value) => {
-                          onViewsChange((views) => {
-                            return [
-                              ...views.slice(0, index),
-                              {
-                                ...views[index],
-                                modifiers: [
-                                  ...view.modifiers.slice(0, mIndex),
-                                  {
-                                    ...modifier,
-                                    props: { value },
-                                  },
-                                  ...view.modifiers.slice(mIndex + 1),
-                                ],
-                              },
-                              ...views.slice(index + 1),
-                            ];
-                          });
+                          // onViewsChange((views) => {
+                          //   return [
+                          //     ...views.slice(0, index),
+                          //     {
+                          //       ...views[index],
+                          //       modifiers: [
+                          //         ...view.modifiers.slice(0, mIndex),
+                          //         {
+                          //           ...modifier,
+                          //           props: { value },
+                          //         },
+                          //         ...view.modifiers.slice(mIndex + 1),
+                          //       ],
+                          //     },
+                          //     ...views.slice(index + 1),
+                          //   ];
+                          // });
                         }}
                         onRemove={() => {
-                          onViewsChange((views) => {
-                            return [
-                              ...views.slice(0, index),
-                              {
-                                ...views[index],
-                                modifiers: [
-                                  ...view.modifiers.slice(0, mIndex),
-                                  ...view.modifiers.slice(mIndex + 1),
-                                ],
-                              },
-                              ...views.slice(index + 1),
-                            ];
-                          });
+                          onEditorChange(editor.removeModifier(modifier.id));
                         }}
                       />
                     );
@@ -86,38 +69,26 @@ export function View({
                         id={modifier.id}
                         value={modifier.props.value}
                         onChange={(value) => {
-                          onViewsChange((views) => {
-                            return [
-                              ...views.slice(0, index),
-                              {
-                                ...views[index],
-                                modifiers: [
-                                  ...view.modifiers.slice(0, mIndex),
-                                  {
-                                    ...modifier,
-                                    props: { value },
-                                  },
-                                  ...view.modifiers.slice(mIndex + 1),
-                                ],
-                              },
-                              ...views.slice(index + 1),
-                            ];
-                          });
+                          // onViewsChange((views) => {
+                          //   return [
+                          //     ...views.slice(0, index),
+                          //     {
+                          //       ...views[index],
+                          //       modifiers: [
+                          //         ...view.modifiers.slice(0, mIndex),
+                          //         {
+                          //           ...modifier,
+                          //           props: { value },
+                          //         },
+                          //         ...view.modifiers.slice(mIndex + 1),
+                          //       ],
+                          //     },
+                          //     ...views.slice(index + 1),
+                          //   ];
+                          // });
                         }}
                         onRemove={() => {
-                          onViewsChange((views) => {
-                            return [
-                              ...views.slice(0, index),
-                              {
-                                ...views[index],
-                                modifiers: [
-                                  ...view.modifiers.slice(0, mIndex),
-                                  ...view.modifiers.slice(mIndex + 1),
-                                ],
-                              },
-                              ...views.slice(index + 1),
-                            ];
-                          });
+                          onEditorChange(editor.removeModifier(modifier.id));
                         }}
                       />
                     );
@@ -146,61 +117,33 @@ export function View({
               <VStackView
                 id={view.id}
                 content={view.props.children}
-                onChild={(view) => {
-                  onViewsChange((views) => {
-                    return [
-                      ...views.slice(0, index),
-                      {
-                        ...(views[index] as IVStackView),
-                        props: {
-                          children: [
-                            ...(views[index] as IVStackView).props.children,
-                            view,
-                          ],
-                        },
-                      },
-                      ...views.slice(index + 1),
-                    ];
-                  });
+                onChild={(child) => {
+                  onEditorChange(editor.insertView(child, view.id));
                 }}
                 onChildChange={(action) => {
-                  onViewsChange((views) => {
-                    return [
-                      ...views.slice(0, index),
-                      {
-                        ...(views[index] as IVStackView),
-                        props: {
-                          children:
-                            typeof action === "function"
-                              ? action(
-                                  (views[index] as IVStackView).props.children
-                                )
-                              : action,
-                        },
-                      },
-                      ...views.slice(index + 1),
-                    ];
-                  });
+                  // onViewsChange((views) => {
+                  //   return [
+                  //     ...views.slice(0, index),
+                  //     {
+                  //       ...(views[index] as IVStackView),
+                  //       props: {
+                  //         children:
+                  //           typeof action === "function"
+                  //             ? action(
+                  //                 (views[index] as IVStackView).props.children
+                  //               )
+                  //             : action,
+                  //       },
+                  //     },
+                  //     ...views.slice(index + 1),
+                  //   ];
+                  // });
                 }}
                 onModifier={(modifier) => {
-                  onViewsChange((views) => {
-                    return [
-                      ...views.slice(0, index),
-                      {
-                        ...views[index],
-                        modifiers: [...views[index].modifiers, modifier],
-                      },
-                      ...views.slice(index + 1),
-                    ];
-                  });
+                  onEditorChange(editor.insertModifier(modifier, view.id));
                 }}
                 onRemove={() => {
-                  onViewsChange((views) => {
-                    return [
-                      ...views.slice(0, index),
-                      ...views.slice(index + 1),
-                    ];
-                  });
+                  onEditorChange(editor.removeView(view.id));
                 }}
               >
                 {modifiers}
@@ -214,36 +157,22 @@ export function View({
                 id={view.id}
                 value={view.props.value}
                 onChange={(value) => {
-                  onViewsChange((views) => {
-                    return [
-                      ...views.slice(0, index),
-                      {
-                        ...(views[index] as ITextView),
-                        props: { value },
-                      },
-                      ...views.slice(index + 1),
-                    ];
-                  });
+                  // onViewsChange((views) => {
+                  //   return [
+                  //     ...views.slice(0, index),
+                  //     {
+                  //       ...(views[index] as ITextView),
+                  //       props: { value },
+                  //     },
+                  //     ...views.slice(index + 1),
+                  //   ];
+                  // });
                 }}
                 onModifier={(modifier) => {
-                  onViewsChange((views) => {
-                    return [
-                      ...views.slice(0, index),
-                      {
-                        ...views[index],
-                        modifiers: [...views[index].modifiers, modifier],
-                      },
-                      ...views.slice(index + 1),
-                    ];
-                  });
+                  onEditorChange(editor.insertModifier(modifier, view.id));
                 }}
                 onRemove={() => {
-                  onViewsChange((views) => {
-                    return [
-                      ...views.slice(0, index),
-                      ...views.slice(index + 1),
-                    ];
-                  });
+                  onEditorChange(editor.removeView(view.id));
                 }}
               >
                 {modifiers}

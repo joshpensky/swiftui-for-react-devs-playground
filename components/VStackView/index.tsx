@@ -61,31 +61,37 @@ export function VStackView({
     }
   }, [isDragging, onDrag]);
 
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: "view",
-    collect: (monitor) => ({
-      isOver: !preview && monitor.isOver({ shallow: true }),
+  const [{ isOver }, drop] = useDrop(
+    () => ({
+      accept: "view",
+      collect: (monitor) => ({
+        isOver: !preview && monitor.isOver({ shallow: true }),
+      }),
+      canDrop(item, monitor) {
+        return monitor.isOver({ shallow: true });
+      },
+      drop(item, monitor) {
+        onChild?.(item as IView);
+      },
     }),
-    canDrop(item, monitor) {
-      return monitor.isOver({ shallow: true });
-    },
-    drop(item, monitor) {
-      onChild?.(item as IView);
-    },
-  }));
+    [onChild]
+  );
 
-  const [{ isModifierOver }, modifierDrop] = useDrop(() => ({
-    accept: "view-modifier",
-    collect: (monitor) => ({
-      isModifierOver: !preview && monitor.isOver({ shallow: true }),
+  const [{ isModifierOver }, modifierDrop] = useDrop(
+    () => ({
+      accept: "view-modifier",
+      collect: (monitor) => ({
+        isModifierOver: !preview && monitor.isOver({ shallow: true }),
+      }),
+      canDrop(item, monitor) {
+        return monitor.isOver({ shallow: true });
+      },
+      drop(item, monitor) {
+        onModifier?.(item as IViewModifier);
+      },
     }),
-    canDrop(item, monitor) {
-      return monitor.isOver({ shallow: true });
-    },
-    drop(item, monitor) {
-      onModifier?.(item as IViewModifier);
-    },
-  }));
+    [onModifier]
+  );
 
   const zIndex = useContext(ZIndexContext);
 
@@ -136,11 +142,7 @@ export function VStackView({
                     duration: 0.25,
                   }}
                 >
-                  <View
-                    view={view}
-                    index={index}
-                    onViewsChange={(action) => onChildChange?.(action)}
-                  />
+                  <View view={view} />
                 </motion.li>
               ))}
             </motion.ul>
