@@ -1,13 +1,11 @@
 import type { NextPage } from "next";
 import { useMemo, useState } from "react";
-import isEqual from "lodash.isequal";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from "./styles/index.module.scss";
 import { Preview } from "../components/Preview";
 import { Canvas } from "../components/Canvas";
-import { IView, IViewModifier } from "../types";
-import { Editor, useEditor } from "../models/Editor";
+import { Editor } from "../models/Editor";
 
 const code = `
 <p style={{ color: 'blue' }}>
@@ -16,7 +14,7 @@ const code = `
 `.trim();
 
 const Home: NextPage = () => {
-  const [editor, setEditor] = useEditor();
+  const [editor, setEditor] = useState(new Editor());
 
   const matched = useMemo(() => {
     return editor.equals(

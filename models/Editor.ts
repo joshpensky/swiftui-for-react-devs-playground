@@ -340,10 +340,6 @@ export class Editor {
   }
 }
 
-export function useEditor() {
-  return useState(new Editor());
-}
-
 export const EditorContext = createContext<
   [Editor, Dispatch<SetStateAction<Editor>>]
 >([new Editor(), () => {}]);

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FontViewModifier } from "../../FontViewModifier";
 import { VStackView } from "../../VStackView";
+import { ColorView } from "../../ColorView";
 
 export function DragLayer() {
   const { itemType, isDragging, item, currentOffset } = useDragLayer(
@@ -28,6 +29,9 @@ export function DragLayer() {
       case "view": {
         const view = item as IView;
         switch (view.type) {
+          case "Color": {
+            return <ColorView preview value="red" />;
+          }
           case "Text": {
             return <TextView preview value="" />;
           }

@@ -7,6 +7,7 @@ import styles from "./styles.module.scss";
 import { FontViewModifier } from "../FontViewModifier";
 import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
 import { EditorContext } from "../../models/Editor";
+import { ColorView } from "../ColorView";
 
 export const ZIndexContext = createContext(0);
 
@@ -90,6 +91,29 @@ export function View({ view }: { view: IView }) {
     <ZIndexContext.Provider value={zIndex + 1}>
       {(() => {
         switch (view.type) {
+          case "Color": {
+            return (
+              <ColorView
+                id={view.id}
+                value={view.props.value}
+                onChange={(value) => {
+                  onEditorChange(
+                    editor.updateView(view.id, {
+                      ...view,
+                      props: { value },
+                    })
+                  );
+                }}
+                onModifier={(modifier) => {
+                  onEditorChange(editor.insertModifier(modifier, view.id));
+                }}
+                onRemove={() => {
+                  onEditorChange(editor.removeView(view.id));
+                }}
+              />
+            );
+          }
+
           case "VStack": {
             return (
               <VStackView

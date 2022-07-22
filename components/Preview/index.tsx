@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { CSSProperties, Fragment } from "react";
 import { IView } from "../../types";
 import styles from "./styles.module.scss";
 
@@ -31,8 +31,20 @@ export function Preview({ view }: { view?: IView }) {
     });
 
     switch (view.type) {
+      case "Color": {
+        return (
+          <div
+            className={styles["color"]}
+            style={{ "--color": view.props.value } as CSSProperties}
+          />
+        );
+      }
       case "Text": {
-        return <p style={modifierStyles}>{view.props.value}</p>;
+        return (
+          <p className={styles["text"]} style={modifierStyles}>
+            {view.props.value}
+          </p>
+        );
       }
       case "VStack": {
         return (

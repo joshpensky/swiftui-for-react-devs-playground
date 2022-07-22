@@ -38,4 +38,13 @@ export interface IVStackView {
   modifiers: IViewModifier[];
 }
 
-export type IView = IVStackView | ITextView;
+export interface IColorView {
+  id: string;
+  type: "Color";
+  props: {
+    value: Color;
+  };
+  modifiers: IViewModifier[];
+}
+
+export type IView = IColorView | IVStackView | ITextView;

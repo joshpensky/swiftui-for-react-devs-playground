@@ -15,6 +15,7 @@ import * as Tabs from "@radix-ui/react-tabs";
 import styles from "./styles.module.scss";
 import { FontViewModifier } from "../../FontViewModifier";
 import { LibraryPreview } from "./LibraryPreview";
+import { ColorView } from "../../ColorView";
 
 export function Library({
   open,
@@ -106,6 +107,7 @@ export function Library({
                       orientation="vertical"
                     >
                       <Tabs.List className={styles["block-list"]}>
+                        <Tabs.Trigger value="color">Color</Tabs.Trigger>
                         <Tabs.Trigger value="text">Text</Tabs.Trigger>
                         <Tabs.Trigger value="vstack">
                           Vertical Stack
@@ -113,6 +115,20 @@ export function Library({
                       </Tabs.List>
 
                       <div className={styles["block-preview"]}>
+                        <Tabs.Content value="color">
+                          <LibraryPreview
+                            title="Color"
+                            description="A representation of a color that adapts to a given context."
+                            docs="https://developer.apple.com/documentation/swiftui/color"
+                          >
+                            <ColorView
+                              preview
+                              value="red"
+                              onDrag={() => onOpenChange(false)}
+                            />
+                          </LibraryPreview>
+                        </Tabs.Content>
+
                         <Tabs.Content value="text">
                           <LibraryPreview
                             title="Text"
