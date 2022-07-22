@@ -21,6 +21,78 @@ export class Editor {
   }
 
   /**
+   * Inserts the given view into the specified parent.
+   *
+   * @param view the view to insert
+   * @param parentId the ID of the parent, or null to insert top-level
+   * @returns a cloned editor with the given view
+   */
+  insertView(view: IView, parentId: string | null): Editor {
+    const views = cloneDeep(this._views);
+
+    if (!parentId) {
+      views.push(view);
+    } else {
+      const response = this.findView(parentId);
+      if (!response) {
+        throw new Error("Parent not found.");
+      }
+
+      let currentLevel = views;
+      response.viewPath.forEach((index, i) => {
+        let currentView = currentLevel[index];
+        if (i === response.viewPath.length - 1) {
+          if (currentView.type === "VStack") {
+            currentView.props.children.push(view);
+          } else {
+            throw new Error("Can't insert into parent.");
+          }
+        } else {
+          if (currentView.type === "VStack") {
+            currentLevel = currentView.props.children;
+          } else {
+            throw new Error("Invalid path.");
+          }
+        }
+      });
+    }
+
+    return new Editor(views);
+  }
+
+  /**
+   * Inserts the given view modifier onto the specified parent.
+   *
+   * @param modifier the view modifier to insert
+   * @param parentId the ID of the parent
+   * @returns a cloned editor with the given view modifier
+   */
+  insertModifier(modifier: IViewModifier, parentId: string): Editor {
+    const views = cloneDeep(this._views);
+
+    const response = this.findView(parentId);
+    if (!response) {
+      throw new Error("Parent not found.");
+    }
+
+    let currentLevel = views;
+    response.viewPath.forEach((index, i) => {
+      let currentView = currentLevel[index];
+      if (i === response.viewPath.length - 1) {
+        currentView.modifiers.push(modifier);
+      } else {
+        if (currentView.type === "VStack") {
+          currentLevel = currentView.props.children;
+        } else {
+          throw new Error("Invalid path.");
+        }
+      }
+    });
+
+    return new Editor(views);
+  }
+
+  /**
    * Finds a view in the tree with the given ID.
    *
    * @param id the ID to search for
