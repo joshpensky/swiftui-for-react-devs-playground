@@ -8,6 +8,7 @@ import { FontViewModifier } from "../FontViewModifier";
 import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
 import { EditorContext } from "../../models/Editor";
 import { ColorView } from "../ColorView";
+import { SpacerView } from "../SpacerView";
 
 export const ZIndexContext = createContext(0);
 
@@ -110,18 +111,16 @@ export function View({ view }: { view: IView }) {
                 onRemove={() => {
                   onEditorChange(editor.removeView(view.id));
                 }}
-              />
+              >
+                {modifiers}
+              </ColorView>
             );
           }
 
-          case "VStack": {
+          case "Spacer": {
             return (
-              <VStackView
+              <SpacerView
                 id={view.id}
-                content={view.props.children}
-                onChild={(child) => {
-                  onEditorChange(editor.insertView(child, view.id));
-                }}
                 onModifier={(modifier) => {
                   onEditorChange(editor.insertModifier(modifier, view.id));
                 }}
@@ -130,7 +129,7 @@ export function View({ view }: { view: IView }) {
                 }}
               >
                 {modifiers}
-              </VStackView>
+              </SpacerView>
             );
           }
 
@@ -158,6 +157,27 @@ export function View({ view }: { view: IView }) {
               </TextView>
             );
           }
+
+          case "VStack": {
+            return (
+              <VStackView
+                id={view.id}
+                content={view.props.children}
+                onChild={(child) => {
+                  onEditorChange(editor.insertView(child, view.id));
+                }}
+                onModifier={(modifier) => {
+                  onEditorChange(editor.insertModifier(modifier, view.id));
+                }}
+                onRemove={() => {
+                  onEditorChange(editor.removeView(view.id));
+                }}
+              >
+                {modifiers}
+              </VStackView>
+            );
+          }
+
           default: {
             return null;
           }

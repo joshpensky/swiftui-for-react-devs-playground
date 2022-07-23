@@ -59,10 +59,10 @@ const Home: NextPage = () => {
           <h2>Preview</h2>
           {editor.views.length ? (
             editor.views.map((view, index) => (
-              <Preview key={index} view={view} />
+              <Preview editor={editor} key={index} view={view} />
             ))
           ) : (
-            <Preview />
+            <Preview editor={editor} />
           )}
         </div>
       </div>

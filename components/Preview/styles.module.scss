@@ -69,6 +69,11 @@
     background-color: var(--color);
   }
 
+  .spacer {
+    display: flex;
+    flex: 1;
+  }
+
   .text {
     color: var(--color, black);
     font: var(--font, 16px sans-serif);
@@ -77,9 +82,11 @@
   }
 
   .vstack {
+    justify-content: center;
+    align-items: center;
     display: flex;
     flex-direction: column;
-    flex: 1;
+    // flex: 1;
     width: 100%;
   }
 }

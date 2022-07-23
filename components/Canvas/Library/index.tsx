@@ -16,6 +16,7 @@ import styles from "./styles.module.scss";
 import { FontViewModifier } from "../../FontViewModifier";
 import { LibraryPreview } from "./LibraryPreview";
 import { ColorView } from "../../ColorView";
+import { SpacerView } from "../../SpacerView";
 
 export function Library({
   open,
@@ -108,6 +109,7 @@ export function Library({
                     >
                       <Tabs.List className={styles["block-list"]}>
                         <Tabs.Trigger value="color">Color</Tabs.Trigger>
+                        <Tabs.Trigger value="spacer">Spacer</Tabs.Trigger>
                         <Tabs.Trigger value="text">Text</Tabs.Trigger>
                         <Tabs.Trigger value="vstack">
                           Vertical Stack
@@ -129,10 +131,23 @@ export function Library({
                           </LibraryPreview>
                         </Tabs.Content>
 
+                        <Tabs.Content value="spacer">
+                          <LibraryPreview
+                            title="Spacer"
+                            description="A flexible space that expands along the major axis of its containing stack layout, or on both axes if not contained in a stack."
+                            docs="https://developer.apple.com/documentation/swiftui/spacer"
+                          >
+                            <SpacerView
+                              preview
+                              onDrag={() => onOpenChange(false)}
+                            />
+                          </LibraryPreview>
+                        </Tabs.Content>
+
                         <Tabs.Content value="text">
                           <LibraryPreview
                             title="Text"
-                            description="Display text content."
+                            description="A view that displays one or more lines of read-only text."
                             docs="https://developer.apple.com/documentation/swiftui/text"
                           >
                             <TextView
@@ -146,7 +161,7 @@ export function Library({
                         <Tabs.Content value="vstack">
                           <LibraryPreview
                             title="Vertical Stack"
-                            description="Align views vertically."
+                            description="A view that arranges its children in a vertical line."
                             docs="https://developer.apple.com/documentation/swiftui/vstack"
                           >
                             <VStackView

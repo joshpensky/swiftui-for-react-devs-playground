@@ -1186,4 +1186,113 @@ describe("Editor", () => {
       ).toBeFalsy();
     });
   });
+
+  describe(".containsView(type:parentId:)", () => {
+    test("throws on invalid parent", () => {
+      expect(() => new Editor().containsView("Color", "abc123")).toThrowError();
+    });
+
+    test("finds nested view from top-level", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [
+              {
+                id: "def123",
+                type: "font",
+                props: {
+                  value: "body",
+                },
+              },
+            ],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Color",
+                  props: {
+                    value: "red",
+                  },
+                  modifiers: [],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ]).containsView("Color", null)
+      ).toBeTruthy();
+    });
+
+    test("finds nested view from nested parent", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [
+              {
+                id: "def123",
+                type: "font",
+                props: {
+                  value: "body",
+                },
+              },
+            ],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Color",
+                  props: {
+                    value: "red",
+                  },
+                  modifiers: [],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ]).containsView("Color", "abc124")
+      ).toBeTruthy();
+    });
+
+    test("returns false on not found", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [
+              {
+                id: "def123",
+                type: "font",
+                props: {
+                  value: "body",
+                },
+              },
+            ],
+          },
+        ]).containsView("Color", "abc123")
+      ).toBeFalsy();
+    });
+  });
 });

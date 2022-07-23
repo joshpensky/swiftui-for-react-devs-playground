@@ -1,8 +1,9 @@
 import { CSSProperties, Fragment } from "react";
+import { Editor } from "../../models/Editor";
 import { IView } from "../../types";
 import styles from "./styles.module.scss";
 
-export function Preview({ view }: { view?: IView }) {
+export function Preview({ editor, view }: { editor: Editor; view?: IView }) {
   function renderView(view: IView) {
     const modifierStyles: Record<string, any> = {};
     [...view.modifiers].reverse().forEach((modifier) => {
@@ -39,6 +40,11 @@ export function Preview({ view }: { view?: IView }) {
           />
         );
       }
+
+      case "Spacer": {
+        return <div className={styles["spacer"]} />;
+      }
+
       case "Text": {
         return (
           <p className={styles["text"]} style={modifierStyles}>
@@ -46,7 +52,15 @@ export function Preview({ view }: { view?: IView }) {
           </p>
         );
       }
+
       case "VStack": {
+        if (
+          editor.containsView("Spacer", view.id) ||
+          editor.containsView("Color", view.id)
+        ) {
+          modifierStyles["flex"] = 1;
+        }
+
         return (
           <div className={styles["vstack"]} style={modifierStyles}>
             {view.props.children.map((view) => (
@@ -55,6 +69,7 @@ export function Preview({ view }: { view?: IView }) {
           </div>
         );
       }
+
       default:
         return null;
     }

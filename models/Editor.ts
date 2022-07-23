@@ -1,9 +1,7 @@
-import { SetStateAction, createContext, useState, Dispatch } from "react";
+import { SetStateAction, createContext, Dispatch } from "react";
 import cloneDeep from "lodash.clonedeep";
 import { IView, IViewModifier } from "../types";
 import isEqual from "lodash.isequal";
-
-export type BlockType = "view" | "view-modifier";
 
 interface FindResponse<T> {
   viewPath: number[];
@@ -44,7 +42,7 @@ export class Editor {
         return modifier;
       });
 
-      if (view.type === "VStack") {
+      if ("children" in view.props) {
         viewsToVisit.unshift(...view.props.children);
       }
     }
@@ -80,7 +78,7 @@ export class Editor {
             throw new Error("Can't insert into parent.");
           }
         } else {
-          if (currentView.type === "VStack") {
+          if ("children" in currentView.props) {
             currentLevel = currentView.props.children;
           } else {
             throw new Error("Invalid path.");
@@ -96,7 +94,7 @@ export class Editor {
    * Inserts the given view modifier onto the specified parent.
    *
    * @param modifier the view modifier to insert
-   * @param parentId the ID of the parent
+   * @param parentId the ID of the parent, or null to insert top-level
    * @returns a cloned editor with the given view modifier
    */
   insertModifier(modifier: IViewModifier, parentId: string): Editor {
@@ -113,7 +111,7 @@ export class Editor {
       if (i === response.viewPath.length - 1) {
         currentView.modifiers.push(modifier);
       } else {
-        if (currentView.type === "VStack") {
+        if ("children" in currentView.props) {
           currentLevel = currentView.props.children;
         } else {
           throw new Error("Invalid path.");
@@ -145,7 +143,7 @@ export class Editor {
       const { viewPath, item } = response;
       if (item.id === id) {
         return { viewPath, item };
-      } else if (item.type === "VStack") {
+      } else if ("children" in item.props) {
         viewsToVisit.unshift(
           ...item.props.children.map((child, index) => {
             return { viewPath: [...viewPath, index], item: child };
@@ -179,7 +177,7 @@ export class Editor {
       let match = item.modifiers.find((modifier) => modifier.id === id);
       if (match) {
         return { viewPath, item: match };
-      } else if (item.type === "VStack") {
+      } else if ("children" in item.props) {
         viewsToVisit.unshift(
           ...item.props.children.map((child, index) => {
             return { viewPath: [...viewPath, index], item: child };
@@ -215,7 +213,7 @@ export class Editor {
           modifiers: currentView.modifiers, // Don't update the modifiers!
         };
       } else {
-        if (currentView.type === "VStack") {
+        if ("children" in currentView.props) {
           currentLevel = currentView.props.children;
         } else {
           throw new Error("Invalid path.");
@@ -253,7 +251,7 @@ export class Editor {
           }
         });
       } else {
-        if (currentView.type === "VStack") {
+        if ("children" in currentView.props) {
           currentLevel = currentView.props.children;
         } else {
           throw new Error("Invalid path.");
@@ -284,7 +282,7 @@ export class Editor {
         currentLevel.splice(index, 1);
       } else {
         let view = currentLevel[index];
-        if (view.type === "VStack") {
+        if ("children" in view.props) {
           currentLevel = view.props.children;
         } else {
           throw new Error("Invalid path.");
@@ -318,7 +316,7 @@ export class Editor {
         );
         view.modifiers.splice(modifierIndex, 1);
       } else {
-        if (view.type === "VStack") {
+        if ("children" in view.props) {
           currentLevel = view.props.children;
         } else {
           throw new Error("Invalid path.");
@@ -337,6 +335,45 @@ export class Editor {
    */
   equals(editor: Editor): boolean {
     return isEqual(this.anonymousViews, editor.anonymousViews);
+  }
+
+  /**
+   * Checks whether the given type of view exists somewhere within
+   * the parent's tree.
+   *
+   * @param type the type of view to search for
+   * @param parentId the ID of the parent to search within, or null to search top-level
+   * @returns whether the type of views is within the parent tree
+   */
+  containsView(type: IView["type"], parentId: string | null) {
+    let viewsToVisit: IView[];
+    if (!parentId) {
+      viewsToVisit = [...this._views];
+    } else {
+      const response = this.findView(parentId);
+      if (!response) {
+        throw new Error("Parent not found.");
+      } else if ("children" in response.item.props) {
+        viewsToVisit = [...response.item.props.children];
+      } else {
+        viewsToVisit = [];
+      }
+    }
+
+    while (viewsToVisit.length) {
+      const view = viewsToVisit.pop();
+      if (!view) {
+        break;
+      }
+
+      if (view.type === type) {
+        return true;
+      } else if ("children" in view.props) {
+        viewsToVisit.unshift(...view.props.children);
+      }
+    }
+
+    return false;
   }
 }
 

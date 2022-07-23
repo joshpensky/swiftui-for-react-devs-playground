@@ -1,4 +1,5 @@
 export type Color = "red" | "green" | "blue";
+export type Font = "body" | "title";
 
 export interface IForegroundColorViewModifier {
   id: string;
@@ -7,8 +8,6 @@ export interface IForegroundColorViewModifier {
     value: Color;
   };
 }
-
-export type Font = "body" | "title";
 
 export interface IFontViewModifier {
   id: string;
@@ -20,6 +19,15 @@ export interface IFontViewModifier {
 
 export type IViewModifier = IFontViewModifier | IForegroundColorViewModifier;
 
+export interface IVStackView {
+  id: string;
+  type: "VStack";
+  props: {
+    children: IView[];
+  };
+  modifiers: IViewModifier[];
+}
+
 export interface ITextView {
   id: string;
   type: "Text";
@@ -29,12 +37,10 @@ export interface ITextView {
   modifiers: IViewModifier[];
 }
 
-export interface IVStackView {
+export interface ISpacerView {
   id: string;
-  type: "VStack";
-  props: {
-    children: IView[];
-  };
+  type: "Spacer";
+  props: {};
   modifiers: IViewModifier[];
 }
 
@@ -47,4 +53,4 @@ export interface IColorView {
   modifiers: IViewModifier[];
 }
 
-export type IView = IColorView | IVStackView | ITextView;
+export type IView = IColorView | ISpacerView | ITextView | IVStackView;
