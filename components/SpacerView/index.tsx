@@ -29,9 +29,6 @@ export function SpacerView({
       props: {},
       modifiers: [],
     },
-    canDrag(monitor) {
-      return !!preview;
-    },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
@@ -66,7 +63,7 @@ export function SpacerView({
         isOver && styles["dropping"]
       )}
       style={{
-        cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
+        cursor: isDragging ? "grabbing" : "grab",
       }}
     >
       <div

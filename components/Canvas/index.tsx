@@ -26,7 +26,12 @@ export function Canvas({
         return monitor.isOver({ shallow: true });
       },
       drop(item, monitor) {
-        onEditorChange(editor.insertView(item as IView, null));
+        let view = item as IView;
+        if (editor.findView(view.id)) {
+          onEditorChange(editor.moveView(view.id, null));
+        } else {
+          onEditorChange(editor.insertView(view, null));
+        }
       },
     }),
     [editor]
@@ -40,7 +45,7 @@ export function Canvas({
         ref={drop}
         className={cx(styles["canvas"], isOver && styles["dropping"])}
       >
-        <LayoutGroup>
+        <LayoutGroup id="canvas">
           <DragLayer />
           {!editor.views.length ? (
             <motion.p>Drag views onto the canvas.</motion.p>

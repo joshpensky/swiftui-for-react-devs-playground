@@ -25,33 +25,33 @@ export function ColorView({
   const _id = useId();
   let id = propsId ?? _id;
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "view",
-    item: {
-      id,
-      type: "Color",
-      props: {
-        value: "red",
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: "view",
+      item: {
+        id,
+        type: "Color",
+        props: {
+          value,
+        },
+        modifiers: [],
       },
-      modifiers: [],
-    },
-    canDrag(monitor) {
-      return !!preview;
-    },
-    end(draggedItem, monitor) {
-      if (monitor.didDrop()) {
-        setTimeout(() => {
-          const select = document.getElementById(id);
-          if (select instanceof HTMLSelectElement) {
-            select.focus();
-          }
-        }, 10);
-      }
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
+      end(draggedItem, monitor) {
+        if (monitor.didDrop()) {
+          setTimeout(() => {
+            const select = document.getElementById(id);
+            if (select instanceof HTMLSelectElement) {
+              select.focus();
+            }
+          }, 10);
+        }
+      },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
     }),
-  }));
+    [value]
+  );
 
   useEffect(() => {
     if (isDragging) {
@@ -82,7 +82,7 @@ export function ColorView({
         isOver && styles["dropping"]
       )}
       style={{
-        cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
+        cursor: isDragging ? "grabbing" : "grab",
       }}
     >
       <div

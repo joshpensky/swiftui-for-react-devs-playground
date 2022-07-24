@@ -375,6 +375,17 @@ export class Editor {
 
     return false;
   }
+
+  moveView(id: string, parentId: string | null) {
+    let response = this.findView(id);
+    if (!response) {
+      throw new Error("View not found.");
+    }
+
+    let editor = this.removeView(id);
+    editor = editor.insertView(response.item, parentId);
+    return editor;
+  }
 }
 
 export const EditorContext = createContext<

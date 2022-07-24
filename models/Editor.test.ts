@@ -1295,4 +1295,128 @@ describe("Editor", () => {
       ).toBeFalsy();
     });
   });
+
+  describe("moveView(id:parentId:)", () => {
+    test("throws error on invalid view ID", () => {
+      expect(() => new Editor().moveView("abc123", null)).toThrowError();
+    });
+
+    test("moves top-level view to nested stack", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [],
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc125",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+        ]).moveView("abc125", "abc124")
+      ).toEqual(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Text",
+                  props: {
+                    value: "Text",
+                  },
+                  modifiers: [],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ])
+      );
+    });
+
+    test("moves nested view to top-level", () => {
+      expect(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [
+                {
+                  id: "abc125",
+                  type: "Text",
+                  props: {
+                    value: "Text",
+                  },
+                  modifiers: [],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ]).moveView("abc125", null)
+      ).toEqual(
+        new Editor([
+          {
+            id: "abc123",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc124",
+            type: "VStack",
+            props: {
+              children: [],
+            },
+            modifiers: [],
+          },
+          {
+            id: "abc125",
+            type: "Text",
+            props: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+        ])
+      );
+    });
+  });
 });

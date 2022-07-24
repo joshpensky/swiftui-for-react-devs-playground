@@ -13,13 +13,13 @@ import { IView, IViewModifier } from "../../types";
 import styles from "./styles.module.scss";
 import { motion } from "framer-motion";
 import { View, ZIndexContext } from "../View";
+import { EditorContext } from "../../models/Editor";
 
 export function VStackView({
   children,
   content,
   onDrag,
   onRemove,
-  onChild,
   onModifier,
   preview,
   id: propsId,
@@ -28,30 +28,31 @@ export function VStackView({
   preview?: boolean;
   content: IView[];
   onDrag?(): void;
-  onChild?(view: IView): void;
   onModifier?(modifier: IViewModifier): void;
   onRemove?(): void;
 }>) {
   const _id = useId();
   let id = propsId ?? _id;
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "view",
-    item: {
-      id,
-      type: "VStack",
-      props: {
-        children: [],
+  const [editor, onEditorChange] = useContext(EditorContext);
+
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: "view",
+      item: {
+        id,
+        type: "VStack",
+        props: {
+          children: content,
+        },
+        modifiers: [],
       },
-      modifiers: [],
-    },
-    canDrag(monitor) {
-      return !!preview;
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
     }),
-  }));
+    [content]
+  );
 
   useEffect(() => {
     if (isDragging) {
@@ -69,10 +70,15 @@ export function VStackView({
         return monitor.isOver({ shallow: true });
       },
       drop(item, monitor) {
-        onChild?.(item as IView);
+        let view = item as IView;
+        if (editor.findView(view.id)) {
+          onEditorChange(editor.moveView(view.id, id));
+        } else {
+          onEditorChange(editor.insertView(view, id));
+        }
       },
     }),
-    [onChild]
+    [editor]
   );
 
   const [{ isModifierOver: isModifierOverTop }, modifierDropTop] = useDrop(
@@ -120,7 +126,7 @@ export function VStackView({
         isModifierOver && styles["modifier-dropping"]
       )}
       style={{
-        cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
+        cursor: isDragging ? "grabbing" : "grab",
       }}
     >
       <div className={styles["wrapper"]}>

@@ -35,34 +35,34 @@ export function TextView({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "view",
-    item: {
-      id,
-      type: "Text",
-      props: {
-        value: "Text",
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: "view",
+      item: {
+        id,
+        type: "Text",
+        props: {
+          value,
+        },
+        modifiers: [],
       },
-      modifiers: [],
-    },
-    canDrag(monitor) {
-      return !!preview;
-    },
-    end(draggedItem, monitor) {
-      if (monitor.didDrop()) {
-        setTimeout(() => {
-          const input = document.getElementById(id);
-          if (input instanceof HTMLInputElement) {
-            input.focus();
-            input.setSelectionRange(0, input.value.length);
-          }
-        }, 10);
-      }
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
+      end(draggedItem, monitor) {
+        if (monitor.didDrop()) {
+          setTimeout(() => {
+            const input = document.getElementById(id);
+            if (input instanceof HTMLInputElement) {
+              input.focus();
+              input.setSelectionRange(0, input.value.length);
+            }
+          }, 10);
+        }
+      },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
     }),
-  }));
+    [value]
+  );
 
   useEffect(() => {
     if (isDragging) {
@@ -83,14 +83,6 @@ export function TextView({
     [onModifier]
   );
 
-  // const widthRef = useRef<HTMLDivElement>(null);
-  // useLayoutEffect(() => {
-  //   const rect = widthRef.current?.getBoundingClientRect();
-  //   if (inputRef.current) {
-  //     inputRef.current.style.width = `${(rect?.width ?? 0) + 10}px`;
-  //   }
-  // }, [value]);
-
   return (
     <div
       ref={drag}
@@ -101,7 +93,7 @@ export function TextView({
         isOver && styles["dropping"]
       )}
       style={{
-        cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
+        cursor: isDragging ? "grabbing" : "grab",
       }}
     >
       <div

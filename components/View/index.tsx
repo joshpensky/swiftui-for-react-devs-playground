@@ -162,9 +162,6 @@ export function View({ view }: { view: IView }) {
               <VStackView
                 id={view.id}
                 content={view.props.children}
-                onChild={(child) => {
-                  onEditorChange(editor.insertView(child, view.id));
-                }}
                 onModifier={(modifier) => {
                   onEditorChange(editor.insertModifier(modifier, view.id));
                 }}

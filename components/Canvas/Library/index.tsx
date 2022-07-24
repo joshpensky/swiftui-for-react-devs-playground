@@ -152,7 +152,7 @@ export function Library({
                           >
                             <TextView
                               preview
-                              value=""
+                              value="Text"
                               onDrag={() => onOpenChange(false)}
                             />
                           </LibraryPreview>

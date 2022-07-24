@@ -31,16 +31,16 @@ export function DragLayer() {
         const view = item as IView;
         switch (view.type) {
           case "Color": {
-            return <ColorView preview value="red" />;
+            return <ColorView preview value={view.props.value} />;
           }
           case "Spacer": {
             return <SpacerView preview />;
           }
           case "Text": {
-            return <TextView preview value="" />;
+            return <TextView preview value={view.props.value} />;
           }
           case "VStack": {
-            return <VStackView preview content={[]} />;
+            return <VStackView preview content={view.props.children} />;
           }
         }
       }
