@@ -1,4 +1,11 @@
-import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
+import {
+  PropsWithChildren,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
 import { motion } from "framer-motion";
@@ -77,7 +84,7 @@ export function TextView({
   );
 
   const widthRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const rect = widthRef.current?.getBoundingClientRect();
     if (inputRef.current) {
       inputRef.current.style.width = `${(rect?.width ?? 0) + 10}px`;

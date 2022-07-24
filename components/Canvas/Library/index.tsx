@@ -28,7 +28,7 @@ export function Library({
   const dragHandleRef = useRef(null);
   const controls = useDragControls();
   const [tab, setTab] = useState("views");
-  const [viewTab, setViewTab] = useState("text");
+  const [viewTab, setViewTab] = useState("color");
   const [viewModifierTab, setViewModifierTab] = useState("font");
 
   return (
