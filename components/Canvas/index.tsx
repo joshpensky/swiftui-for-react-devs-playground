@@ -46,13 +46,12 @@ export function Canvas({
             <motion.p>Drag views onto the canvas.</motion.p>
           ) : (
             <div className={styles["views-container"]}>
-              <motion.ul className={styles["views"]} /*layout*/>
+              <motion.ul className={styles["views"]} layout="position">
                 {editor.views.map((view, index) => {
                   return (
                     <motion.li
                       key={view.id}
-                      // layout="position"
-                      // layoutId={view.id}
+                      layoutId={view.id}
                       transition={{
                         type: "spring",
                         bounce: 0,

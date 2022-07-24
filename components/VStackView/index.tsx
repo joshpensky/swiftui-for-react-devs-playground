@@ -146,12 +146,11 @@ export function VStackView({
             style={{ "--z-index": zIndex } as CSSProperties}
           >
             {!!content.length && (
-              <motion.ul className={styles["views"]} /*layout*/>
+              <motion.ul className={styles["views"]} layout="position">
                 {content.map((view, index) => (
                   <motion.li
                     key={view.id}
-                    // layout="position"
-                    // layoutId={view.id}
+                    layoutId={view.id}
                     transition={{
                       type: "spring",
                       bounce: 0,

@@ -75,11 +75,7 @@ export function DragLayer() {
           y: currentOffset?.y ?? 0,
           opacity: 0.9,
         }}
-        exit={{ opacity: 0, transition: { duration: 0.2 } }}
-        transition={{
-          duration: 0,
-          layout: { duration: 0.2 },
-        }}
+        transition={{ duration: 0 }}
         layoutId={item.id}
         hidden={!currentOffset}
       >

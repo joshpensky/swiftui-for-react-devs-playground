@@ -18,14 +18,13 @@ export function View({ view }: { view: IView }) {
   let modifiers = null;
   if (view.modifiers.length) {
     modifiers = (
-      <motion.ul /*layout*/ className={styles["modifiers"]}>
+      <motion.ul className={styles["modifiers"]} layout="position">
         {view.modifiers.map((modifier, mIndex) => {
           return (
             <motion.li
               key={modifier.id}
               className="vm-container"
-              // layout="position"
-              // layoutId={modifier.id}
+              layoutId={modifier.id}
               transition={{
                 type: "spring",
                 bounce: 0,

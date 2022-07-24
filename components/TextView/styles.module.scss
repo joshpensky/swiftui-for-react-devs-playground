@@ -32,11 +32,9 @@
   }
 
   input {
-    width: 175px;
     border: none;
     background-color: white;
-    padding: 5px;
-    margin-inline: 5px;
+    padding: 0;
     border-radius: 5px;
     font-size: 13.5px;
 
@@ -84,15 +82,23 @@
     }
   }
 
-  div[aria-hidden="true"] {
-    position: absolute;
-    user-select: none;
-    pointer-events: none;
-    opacity: 0;
+  .input {
+    position: relative;
+    margin-inline: 5px;
 
     pre {
       font-size: 13.5px;
+      padding: 5px;
       font-family: inherit;
+      user-select: none;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    input {
+      padding: 5px;
+      position: absolute;
+      inset: 0;
     }
   }
 }

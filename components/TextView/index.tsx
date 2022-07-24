@@ -83,13 +83,13 @@ export function TextView({
     [onModifier]
   );
 
-  const widthRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-    const rect = widthRef.current?.getBoundingClientRect();
-    if (inputRef.current) {
-      inputRef.current.style.width = `${(rect?.width ?? 0) + 10}px`;
-    }
-  }, [value]);
+  // const widthRef = useRef<HTMLDivElement>(null);
+  // useLayoutEffect(() => {
+  //   const rect = widthRef.current?.getBoundingClientRect();
+  //   if (inputRef.current) {
+  //     inputRef.current.style.width = `${(rect?.width ?? 0) + 10}px`;
+  //   }
+  // }, [value]);
 
   return (
     <div
@@ -109,23 +109,22 @@ export function TextView({
         className={cx(styles["container"], isOver && styles["dropping"])}
       >
         <pre>Text(&quot;</pre>
-        <input
-          ref={inputRef}
-          id={id}
-          name={id}
-          type="text"
-          placeholder="Content"
-          value={value}
-          onChange={(evt) => {
-            onChange?.(evt.target.value);
-          }}
-          disabled={preview}
-        />
-        <pre>&quot;)</pre>
-
-        <div ref={widthRef} aria-hidden="true">
-          <pre>{value || "Content"}</pre>
+        <div className={styles["input"]}>
+          <pre aria-hidden="true">{value || "Content"}</pre>
+          <input
+            ref={inputRef}
+            id={id}
+            name={id}
+            type="text"
+            placeholder="Content"
+            value={value}
+            onChange={(evt) => {
+              onChange?.(evt.target.value);
+            }}
+            disabled={preview}
+          />
         </div>
+        <pre>&quot;)</pre>
 
         {!preview && (
           <button type="button" onClick={() => onRemove?.()}>
