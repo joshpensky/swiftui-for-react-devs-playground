@@ -9,6 +9,7 @@ import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
 import { EditorContext } from "../../models/Editor";
 import { ColorView } from "../ColorView";
 import { SpacerView } from "../SpacerView";
+import { Flipped } from "react-flip-toolkit";
 
 export const ZIndexContext = createContext(0);
 
@@ -18,71 +19,63 @@ export function View({ view }: { view: IView }) {
   let modifiers = null;
   if (view.modifiers.length) {
     modifiers = (
-      <motion.ul /*layout*/ className={styles["modifiers"]}>
+      <ul className={styles["modifiers"]}>
         {view.modifiers.map((modifier, mIndex) => {
           return (
-            <motion.li
-              key={modifier.id}
-              className="vm-container"
-              // layout="position"
-              // layoutId={modifier.id}
-              transition={{
-                type: "spring",
-                bounce: 0,
-                duration: 0.25,
-              }}
-            >
-              {(() => {
-                switch (modifier.type) {
-                  case "font": {
-                    return (
-                      <FontViewModifier
-                        id={modifier.id}
-                        value={modifier.props.value}
-                        onChange={(value) => {
-                          onEditorChange(
-                            editor.updateModifier(modifier.id, {
-                              ...modifier,
-                              props: { value },
-                            })
-                          );
-                        }}
-                        onRemove={() => {
-                          onEditorChange(editor.removeModifier(modifier.id));
-                        }}
-                      />
-                    );
-                  }
+            <Flipped key={modifier.id} flipId={modifier.id}>
+              <li className="vm-container">
+                {(() => {
+                  switch (modifier.type) {
+                    case "font": {
+                      return (
+                        <FontViewModifier
+                          id={modifier.id}
+                          value={modifier.props.value}
+                          onChange={(value) => {
+                            onEditorChange(
+                              editor.updateModifier(modifier.id, {
+                                ...modifier,
+                                props: { value },
+                              })
+                            );
+                          }}
+                          onRemove={() => {
+                            onEditorChange(editor.removeModifier(modifier.id));
+                          }}
+                        />
+                      );
+                    }
 
-                  case "foregroundColor": {
-                    return (
-                      <ForegroundColorViewModifier
-                        id={modifier.id}
-                        value={modifier.props.value}
-                        onChange={(value) => {
-                          onEditorChange(
-                            editor.updateModifier(modifier.id, {
-                              ...modifier,
-                              props: { value },
-                            })
-                          );
-                        }}
-                        onRemove={() => {
-                          onEditorChange(editor.removeModifier(modifier.id));
-                        }}
-                      />
-                    );
-                  }
+                    case "foregroundColor": {
+                      return (
+                        <ForegroundColorViewModifier
+                          id={modifier.id}
+                          value={modifier.props.value}
+                          onChange={(value) => {
+                            onEditorChange(
+                              editor.updateModifier(modifier.id, {
+                                ...modifier,
+                                props: { value },
+                              })
+                            );
+                          }}
+                          onRemove={() => {
+                            onEditorChange(editor.removeModifier(modifier.id));
+                          }}
+                        />
+                      );
+                    }
 
-                  default: {
-                    return null;
+                    default: {
+                      return null;
+                    }
                   }
-                }
-              })()}
-            </motion.li>
+                })()}
+              </li>
+            </Flipped>
           );
         })}
-      </motion.ul>
+      </ul>
     );
   }
 

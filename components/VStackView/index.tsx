@@ -13,6 +13,9 @@ import { IView, IViewModifier } from "../../types";
 import styles from "./styles.module.scss";
 import { motion } from "framer-motion";
 import { View, ZIndexContext } from "../View";
+import { Flipped } from "react-flip-toolkit";
+import { Editor } from "../../models/Editor";
+import isEqual from "lodash.isequal";
 
 export function VStackView({
   children,
@@ -146,20 +149,13 @@ export function VStackView({
             style={{ "--z-index": zIndex } as CSSProperties}
           >
             {!!content.length && (
-              <motion.ul className={styles["views"]} /*layout*/>
+              <motion.ul className={styles["views"]}>
                 {content.map((view, index) => (
-                  <motion.li
-                    key={view.id}
-                    // layout="position"
-                    // layoutId={view.id}
-                    transition={{
-                      type: "spring",
-                      bounce: 0,
-                      duration: 0.25,
-                    }}
-                  >
-                    <View view={view} />
-                  </motion.li>
+                  <Flipped key={view.id} flipId={view.id} translate>
+                    <li>
+                      <View view={view} />
+                    </li>
+                  </Flipped>
                 ))}
               </motion.ul>
             )}

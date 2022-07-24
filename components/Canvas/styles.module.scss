@@ -1,3 +1,9 @@
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .canvas {
   display: flex;
   flex-direction: column;

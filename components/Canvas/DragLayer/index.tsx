@@ -10,6 +10,7 @@ import { FontViewModifier } from "../../FontViewModifier";
 import { VStackView } from "../../VStackView";
 import { ColorView } from "../../ColorView";
 import { SpacerView } from "../../SpacerView";
+import { Flipped } from "react-flip-toolkit";
 
 export function DragLayer() {
   const { itemType, isDragging, item, currentOffset } = useDragLayer(
@@ -67,24 +68,21 @@ export function DragLayer() {
   }
 
   return (
-    <motion.ul className={styles["layer"]}>
-      <motion.li
-        className={cx(styles["item"], "dragging")}
-        animate={{
-          x: currentOffset?.x ?? 0,
-          y: currentOffset?.y ?? 0,
-          opacity: 0.9,
-        }}
-        exit={{ opacity: 0, transition: { duration: 0.2 } }}
-        transition={{
-          duration: 0,
-          layout: { duration: 0.2 },
-        }}
-        layoutId={item.id}
-        hidden={!currentOffset}
-      >
-        {renderItem()}
-      </motion.li>
-    </motion.ul>
+    <ul className={styles["layer"]}>
+      <Flipped flipId={item.id} translate>
+        <motion.li
+          className={cx(styles["item"], "dragging")}
+          animate={{
+            x: currentOffset?.x ?? 0,
+            y: currentOffset?.y ?? 0,
+            opacity: 0.9,
+          }}
+          transition={{ duration: 0 }}
+          hidden={!currentOffset}
+        >
+          {renderItem()}
+        </motion.li>
+      </Flipped>
+    </ul>
   );
 }

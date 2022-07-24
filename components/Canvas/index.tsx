@@ -8,6 +8,7 @@ import { DragLayer } from "./DragLayer";
 import { LayoutGroup, motion } from "framer-motion";
 import { View } from "../View";
 import { Editor, EditorContext } from "../../models/Editor";
+import { Flipped, Flipper } from "react-flip-toolkit";
 
 export function Canvas({
   editor,
@@ -36,37 +37,30 @@ export function Canvas({
 
   return (
     <EditorContext.Provider value={[editor, onEditorChange]}>
-      <div
-        ref={drop}
-        className={cx(styles["canvas"], isOver && styles["dropping"])}
-      >
-        <LayoutGroup>
+      <div ref={drop} className={styles["dropzone"]}>
+        <Flipper
+          className={cx(styles["canvas"], isOver && styles["dropping"])}
+          flipKey={JSON.stringify(editor.views)}
+        >
           <DragLayer />
           {!editor.views.length ? (
             <motion.p>Drag views onto the canvas.</motion.p>
           ) : (
             <div className={styles["views-container"]}>
-              <motion.ul className={styles["views"]} /*layout*/>
+              <ul className={styles["views"]}>
                 {editor.views.map((view, index) => {
                   return (
-                    <motion.li
-                      key={view.id}
-                      // layout="position"
-                      // layoutId={view.id}
-                      transition={{
-                        type: "spring",
-                        bounce: 0,
-                        duration: 0.25,
-                      }}
-                    >
-                      <View view={view} />
-                    </motion.li>
+                    <Flipped key={view.id} flipId={view.id} translate>
+                      <li>
+                        <View view={view} />
+                      </li>
+                    </Flipped>
                   );
                 })}
-              </motion.ul>
+              </ul>
             </div>
           )}
-        </LayoutGroup>
+        </Flipper>
 
         <Library open={toolbarOpen} onOpenChange={setToolbarOpen} />
       </div>
