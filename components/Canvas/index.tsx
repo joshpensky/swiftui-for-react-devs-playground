@@ -5,7 +5,7 @@ import styles from "./styles.module.scss";
 import { IView } from "../../types";
 import { Library } from "./Library";
 import { DragLayer } from "./DragLayer";
-import { LayoutGroup, motion } from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { View } from "../View";
 import { Editor, EditorContext } from "../../models/Editor";
 
@@ -47,15 +47,28 @@ export function Canvas({
       >
         <LayoutGroup id="canvas">
           <DragLayer />
-          {!editor.views.length ? (
-            <motion.p>Drag views onto the canvas.</motion.p>
-          ) : (
-            <div className={styles["views-container"]}>
-              <motion.ul className={styles["views"]} layout="position">
-                {editor.views.map((view, index) => {
+
+          {!editor.views.length && (
+            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              Drag views onto the canvas.
+            </motion.p>
+          )}
+
+          <motion.div
+            className={styles["views-container"]}
+            key="canvas-views"
+            exit={{
+              opacity: 0,
+              transition: { duration: 0.25, when: "afterChildren" },
+            }}
+          >
+            <motion.ul className={styles["views"]} layout="position">
+              <AnimatePresence>
+                {editor.views.map((view) => {
                   return (
                     <motion.li
                       key={view.id}
+                      className={styles["view"]}
                       layoutId={view.id}
                       transition={{
                         type: "spring",
@@ -63,13 +76,32 @@ export function Canvas({
                         duration: 0.25,
                       }}
                     >
-                      <View view={view} />
+                      <motion.div
+                        aria-hidden="true"
+                        className={styles["poof"]}
+                        exit={{
+                          animation: `${styles["poof"]} 0.5s steps(7, end) forwards`,
+                        }}
+                      />
+
+                      <motion.div
+                        exit={{
+                          opacity: 0,
+                          transition: {
+                            duration: 0.25,
+                          },
+                        }}
+                      >
+                        <View view={view} />
+                      </motion.div>
                     </motion.li>
                   );
                 })}
-              </motion.ul>
-            </div>
-          )}
+              </AnimatePresence>
+            </motion.ul>
+          </motion.div>
+          {/* )}
+          </AnimatePresence> */}
         </LayoutGroup>
 
         <Library open={toolbarOpen} onOpenChange={setToolbarOpen} />

@@ -11,7 +11,7 @@ import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
 import { IView, IViewModifier } from "../../types";
 import styles from "./styles.module.scss";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { View, ZIndexContext } from "../View";
 import { EditorContext } from "../../models/Editor";
 
@@ -151,23 +151,22 @@ export function VStackView({
             )}
             style={{ "--z-index": zIndex } as CSSProperties}
           >
-            {!!content.length && (
-              <motion.ul className={styles["views"]} layout="position">
-                {content.map((view, index) => (
-                  <motion.li
-                    key={view.id}
-                    layoutId={view.id}
-                    transition={{
-                      type: "spring",
-                      bounce: 0,
-                      duration: 0.25,
-                    }}
-                  >
-                    <View view={view} />
-                  </motion.li>
-                ))}
-              </motion.ul>
-            )}
+            <motion.ul className={styles["views"]} layout="position">
+              {content.map((view, index) => (
+                <motion.li
+                  key={view.id}
+                  layoutId={view.id}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    type: "spring",
+                    bounce: 0,
+                    duration: 0.25,
+                  }}
+                >
+                  <View view={view} />
+                </motion.li>
+              ))}
+            </motion.ul>
           </div>
         </div>
 
