@@ -17,6 +17,10 @@
   border-radius: 15px;
   position: relative;
 
+  .dragging & {
+    opacity: 0;
+  }
+
   &.dropping {
     &::after {
       content: '';

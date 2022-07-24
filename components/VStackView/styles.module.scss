@@ -22,21 +22,13 @@
   position: relative;
   z-index: 2;
 
+  .dragging & {
+    opacity: 0;
+  }
+
   .modifier-dropping & {
     background-color: mix(#2868E4, #FFC328, 25%);
   }
-
-  // .modifier-dropping & {
-    // &::after {
-    //   content: '';
-    //   position: absolute;
-    //   inset: 0;
-      // box-shadow: inset 0 0 0 3px #2868E4;
-      // background-color: rgba(#2868E4, 0.25);
-    //   border-radius: 15px;
-    //   pointer-events: none;
-    // }
-  // }
 
   &:nth-child(1) {
     border-bottom-left-radius: 0;
