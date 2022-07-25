@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useId } from "react";
 import cx from "classnames";
 import { useDrag } from "react-dnd";
 import styles from "./styles.module.scss";
-import { Font } from "../../models/NewEditor";
+import { Font } from "../../models/Editor";
 
 export function FontViewModifier({
   value,

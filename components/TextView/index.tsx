@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useId, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
 import styles from "./styles.module.scss";
-import { ITextView, IViewModifier } from "../../models/NewEditor";
+import { ITextView, IViewModifier } from "../../models/Editor";
 
 export function TextView({
   children,

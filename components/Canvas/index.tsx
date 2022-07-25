@@ -6,7 +6,7 @@ import { Library } from "./Library";
 import { DragLayer } from "./DragLayer";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { View } from "../View";
-import { Editor, IView } from "../../models/NewEditor";
+import { Editor, IView } from "../../models/Editor";
 import { EditorContext } from "../../context/EditorContext";
 
 export function Canvas({

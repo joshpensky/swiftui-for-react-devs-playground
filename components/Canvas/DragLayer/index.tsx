@@ -1,5 +1,5 @@
 import { useDragLayer } from "react-dnd";
-import { IView, IViewModifier } from "../../../models/NewEditor";
+import { IView, IViewModifier } from "../../../models/Editor";
 import { ForegroundColorViewModifier } from "../../ForegroundColorViewModifier";
 import { TextView } from "../../TextView";
 import styles from "./styles.module.scss";

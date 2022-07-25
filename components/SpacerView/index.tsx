@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useId } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
 import styles from "./styles.module.scss";
-import { ISpacerView, IViewModifier } from "../../models/NewEditor";
+import { ISpacerView, IViewModifier } from "../../models/Editor";
 
 export function SpacerView({
   children,

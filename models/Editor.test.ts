@@ -1,34 +1,78 @@
-import { Editor } from "./Editor";
+import { Editor, EditorState } from "./Editor";
 
-describe("Editor", () => {
-  describe(".anonymousViews", () => {
-    test("strips all IDs from views and modifiers", () => {
-      expect(
-        new Editor([
+export const exampleState: EditorState = {
+  scope: {
+    items: [
+      { id: 1, title: "Do something", completed: true },
+      { id: 2, title: "Do something else", completed: false },
+    ],
+  },
+  tree: [
+    {
+      id: ":ab1:",
+      blockType: "view",
+      type: "ForEach",
+      args: {
+        data: "items",
+        id: "id",
+        scopeVariable: "item",
+        content: [
           {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
+            id: ":ab5:",
+            blockType: "view",
+            type: "HStack",
+            args: {
+              content: [
                 {
-                  id: "abc125",
+                  id: ":ab2:",
+                  blockType: "control",
+                  type: "if",
+                  args: {
+                    condition: "$0.completed",
+                    content: [
+                      {
+                        id: ":ab3:",
+                        blockType: "view",
+                        type: "Image",
+                        args: {
+                          systemName: "checkmark",
+                        },
+                        modifiers: [],
+                      },
+                    ],
+                  },
+                },
+                {
+                  id: ":ab4:",
+                  blockType: "view",
                   type: "Text",
-                  props: {
-                    value: "Text",
+                  args: {
+                    value: "$0.title",
                   },
                   modifiers: [
                     {
-                      id: "def123",
+                      id: ":cd1:",
+                      blockType: "modifier",
+                      type: "background",
+                      args: {
+                        content: [
+                          {
+                            id: ":ab9:",
+                            blockType: "view",
+                            type: "Color",
+                            args: {
+                              value: "red",
+                            },
+                            modifiers: [],
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      id: ":cd2:",
+                      blockType: "modifier",
                       type: "font",
-                      props: {
+                      args: {
                         value: "body",
                       },
                     },
@@ -38,90 +82,39 @@ describe("Editor", () => {
             },
             modifiers: [],
           },
-        ]).anonymousViews
-      ).toEqual([
-        {
-          type: "Text",
-          props: {
-            value: "Text",
-          },
-          modifiers: [],
-        },
-        {
-          type: "VStack",
-          props: {
-            children: [
-              {
-                type: "Text",
-                props: {
-                  value: "Text",
-                },
-                modifiers: [
-                  {
-                    type: "font",
-                    props: {
-                      value: "body",
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-          modifiers: [],
-        },
-      ]);
-    });
-  });
+        ],
+      },
+      modifiers: [],
+    },
+  ],
+};
 
-  describe(".insertView(view:parentId:)", () => {
-    test("throws on unknown parent ID", () => {
+describe("NewEditor", () => {
+  describe(".insert(blockOrModifier:id:)", () => {
+    test("throws error on modifier in top-level", () => {
       expect(() =>
-        new Editor().insertView(
+        new Editor({ scope: {}, tree: [] }).insert(
           {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
+            id: ":cd1:",
+            blockType: "modifier",
+            type: "font",
+            args: {
+              value: "title",
             },
-            modifiers: [],
           },
-          "abc124"
+          null
         )
-      ).toThrowError();
+      ).toThrowError(new Error("Cannot add modifier to root state."));
     });
 
-    test("throws on invalid parent ID", () => {
-      expect(() =>
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ]).insertView(
-          {
-            id: "abc124",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          "abc123"
-        )
-      ).toThrowError();
-    });
-
-    test("inserts into top-level without parent ID specified", () => {
+    test("adds block (control or view) to top-level", () => {
       expect(
-        new Editor().insertView(
+        new Editor({ scope: {}, tree: [] }).insert(
           {
-            id: "abc123",
+            id: ":ab1:",
+            blockType: "view",
             type: "Text",
-            props: {
+            args: {
               value: "Text",
             },
             modifiers: [],
@@ -129,1009 +122,558 @@ describe("Editor", () => {
           null
         )
       ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-
-    test("inserts into nested parent", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).insertView(
-          {
-            id: "abc126",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          "abc124"
-        )
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-                {
-                  id: "abc126",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-  });
-
-  describe(".insertModifier(modifier:parentId:)", () => {
-    test("throws on unknown parent ID", () => {
-      expect(() =>
-        new Editor().insertModifier(
-          {
-            id: "def123",
-            type: "font",
-            props: {
-              value: "body",
-            },
-          },
-          "abc123"
-        )
-      ).toThrowError();
-    });
-
-    test("inserts on specified parent view", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ]).insertModifier(
-          {
-            id: "def123",
-            type: "font",
-            props: {
-              value: "body",
-            },
-          },
-          "abc123"
-        )
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-        ])
-      );
-    });
-
-    test("inserts on specified parent nested view", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [
-                    {
-                      id: "def123",
-                      type: "font",
-                      props: {
-                        value: "body",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).insertModifier(
-          {
-            id: "def124",
-            type: "font",
-            props: {
-              value: "body",
-            },
-          },
-          "abc125"
-        )
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [
-                    {
-                      id: "def123",
-                      type: "font",
-                      props: {
-                        value: "body",
-                      },
-                    },
-                    {
-                      id: "def124",
-                      type: "font",
-                      props: {
-                        value: "body",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-  });
-
-  describe(".findView(id:)", () => {
-    test("returns null in empty editor", () => {
-      expect(new Editor().findView("abc123")).toEqual(null);
-    });
-
-    test("returns null for mismatched IDs", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ]).findView("abc124")
-      ).toEqual(null);
-    });
-
-    test("returns the view with the given ID", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ]).findView("abc123")
-      ).toEqual({
-        viewPath: [0],
-        item: {
-          id: "abc123",
-          type: "Text",
-          props: {
-            value: "Text",
-          },
-          modifiers: [],
-        },
-      });
-    });
-
-    test("returns the nested view with the given ID", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).findView("abc125")
-      ).toEqual({
-        viewPath: [1, 0],
-        item: {
-          id: "abc125",
-          type: "Text",
-          props: {
-            value: "Text",
-          },
-          modifiers: [],
-        },
-      });
-    });
-  });
-
-  describe(".findModifier(id:)", () => {
-    test("returns null in empty editor", () => {
-      expect(new Editor().findModifier("abc123")).toEqual(null);
-    });
-
-    test("returns null for mismatched IDs", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-        ]).findModifier("def124")
-      ).toEqual(null);
-    });
-
-    test("returns the modifier with the given ID", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-        ]).findModifier("def123")
-      ).toEqual({
-        viewPath: [0],
-        item: {
-          id: "def123",
-          type: "font",
-          props: {
-            value: "body",
-          },
-        },
-      });
-    });
-
-    test("returns the nested view with the given ID", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [
-                    {
-                      id: "def124",
-                      type: "font",
-                      props: {
-                        value: "body",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).findModifier("def124")
-      ).toEqual({
-        viewPath: [1, 0],
-        item: {
-          id: "def124",
-          type: "font",
-          props: {
-            value: "body",
-          },
-        },
-      });
-    });
-  });
-
-  describe(".updateView(id:view:)", () => {
-    test("throws on invalid view ID", () => {
-      expect(() =>
-        new Editor().updateView("abc123", {
-          id: "abc123",
-          type: "Text",
-          props: {
-            value: "Text",
-          },
-          modifiers: [],
-        })
-      ).toThrowError();
-    });
-
-    test("updates a top-level view", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ]).updateView("abc123", {
-          id: "abc123",
-          type: "Text",
-          props: {
-            value: "Different text",
-          },
-          modifiers: [],
-        })
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Different text",
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-
-    test("updates a nested view", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).updateView("abc125", {
-          id: "abc125",
-          type: "Text",
-          props: {
-            value: "Different text",
-          },
-          modifiers: [],
-        })
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Different text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-  });
-
-  describe(".updateModifier(id:modifier:)", () => {
-    test("throws on invalid view ID", () => {
-      expect(() =>
-        new Editor().updateModifier("def123", {
-          id: "def123",
-          type: "font",
-          props: {
-            value: "body",
-          },
-        })
-      ).toThrowError();
-    });
-
-    test("updates modifier on top-level view", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-        ]).updateModifier("def123", {
-          id: "def123",
-          type: "font",
-          props: {
-            value: "title",
-          },
-        })
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "title",
-                },
-              },
-            ],
-          },
-        ])
-      );
-    });
-
-    test("updates modifier on nested view", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [
-                    {
-                      id: "def123",
-                      type: "font",
-                      props: {
-                        value: "body",
-                      },
-                    },
-                    {
-                      id: "def124",
-                      type: "foregroundColor",
-                      props: {
-                        value: "red",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).updateModifier("def124", {
-          id: "def124",
-          type: "foregroundColor",
-          props: {
-            value: "green",
-          },
-        })
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [
-                    {
-                      id: "def123",
-                      type: "font",
-                      props: {
-                        value: "body",
-                      },
-                    },
-                    {
-                      id: "def124",
-                      type: "foregroundColor",
-                      props: {
-                        value: "green",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-  });
-
-  describe(".removeView(id:)", () => {
-    test("throws on invalid view ID", () => {
-      expect(() => new Editor().removeView("abc123")).toThrowError();
-    });
-
-    test("removes top-level view from editor", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ]).removeView("abc123")
-      ).toEqual(new Editor([]));
-    });
-
-    test("removes nested view from editor", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).removeView("abc125")
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [],
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-  });
-
-  describe(".removeModifier(id:)", () => {
-    test("throws on invalid view ID", () => {
-      expect(() => new Editor().removeModifier("def123")).toThrowError();
-    });
-
-    test("removes modifier on top-level view from editor", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-              {
-                id: "def124",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-        ]).removeModifier("def123")
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def124",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-        ])
-      );
-    });
-
-    test("removes modifier on nested view from editor", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [
-                    {
-                      id: "def124",
-                      type: "font",
-                      props: {
-                        value: "body",
-                      },
-                    },
-                  ],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).removeModifier("def124")
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-  });
-
-  describe(".equals(editor:)", () => {
-    test("equality for empty editors", () => {
-      expect(new Editor().equals(new Editor())).toBeTruthy();
-    });
-
-    test("equality for same editor structure", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).equals(
-          new Editor([
+        new Editor({
+          scope: {},
+          tree: [
             {
-              id: "abc456",
+              id: ":ab1:",
+              blockType: "view",
               type: "Text",
-              props: {
+              args: {
+                value: "Text",
+              },
+              modifiers: [],
+            },
+          ],
+        })
+      );
+    });
+
+    test("throws error on parent not found", () => {
+      expect(() =>
+        new Editor({ scope: {}, tree: [] }).insert(
+          {
+            id: ":ab1:",
+            blockType: "modifier",
+            type: "font",
+            args: {
+              value: "title",
+            },
+          },
+          ":ab2:"
+        )
+      ).toThrowError(new Error("Parent not found."));
+    });
+
+    test("throws error when modifier inserted into modifier", () => {
+      expect(() =>
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "Text",
+              args: {
                 value: "Text",
               },
               modifiers: [
                 {
-                  id: "def456",
+                  id: ":cd1:",
+                  blockType: "modifier",
                   type: "font",
-                  props: {
+                  args: {
                     value: "body",
                   },
                 },
               ],
             },
+          ],
+        }).insert(
+          {
+            id: ":cd2:",
+            blockType: "modifier",
+            type: "font",
+            args: {
+              value: "body",
+            },
+          },
+          ":cd1:"
+        )
+      ).toThrowError(new Error("Cannot add modifier to modifier."));
+    });
+
+    test("throws error when modifier inserted into control", () => {
+      expect(() =>
+        new Editor({
+          scope: {},
+          tree: [
             {
-              id: "abc457",
-              type: "VStack",
-              props: {
-                children: [
+              id: ":ab1:",
+              blockType: "control",
+              type: "if",
+              args: {
+                condition: "true",
+                content: [],
+              },
+            },
+          ],
+        }).insert(
+          {
+            id: ":cd2:",
+            blockType: "modifier",
+            type: "font",
+            args: {
+              value: "body",
+            },
+          },
+          ":ab1:"
+        )
+      ).toThrowError(new Error("Cannot add modifier to control."));
+    });
+
+    test("adds modifier to view", () => {
+      expect(
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "HStack",
+              args: {
+                content: [],
+              },
+              modifiers: [],
+            },
+          ],
+        }).insert(
+          {
+            id: ":cd1:",
+            blockType: "modifier",
+            type: "font",
+            args: {
+              value: "body",
+            },
+          },
+          ":ab1:"
+        )
+      ).toEqual(
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "HStack",
+              args: {
+                content: [],
+              },
+              modifiers: [
+                {
+                  id: ":cd1:",
+                  blockType: "modifier",
+                  type: "font",
+                  args: {
+                    value: "body",
+                  },
+                },
+              ],
+            },
+          ],
+        })
+      );
+    });
+
+    test("throws error on invalid parent", () => {
+      expect(() =>
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "Text",
+              args: {
+                value: "Text",
+              },
+              modifiers: [],
+            },
+          ],
+        }).insert(
+          {
+            id: ":ab2:",
+            blockType: "view",
+            type: "Text",
+            args: {
+              value: "Text",
+            },
+            modifiers: [],
+          },
+          ":ab1:"
+        )
+      ).toThrowError(new Error("Invalid parent."));
+    });
+
+    test("inserts view or control to given parent", () => {
+      expect(
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "HStack",
+              args: {
+                content: [
                   {
-                    id: "abc458",
-                    type: "Text",
-                    props: {
-                      value: "Text",
+                    id: ":ab2:",
+                    blockType: "control",
+                    type: "if",
+                    args: {
+                      condition: "true",
+                      content: [],
+                    },
+                  },
+                ],
+              },
+              modifiers: [],
+            },
+          ],
+        }).insert(
+          {
+            id: ":ab3",
+            blockType: "view",
+            type: "Color",
+            args: {
+              value: "blue",
+            },
+            modifiers: [],
+          },
+          ":ab2:"
+        )
+      ).toEqual(
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "HStack",
+              args: {
+                content: [
+                  {
+                    id: ":ab2:",
+                    blockType: "control",
+                    type: "if",
+                    args: {
+                      condition: "true",
+                      content: [
+                        {
+                          id: ":ab3",
+                          blockType: "view",
+                          type: "Color",
+                          args: {
+                            value: "blue",
+                          },
+                          modifiers: [],
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+              modifiers: [],
+            },
+          ],
+        })
+      );
+    });
+  });
+
+  describe(".select(id:)", () => {
+    test("searches content within blocks", () => {
+      expect(new Editor(exampleState).select(":ab2:")).toEqual({
+        path: [
+          { type: "block", index: 0 },
+          { type: "block", index: 0 },
+          { type: "block", index: 0 },
+        ],
+        item: {
+          id: ":ab2:",
+          blockType: "control",
+          type: "if",
+          args: {
+            condition: "$0.completed",
+            content: [
+              {
+                id: ":ab3:",
+                blockType: "view",
+                type: "Image",
+                args: {
+                  systemName: "checkmark",
+                },
+                modifiers: [],
+              },
+            ],
+          },
+        },
+      });
+    });
+
+    test("searches content within modifiers", () => {
+      expect(new Editor(exampleState).select(":ab9:")).toEqual({
+        path: [
+          { type: "block", index: 0 },
+          { type: "block", index: 0 },
+          { type: "block", index: 1 },
+          { type: "modifier", index: 0 },
+          { type: "block", index: 0 },
+        ],
+        item: {
+          id: ":ab9:",
+          blockType: "view",
+          type: "Color",
+          args: {
+            value: "red",
+          },
+          modifiers: [],
+        },
+      });
+    });
+
+    test("searches content within modifiers", () => {
+      expect(new Editor(exampleState).select(":cd2:")).toEqual({
+        path: [
+          { type: "block", index: 0 },
+          { type: "block", index: 0 },
+          { type: "block", index: 1 },
+          { type: "modifier", index: 1 },
+        ],
+        item: {
+          id: ":cd2:",
+          blockType: "modifier",
+          type: "font",
+          args: {
+            value: "body",
+          },
+        },
+      });
+    });
+  });
+
+  describe(".contains(type:parentId:)", () => {
+    test("is always falsy for top-level checks in empty editor", () => {
+      expect(
+        new Editor({ scope: {}, tree: [] }).contains("if", null)
+      ).toBeFalsy();
+    });
+
+    test("throw error on parent not found", () => {
+      expect(() =>
+        new Editor({ scope: {}, tree: [] }).contains("if", ":ab1:")
+      ).toThrowError(new Error("Parent not found."));
+    });
+
+    test("checks whether a modifier exists within tree", () => {
+      expect(
+        new Editor(exampleState).contains("background", ":ab5:")
+      ).toBeTruthy();
+    });
+
+    test("checks whether a block exists within tree", () => {
+      expect(new Editor(exampleState).contains("Image", null)).toBeTruthy();
+    });
+
+    test("doesn't check whether a block exists within a modifier", () => {
+      expect(new Editor(exampleState).contains("Color", null)).toBeFalsy();
+    });
+  });
+
+  describe(".update(id:blockOrModifier:)", () => {
+    test("throws error on not found block or modifier", () => {
+      expect(() =>
+        new Editor({ scope: {}, tree: [] }).update(":ab1:", {
+          id: ":ab1:",
+          blockType: "control",
+          type: "if",
+          args: {
+            condition: "true",
+            content: [],
+          },
+        })
+      ).toThrowError(new Error("Not found."));
+    });
+
+    test("throws error on mismatched block type", () => {
+      expect(() =>
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "control",
+              type: "if",
+              args: {
+                condition: "true",
+                content: [],
+              },
+            },
+          ],
+        }).update(":ab1:", {
+          id: ":ab1:",
+          blockType: "view",
+          type: "HStack",
+          args: {
+            content: [],
+          },
+          modifiers: [],
+        })
+      ).toThrowError(new Error("Block type doesn't match."));
+    });
+
+    test("throws error on mismatched ID", () => {
+      expect(() =>
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "control",
+              type: "if",
+              args: {
+                condition: "true",
+                content: [],
+              },
+            },
+          ],
+        }).update(":ab1:", {
+          id: ":ab2:",
+          blockType: "control",
+          type: "if",
+          args: {
+            condition: "true",
+            content: [],
+          },
+        })
+      ).toThrowError(new Error("ID doesn't match."));
+    });
+
+    test("updates block or modifier", () => {
+      expect(
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "control",
+              type: "if",
+              args: {
+                condition: "true",
+                content: [],
+              },
+            },
+          ],
+        }).update(":ab1:", {
+          id: ":ab1:",
+          blockType: "control",
+          type: "if",
+          args: {
+            condition: "false",
+            content: [],
+          },
+        })
+      ).toEqual(
+        new Editor({
+          scope: {},
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "control",
+              type: "if",
+              args: {
+                condition: "false",
+                content: [],
+              },
+            },
+          ],
+        })
+      );
+    });
+  });
+
+  describe(".move(id:parentId:)", () => {
+    test("throws error on invalid block or modifier", () => {
+      expect(() =>
+        new Editor({ scope: {}, tree: [] }).move(":ab1:", null)
+      ).toThrowError(new Error("Not found."));
+    });
+
+    test("moves block or modifier", () => {
+      expect(new Editor(exampleState).move(":ab9:", ":ab5:")).toEqual(
+        new Editor({
+          scope: exampleState.scope,
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "ForEach",
+              args: {
+                data: "items",
+                id: "id",
+                scopeVariable: "item",
+                content: [
+                  {
+                    id: ":ab5:",
+                    blockType: "view",
+                    type: "HStack",
+                    args: {
+                      content: [
+                        {
+                          id: ":ab2:",
+                          blockType: "control",
+                          type: "if",
+                          args: {
+                            condition: "$0.completed",
+                            content: [
+                              {
+                                id: ":ab3:",
+                                blockType: "view",
+                                type: "Image",
+                                args: {
+                                  systemName: "checkmark",
+                                },
+                                modifiers: [],
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          id: ":ab4:",
+                          blockType: "view",
+                          type: "Text",
+                          args: {
+                            value: "$0.title",
+                          },
+                          modifiers: [
+                            {
+                              id: ":cd1:",
+                              blockType: "modifier",
+                              type: "background",
+                              args: {
+                                content: [],
+                              },
+                            },
+                            {
+                              id: ":cd2:",
+                              blockType: "modifier",
+                              type: "font",
+                              args: {
+                                value: "body",
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          id: ":ab9:",
+                          blockType: "view",
+                          type: "Color",
+                          args: {
+                            value: "red",
+                          },
+                          modifiers: [],
+                        },
+                      ],
                     },
                     modifiers: [],
                   },
@@ -1139,284 +681,346 @@ describe("Editor", () => {
               },
               modifiers: [],
             },
-          ])
-        )
-      ).toBeTruthy();
+          ],
+        })
+      );
+    });
+  });
+
+  describe(".delete(id:)", () => {
+    test("throws error on invalid block or modifier", () => {
+      expect(() => new Editor(exampleState).delete(":abc123:")).toThrowError(
+        new Error("Not found.")
+      );
     });
 
-    test("inequality for different editor values", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-        ]).equals(
-          new Editor([
+    test("removes a top-level block", () => {
+      expect(new Editor(exampleState).delete(":ab1:")).toEqual(
+        new Editor({ scope: exampleState.scope, tree: [] })
+      );
+    });
+
+    test("removes a nested block", () => {
+      expect(new Editor(exampleState).delete(":ab2:")).toEqual(
+        new Editor({
+          scope: exampleState.scope,
+          tree: [
             {
-              id: "abc456",
-              type: "Text",
-              props: {
-                value: "Text",
-              },
-              modifiers: [
-                {
-                  id: "def456",
-                  type: "font",
-                  props: {
-                    value: "title",
+              id: ":ab1:",
+              blockType: "view",
+              type: "ForEach",
+              args: {
+                data: "items",
+                id: "id",
+                scopeVariable: "item",
+                content: [
+                  {
+                    id: ":ab5:",
+                    blockType: "view",
+                    type: "HStack",
+                    args: {
+                      content: [
+                        {
+                          id: ":ab4:",
+                          blockType: "view",
+                          type: "Text",
+                          args: {
+                            value: "$0.title",
+                          },
+                          modifiers: [
+                            {
+                              id: ":cd1:",
+                              blockType: "modifier",
+                              type: "background",
+                              args: {
+                                content: [
+                                  {
+                                    id: ":ab9:",
+                                    blockType: "view",
+                                    type: "Color",
+                                    args: {
+                                      value: "red",
+                                    },
+                                    modifiers: [],
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              id: ":cd2:",
+                              blockType: "modifier",
+                              type: "font",
+                              args: {
+                                value: "body",
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    modifiers: [],
                   },
-                },
-              ],
+                ],
+              },
+              modifiers: [],
             },
-          ])
+          ],
+        })
+      );
+    });
+
+    test("removes a modifier-nested block", () => {
+      expect(new Editor(exampleState).delete(":ab9:")).toEqual(
+        new Editor({
+          scope: exampleState.scope,
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "ForEach",
+              args: {
+                data: "items",
+                id: "id",
+                scopeVariable: "item",
+                content: [
+                  {
+                    id: ":ab5:",
+                    blockType: "view",
+                    type: "HStack",
+                    args: {
+                      content: [
+                        {
+                          id: ":ab2:",
+                          blockType: "control",
+                          type: "if",
+                          args: {
+                            condition: "$0.completed",
+                            content: [
+                              {
+                                id: ":ab3:",
+                                blockType: "view",
+                                type: "Image",
+                                args: {
+                                  systemName: "checkmark",
+                                },
+                                modifiers: [],
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          id: ":ab4:",
+                          blockType: "view",
+                          type: "Text",
+                          args: {
+                            value: "$0.title",
+                          },
+                          modifiers: [
+                            {
+                              id: ":cd1:",
+                              blockType: "modifier",
+                              type: "background",
+                              args: {
+                                content: [],
+                              },
+                            },
+                            {
+                              id: ":cd2:",
+                              blockType: "modifier",
+                              type: "font",
+                              args: {
+                                value: "body",
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    modifiers: [],
+                  },
+                ],
+              },
+              modifiers: [],
+            },
+          ],
+        })
+      );
+    });
+
+    test("removes modifier", () => {
+      expect(new Editor(exampleState).delete(":cd1:")).toEqual(
+        new Editor({
+          scope: exampleState.scope,
+          tree: [
+            {
+              id: ":ab1:",
+              blockType: "view",
+              type: "ForEach",
+              args: {
+                data: "items",
+                id: "id",
+                scopeVariable: "item",
+                content: [
+                  {
+                    id: ":ab5:",
+                    blockType: "view",
+                    type: "HStack",
+                    args: {
+                      content: [
+                        {
+                          id: ":ab2:",
+                          blockType: "control",
+                          type: "if",
+                          args: {
+                            condition: "$0.completed",
+                            content: [
+                              {
+                                id: ":ab3:",
+                                blockType: "view",
+                                type: "Image",
+                                args: {
+                                  systemName: "checkmark",
+                                },
+                                modifiers: [],
+                              },
+                            ],
+                          },
+                        },
+                        {
+                          id: ":ab4:",
+                          blockType: "view",
+                          type: "Text",
+                          args: {
+                            value: "$0.title",
+                          },
+                          modifiers: [
+                            {
+                              id: ":cd2:",
+                              blockType: "modifier",
+                              type: "font",
+                              args: {
+                                value: "body",
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    modifiers: [],
+                  },
+                ],
+              },
+              modifiers: [],
+            },
+          ],
+        })
+      );
+    });
+  });
+
+  describe(".equals(editor:)", () => {
+    test("always true for empty editors", () => {
+      expect(
+        new Editor({ scope: {}, tree: [] }).equals(
+          new Editor({ scope: {}, tree: [] })
         )
-      ).toBeFalsy();
-    });
-  });
-
-  describe(".containsView(type:parentId:)", () => {
-    test("throws on invalid parent", () => {
-      expect(() => new Editor().containsView("Color", "abc123")).toThrowError();
-    });
-
-    test("finds nested view from top-level", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Color",
-                  props: {
-                    value: "red",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).containsView("Color", null)
       ).toBeTruthy();
     });
 
-    test("finds nested view from nested parent", () => {
+    test("always true for exact same editors", () => {
       expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
-              {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
-                },
-              },
-            ],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Color",
-                  props: {
-                    value: "red",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).containsView("Color", "abc124")
+        new Editor(exampleState).equals(new Editor(exampleState))
       ).toBeTruthy();
     });
 
-    test("returns false on not found", () => {
+    test("checks for tree equality, regardless if IDs match", () => {
       expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [
+        new Editor(exampleState).equals(
+          new Editor({
+            scope: {},
+            tree: [
               {
-                id: "def123",
-                type: "font",
-                props: {
-                  value: "body",
+                id: "::ab1::",
+                blockType: "view",
+                type: "ForEach",
+                args: {
+                  data: "items",
+                  id: "id",
+                  scopeVariable: "item",
+                  content: [
+                    {
+                      id: "::ab5::",
+                      blockType: "view",
+                      type: "HStack",
+                      args: {
+                        content: [
+                          {
+                            id: "::ab2::",
+                            blockType: "control",
+                            type: "if",
+                            args: {
+                              condition: "$0.completed",
+                              content: [
+                                {
+                                  id: "::ab3::",
+                                  blockType: "view",
+                                  type: "Image",
+                                  args: {
+                                    systemName: "checkmark",
+                                  },
+                                  modifiers: [],
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            id: "::ab4::",
+                            blockType: "view",
+                            type: "Text",
+                            args: {
+                              value: "$0.title",
+                            },
+                            modifiers: [
+                              {
+                                id: "::cd1::",
+                                blockType: "modifier",
+                                type: "background",
+                                args: {
+                                  content: [
+                                    {
+                                      id: "::ab9::",
+                                      blockType: "view",
+                                      type: "Color",
+                                      args: {
+                                        value: "red",
+                                      },
+                                      modifiers: [],
+                                    },
+                                  ],
+                                },
+                              },
+                              {
+                                id: "::cd2::",
+                                blockType: "modifier",
+                                type: "font",
+                                args: {
+                                  value: "body",
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                      modifiers: [],
+                    },
+                  ],
                 },
+                modifiers: [],
               },
             ],
-          },
-        ]).containsView("Color", "abc123")
-      ).toBeFalsy();
-    });
-  });
-
-  describe("moveView(id:parentId:)", () => {
-    test("throws error on invalid view ID", () => {
-      expect(() => new Editor().moveView("abc123", null)).toThrowError();
-    });
-
-    test("moves top-level view to nested stack", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [],
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc125",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ]).moveView("abc125", "abc124")
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ])
-      );
-    });
-
-    test("moves nested view to top-level", () => {
-      expect(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [
-                {
-                  id: "abc125",
-                  type: "Text",
-                  props: {
-                    value: "Text",
-                  },
-                  modifiers: [],
-                },
-              ],
-            },
-            modifiers: [],
-          },
-        ]).moveView("abc125", null)
-      ).toEqual(
-        new Editor([
-          {
-            id: "abc123",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc124",
-            type: "VStack",
-            props: {
-              children: [],
-            },
-            modifiers: [],
-          },
-          {
-            id: "abc125",
-            type: "Text",
-            props: {
-              value: "Text",
-            },
-            modifiers: [],
-          },
-        ])
-      );
+          })
+        )
+      ).toBeTruthy();
     });
   });
 });

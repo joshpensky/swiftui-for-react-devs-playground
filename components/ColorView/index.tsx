@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
-import { Color, IColorView, IViewModifier } from "../../models/NewEditor";
+import { Color, IColorView, IViewModifier } from "../../models/Editor";
 import styles from "./styles.module.scss";
 
 export function ColorView({

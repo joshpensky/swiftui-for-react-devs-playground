@@ -14,7 +14,7 @@ import {
   IView,
   IViewModifier,
   IVStackView,
-} from "../../models/NewEditor";
+} from "../../models/Editor";
 import styles from "./styles.module.scss";
 import { AnimatePresence, motion } from "framer-motion";
 import { View, ZIndexContext } from "../View";

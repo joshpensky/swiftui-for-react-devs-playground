@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { IControl, IView } from "../../models/NewEditor";
+import { IControl, IView } from "../../models/Editor";
 import { TextView } from "../TextView";
 import { VStackView } from "../VStackView";
 import { motion } from "framer-motion";

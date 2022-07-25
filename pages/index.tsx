@@ -3,9 +3,9 @@ import { useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from "./styles/index.module.scss";
-import { Preview } from "../components/NewPreview";
+import { Preview } from "../components/Preview";
 import { Canvas } from "../components/Canvas";
-import { Editor } from "../models/NewEditor";
+import { Editor } from "../models/Editor";
 
 const code = `
 <p style={{ color: 'blue' }}>

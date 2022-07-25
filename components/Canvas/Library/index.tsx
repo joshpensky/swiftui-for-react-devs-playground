@@ -220,7 +220,7 @@ export function Library({
                           >
                             <ForegroundColorViewModifier
                               preview
-                              value="red"
+                              color="red"
                               onDrag={() => onOpenChange(false)}
                             />
                           </LibraryPreview>
