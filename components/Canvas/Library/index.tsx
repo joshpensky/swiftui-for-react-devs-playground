@@ -30,6 +30,7 @@ export function Library({
   const [tab, setTab] = useState("views");
   const [viewTab, setViewTab] = useState("color");
   const [viewModifierTab, setViewModifierTab] = useState("font");
+  const [controlTab, setControlTab] = useState("if");
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
@@ -85,7 +86,12 @@ export function Library({
                     aria-label="Block Types"
                     style={
                       {
-                        "--active-tab": tab === "views" ? 0 : 1,
+                        "--active-tab":
+                          tab === "views"
+                            ? 0
+                            : tab === "view-modifiers"
+                            ? 1
+                            : 2,
                       } as CSSProperties
                     }
                   >
@@ -97,6 +103,12 @@ export function Library({
                       value="view-modifiers"
                     >
                       View Modifiers
+                    </Tabs.Trigger>
+                    <Tabs.Trigger
+                      className={styles["tab-item"]}
+                      value="controls"
+                    >
+                      Controls
                     </Tabs.Trigger>
                   </Tabs.List>
 
@@ -218,6 +230,21 @@ export function Library({
                           </LibraryPreview>
                         </Tabs.Content>
                       </div>
+                    </Tabs.Root>
+                  </Tabs.Content>
+
+                  <Tabs.Content value="controls">
+                    <Tabs.Root
+                      className={styles["tab-view"]}
+                      value={controlTab}
+                      onValueChange={setControlTab}
+                      orientation="vertical"
+                    >
+                      <Tabs.List className={styles["block-list"]}>
+                        <Tabs.Trigger value="if">If Statement</Tabs.Trigger>
+                      </Tabs.List>
+
+                      <div className={styles["block-preview"]} />
                     </Tabs.Root>
                   </Tabs.Content>
                 </Tabs.Root>
