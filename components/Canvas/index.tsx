@@ -5,7 +5,7 @@ import styles from "./styles.module.scss";
 import { Library } from "./Library";
 import { DragLayer } from "./DragLayer";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { View } from "../View";
+import { Block } from "../Block";
 import { Editor, IView } from "../../models/Editor";
 import { EditorContext } from "../../context/EditorContext";
 
@@ -92,7 +92,7 @@ export function Canvas({
                           },
                         }}
                       >
-                        <View block={block} />
+                        <Block block={block} />
                       </motion.div>
                     </motion.li>
                   );

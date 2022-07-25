@@ -12,7 +12,7 @@ import { SpacerView } from "../SpacerView";
 
 export const ZIndexContext = createContext(0);
 
-export function View({ block }: { block: IControl | IView }) {
+export function Block({ block }: { block: IControl | IView }) {
   const [editor, onEditorChange] = useContext(EditorContext);
 
   let modifiers = null;

@@ -17,7 +17,7 @@ import {
 } from "../../models/Editor";
 import styles from "./styles.module.scss";
 import { AnimatePresence, motion } from "framer-motion";
-import { View, ZIndexContext } from "../View";
+import { Block, ZIndexContext } from "../Block";
 import { EditorContext } from "../../context/EditorContext";
 
 export function VStackView({
@@ -173,7 +173,7 @@ export function VStackView({
                     duration: 0.25,
                   }}
                 >
-                  <View block={block} />
+                  <Block block={block} />
                 </motion.li>
               ))}
             </motion.ul>
