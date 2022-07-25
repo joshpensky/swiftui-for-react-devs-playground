@@ -175,7 +175,7 @@ export function Block({
 
           case "Image": {
             const { systemName } = block.args;
-            // TODO: convert to SVG so they work with --color!
+            // TODO: convert to SVG so they work with `--color`!
             return (
               <Image
                 style={modifierStyle}
@@ -185,6 +185,10 @@ export function Block({
                 height={20}
               />
             );
+          }
+
+          case "Spacer": {
+            return <div className={styles["spacer"]} />;
           }
 
           case "Text": {
@@ -197,6 +201,20 @@ export function Block({
               <p className={styles["text"]} style={modifierStyle}>
                 {displayValue}
               </p>
+            );
+          }
+
+          case "VStack": {
+            const { content } = block.args;
+            return (
+              <div
+                className={cx(styles["vstack"], shouldFlex && styles["_flex"])}
+                style={modifierStyle}
+              >
+                {content.map((block) => (
+                  <Block key={block.id} block={block} scope={scope} />
+                ))}
+              </div>
             );
           }
 

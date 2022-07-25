@@ -1,7 +1,7 @@
 import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
-import { Color, IViewModifier } from "../../types";
+import { Color, IColorView, IViewModifier } from "../../models/NewEditor";
 import styles from "./styles.module.scss";
 
 export function ColorView({
@@ -25,13 +25,18 @@ export function ColorView({
   const _id = useId();
   let id = propsId ?? _id;
 
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging }, drag] = useDrag<
+    IColorView,
+    unknown,
+    { isDragging: boolean }
+  >(
     () => ({
       type: "view",
       item: {
         id,
+        blockType: "view",
         type: "Color",
-        props: {
+        args: {
           value,
         },
         modifiers: [],
@@ -61,7 +66,7 @@ export function ColorView({
 
   const [{ isOver }, drop] = useDrop(
     () => ({
-      accept: "view-modifier",
+      accept: "modifier",
       collect: (monitor) => ({
         isOver: !preview && monitor.isOver(),
       }),

@@ -2,10 +2,10 @@ import { PropsWithChildren, useEffect, useId } from "react";
 import cx from "classnames";
 import { useDrag } from "react-dnd";
 import styles from "./styles.module.scss";
-import { Color } from "../../types";
+import { Color } from "../../models/NewEditor";
 
 export function ForegroundColorViewModifier({
-  value,
+  color,
   onChange,
   onDrag,
   onRemove,
@@ -14,8 +14,8 @@ export function ForegroundColorViewModifier({
 }: PropsWithChildren<{
   id?: string;
   preview?: boolean;
-  value: Color;
-  onChange?(value: Color): void;
+  color: Color;
+  onChange?(color: Color): void;
   onDrag?(): void;
   onRemove?(): void;
 }>) {
@@ -23,7 +23,7 @@ export function ForegroundColorViewModifier({
   const id = propsId ?? _id;
 
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: "view-modifier",
+    type: "modifier",
     item: {
       id,
       type: "foregroundColor",
@@ -67,7 +67,7 @@ export function ForegroundColorViewModifier({
       <select
         id={id}
         name={id}
-        value={value}
+        value={color}
         onChange={(evt) => onChange?.(evt.target.value as Color)}
         disabled={preview}
       >

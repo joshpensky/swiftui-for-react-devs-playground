@@ -1,16 +1,8 @@
-import {
-  PropsWithChildren,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { PropsWithChildren, useEffect, useId, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
-import { motion } from "framer-motion";
-import { IViewModifier } from "../../types";
 import styles from "./styles.module.scss";
+import { ITextView, IViewModifier } from "../../models/NewEditor";
 
 export function TextView({
   children,
@@ -35,13 +27,18 @@ export function TextView({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging }, drag] = useDrag<
+    ITextView,
+    unknown,
+    { isDragging: boolean }
+  >(
     () => ({
       type: "view",
       item: {
         id,
+        blockType: "view",
         type: "Text",
-        props: {
+        args: {
           value,
         },
         modifiers: [],
@@ -72,7 +69,7 @@ export function TextView({
 
   const [{ isOver }, drop] = useDrop(
     () => ({
-      accept: "view-modifier",
+      accept: "modifier",
       collect: (monitor) => ({
         isOver: !preview && monitor.isOver(),
       }),

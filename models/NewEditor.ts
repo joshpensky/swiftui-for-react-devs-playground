@@ -77,6 +77,11 @@ export interface ITextView extends IBaseView {
   };
 }
 
+export interface ISpacerView extends IBaseView {
+  type: "Spacer";
+  args: {};
+}
+
 export interface IImageView extends IBaseView {
   type: "Image";
   args: {
@@ -113,6 +118,7 @@ export type IView =
   | IForEachView
   | IHStackView
   | IImageView
+  | ISpacerView
   | ITextView
   | IVStackView
   | IZStackView;

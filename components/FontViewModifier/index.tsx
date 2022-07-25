@@ -2,7 +2,7 @@ import { PropsWithChildren, useEffect, useId } from "react";
 import cx from "classnames";
 import { useDrag } from "react-dnd";
 import styles from "./styles.module.scss";
-import { Font } from "../../types";
+import { Font } from "../../models/NewEditor";
 
 export function FontViewModifier({
   value,
@@ -23,7 +23,7 @@ export function FontViewModifier({
   const id = propsId ?? _id;
 
   const [{ isDragging }, drag] = useDrag(() => ({
-    type: "view-modifier",
+    type: "modifier",
     item: {
       id,
       type: "font",

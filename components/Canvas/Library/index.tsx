@@ -87,11 +87,7 @@ export function Library({
                     style={
                       {
                         "--active-tab":
-                          tab === "views"
-                            ? 0
-                            : tab === "view-modifiers"
-                            ? 1
-                            : 2,
+                          tab === "views" ? 0 : tab === "modifiers" ? 1 : 2,
                       } as CSSProperties
                     }
                   >
@@ -100,7 +96,7 @@ export function Library({
                     </Tabs.Trigger>
                     <Tabs.Trigger
                       className={styles["tab-item"]}
-                      value="view-modifiers"
+                      value="modifiers"
                     >
                       View Modifiers
                     </Tabs.Trigger>
@@ -187,7 +183,7 @@ export function Library({
                     </Tabs.Root>
                   </Tabs.Content>
 
-                  <Tabs.Content value="view-modifiers">
+                  <Tabs.Content value="modifiers">
                     <Tabs.Root
                       className={styles["tab-view"]}
                       value={viewModifierTab}

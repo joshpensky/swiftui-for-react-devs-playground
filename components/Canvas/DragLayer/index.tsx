@@ -1,11 +1,11 @@
 import { useDragLayer } from "react-dnd";
-import { IView, IViewModifier } from "../../../types";
+import { IView, IViewModifier } from "../../../models/NewEditor";
 import { ForegroundColorViewModifier } from "../../ForegroundColorViewModifier";
 import { TextView } from "../../TextView";
 import styles from "./styles.module.scss";
 import cx from "classnames";
 import { useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { FontViewModifier } from "../../FontViewModifier";
 import { VStackView } from "../../VStackView";
 import { ColorView } from "../../ColorView";
@@ -31,28 +31,28 @@ export function DragLayer() {
         const view = item as IView;
         switch (view.type) {
           case "Color": {
-            return <ColorView preview value={view.props.value} />;
+            return <ColorView preview value={view.args.value} />;
           }
           case "Spacer": {
             return <SpacerView preview />;
           }
           case "Text": {
-            return <TextView preview value={view.props.value} />;
+            return <TextView preview value={view.args.value} />;
           }
           case "VStack": {
-            return <VStackView preview content={view.props.children} />;
+            return <VStackView preview content={view.args.content} />;
           }
         }
       }
 
-      case "view-modifier": {
+      case "modifier": {
         const modifier = item as IViewModifier;
         switch (modifier.type) {
           case "font": {
             return <FontViewModifier preview value="body" />;
           }
           case "foregroundColor": {
-            return <ForegroundColorViewModifier preview value="red" />;
+            return <ForegroundColorViewModifier preview color="red" />;
           }
         }
       }

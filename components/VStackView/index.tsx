@@ -9,11 +9,16 @@ import {
 } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
-import { IView, IViewModifier } from "../../types";
+import {
+  IControl,
+  IView,
+  IViewModifier,
+  IVStackView,
+} from "../../models/NewEditor";
 import styles from "./styles.module.scss";
 import { AnimatePresence, motion } from "framer-motion";
 import { View, ZIndexContext } from "../View";
-import { EditorContext } from "../../models/Editor";
+import { EditorContext } from "../../context/EditorContext";
 
 export function VStackView({
   children,
@@ -26,7 +31,7 @@ export function VStackView({
 }: PropsWithChildren<{
   id?: string;
   preview?: boolean;
-  content: IView[];
+  content: (IControl | IView)[];
   onDrag?(): void;
   onModifier?(modifier: IViewModifier): void;
   onRemove?(): void;
@@ -36,14 +41,19 @@ export function VStackView({
 
   const [editor, onEditorChange] = useContext(EditorContext);
 
-  const [{ isDragging }, drag] = useDrag(
+  const [{ isDragging }, drag] = useDrag<
+    IVStackView,
+    unknown,
+    { isDragging: boolean }
+  >(
     () => ({
       type: "view",
       item: {
         id,
+        blockType: "view",
         type: "VStack",
-        props: {
-          children: content,
+        args: {
+          content,
         },
         modifiers: [],
       },
@@ -71,10 +81,10 @@ export function VStackView({
       },
       drop(item, monitor) {
         let view = item as IView;
-        if (editor.findView(view.id)) {
-          onEditorChange(editor.moveView(view.id, id));
+        if (editor.select(view.id)) {
+          onEditorChange(editor.move(view.id, id));
         } else {
-          onEditorChange(editor.insertView(view, id));
+          onEditorChange(editor.insert(view, id));
         }
       },
     }),
@@ -83,7 +93,7 @@ export function VStackView({
 
   const [{ isModifierOver: isModifierOverTop }, modifierDropTop] = useDrop(
     () => ({
-      accept: "view-modifier",
+      accept: "modifier",
       collect: (monitor) => ({
         isModifierOver: !preview && monitor.isOver({ shallow: true }),
       }),
@@ -99,7 +109,7 @@ export function VStackView({
   const [{ isModifierOver: isModifierOverBottom }, modifierDropBottom] =
     useDrop(
       () => ({
-        accept: "view-modifier",
+        accept: "modifier",
         collect: (monitor) => ({
           isModifierOver: !preview && monitor.isOver({ shallow: true }),
         }),
@@ -152,10 +162,10 @@ export function VStackView({
             style={{ "--z-index": zIndex } as CSSProperties}
           >
             <motion.ul className={styles["views"]} layout="position">
-              {content.map((view, index) => (
+              {content.map((block, index) => (
                 <motion.li
-                  key={view.id}
-                  layoutId={view.id}
+                  key={block.id}
+                  layoutId={block.id}
                   exit={{ opacity: 0 }}
                   transition={{
                     type: "spring",
@@ -163,7 +173,7 @@ export function VStackView({
                     duration: 0.25,
                   }}
                 >
-                  <View view={view} />
+                  <View block={block} />
                 </motion.li>
               ))}
             </motion.ul>

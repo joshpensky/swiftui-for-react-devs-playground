@@ -2,12 +2,12 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useDrop } from "react-dnd";
 import cx from "classnames";
 import styles from "./styles.module.scss";
-import { IView } from "../../types";
 import { Library } from "./Library";
 import { DragLayer } from "./DragLayer";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
 import { View } from "../View";
-import { Editor, EditorContext } from "../../models/Editor";
+import { Editor, IView } from "../../models/NewEditor";
+import { EditorContext } from "../../context/EditorContext";
 
 export function Canvas({
   editor,
@@ -27,10 +27,10 @@ export function Canvas({
       },
       drop(item, monitor) {
         let view = item as IView;
-        if (editor.findView(view.id)) {
-          onEditorChange(editor.moveView(view.id, null));
+        if (editor.select(view.id)) {
+          onEditorChange(editor.move(view.id, null));
         } else {
-          onEditorChange(editor.insertView(view, null));
+          onEditorChange(editor.insert(view, null));
         }
       },
     }),
@@ -48,7 +48,7 @@ export function Canvas({
         <LayoutGroup id="canvas">
           <DragLayer />
 
-          {!editor.views.length && (
+          {!editor.state.tree.length && (
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               Drag views onto the canvas.
             </motion.p>
@@ -64,12 +64,12 @@ export function Canvas({
           >
             <motion.ul className={styles["views"]} layout="position">
               <AnimatePresence>
-                {editor.views.map((view) => {
+                {editor.state.tree.map((block) => {
                   return (
                     <motion.li
-                      key={view.id}
+                      key={block.id}
                       className={styles["view"]}
-                      layoutId={view.id}
+                      layoutId={block.id}
                       transition={{
                         type: "spring",
                         bounce: 0,
@@ -92,7 +92,7 @@ export function Canvas({
                           },
                         }}
                       >
-                        <View view={view} />
+                        <View block={block} />
                       </motion.div>
                     </motion.li>
                   );

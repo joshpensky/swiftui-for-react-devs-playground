@@ -1,8 +1,8 @@
 import { PropsWithChildren, useEffect, useId } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
-import { IViewModifier } from "../../types";
 import styles from "./styles.module.scss";
+import { ISpacerView, IViewModifier } from "../../models/NewEditor";
 
 export function SpacerView({
   children,
@@ -21,12 +21,17 @@ export function SpacerView({
   const _id = useId();
   let id = propsId ?? _id;
 
-  const [{ isDragging }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag<
+    ISpacerView,
+    unknown,
+    { isDragging: boolean }
+  >(() => ({
     type: "view",
     item: {
       id,
+      blockType: "view",
       type: "Spacer",
-      props: {},
+      args: {},
       modifiers: [],
     },
     collect: (monitor) => ({
@@ -42,7 +47,7 @@ export function SpacerView({
 
   const [{ isOver }, drop] = useDrop(
     () => ({
-      accept: "view-modifier",
+      accept: "modifier",
       collect: (monitor) => ({
         isOver: !preview && monitor.isOver(),
       }),

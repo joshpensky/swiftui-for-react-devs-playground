@@ -70,7 +70,14 @@
 .color {
   display: flex;
   flex: 1;
+  width: 100%;
   background-color: var(--color, transparent);
+}
+
+.spacer {
+  display: flex;
+  flex: 1;
+  width: 100%;
 }
 
 .foreach {
@@ -95,6 +102,15 @@
   margin: 0;
   font: var(--font, 16px sans-serif);
   color: var(--color, black);
+}
+
+.vstack {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .zstack {

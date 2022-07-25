@@ -1,25 +1,25 @@
 import { createContext, useContext } from "react";
-import { IView } from "../../types";
+import { IControl, IView } from "../../models/NewEditor";
 import { TextView } from "../TextView";
 import { VStackView } from "../VStackView";
 import { motion } from "framer-motion";
 import styles from "./styles.module.scss";
 import { FontViewModifier } from "../FontViewModifier";
 import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
-import { EditorContext } from "../../models/Editor";
+import { EditorContext } from "../../context/EditorContext";
 import { ColorView } from "../ColorView";
 import { SpacerView } from "../SpacerView";
 
 export const ZIndexContext = createContext(0);
 
-export function View({ view }: { view: IView }) {
+export function View({ block }: { block: IControl | IView }) {
   const [editor, onEditorChange] = useContext(EditorContext);
 
   let modifiers = null;
-  if (view.modifiers.length) {
+  if (block.blockType === "view" && block.modifiers.length) {
     modifiers = (
       <motion.ul className={styles["modifiers"]} layout="position">
-        {view.modifiers.map((modifier, mIndex) => {
+        {block.modifiers.map((modifier, mIndex) => {
           return (
             <motion.li
               key={modifier.id}
@@ -37,17 +37,17 @@ export function View({ view }: { view: IView }) {
                     return (
                       <FontViewModifier
                         id={modifier.id}
-                        value={modifier.props.value}
+                        value={modifier.args.value}
                         onChange={(value) => {
                           onEditorChange(
-                            editor.updateModifier(modifier.id, {
+                            editor.update(modifier.id, {
                               ...modifier,
-                              props: { value },
+                              args: { value },
                             })
                           );
                         }}
                         onRemove={() => {
-                          onEditorChange(editor.removeModifier(modifier.id));
+                          onEditorChange(editor.delete(modifier.id));
                         }}
                       />
                     );
@@ -57,17 +57,17 @@ export function View({ view }: { view: IView }) {
                     return (
                       <ForegroundColorViewModifier
                         id={modifier.id}
-                        value={modifier.props.value}
-                        onChange={(value) => {
+                        color={modifier.args.color}
+                        onChange={(color) => {
                           onEditorChange(
-                            editor.updateModifier(modifier.id, {
+                            editor.update(modifier.id, {
                               ...modifier,
-                              props: { value },
+                              args: { color },
                             })
                           );
                         }}
                         onRemove={() => {
-                          onEditorChange(editor.removeModifier(modifier.id));
+                          onEditorChange(editor.delete(modifier.id));
                         }}
                       />
                     );
@@ -90,25 +90,25 @@ export function View({ view }: { view: IView }) {
   return (
     <ZIndexContext.Provider value={zIndex + 1}>
       {(() => {
-        switch (view.type) {
+        switch (block.type) {
           case "Color": {
             return (
               <ColorView
-                id={view.id}
-                value={view.props.value}
+                id={block.id}
+                value={block.args.value}
                 onChange={(value) => {
                   onEditorChange(
-                    editor.updateView(view.id, {
-                      ...view,
-                      props: { value },
+                    editor.update(block.id, {
+                      ...block,
+                      args: { value },
                     })
                   );
                 }}
                 onModifier={(modifier) => {
-                  onEditorChange(editor.insertModifier(modifier, view.id));
+                  onEditorChange(editor.insert(modifier, block.id));
                 }}
                 onRemove={() => {
-                  onEditorChange(editor.removeView(view.id));
+                  onEditorChange(editor.delete(block.id));
                 }}
               >
                 {modifiers}
@@ -119,12 +119,12 @@ export function View({ view }: { view: IView }) {
           case "Spacer": {
             return (
               <SpacerView
-                id={view.id}
+                id={block.id}
                 onModifier={(modifier) => {
-                  onEditorChange(editor.insertModifier(modifier, view.id));
+                  onEditorChange(editor.insert(modifier, block.id));
                 }}
                 onRemove={() => {
-                  onEditorChange(editor.removeView(view.id));
+                  onEditorChange(editor.delete(block.id));
                 }}
               >
                 {modifiers}
@@ -135,21 +135,21 @@ export function View({ view }: { view: IView }) {
           case "Text": {
             return (
               <TextView
-                id={view.id}
-                value={view.props.value}
+                id={block.id}
+                value={block.args.value}
                 onChange={(value) => {
                   onEditorChange(
-                    editor.updateView(view.id, {
-                      ...view,
-                      props: { value },
+                    editor.update(block.id, {
+                      ...block,
+                      args: { value },
                     })
                   );
                 }}
                 onModifier={(modifier) => {
-                  onEditorChange(editor.insertModifier(modifier, view.id));
+                  onEditorChange(editor.insert(modifier, block.id));
                 }}
                 onRemove={() => {
-                  onEditorChange(editor.removeView(view.id));
+                  onEditorChange(editor.delete(block.id));
                 }}
               >
                 {modifiers}
@@ -160,13 +160,13 @@ export function View({ view }: { view: IView }) {
           case "VStack": {
             return (
               <VStackView
-                id={view.id}
-                content={view.props.children}
+                id={block.id}
+                content={block.args.content}
                 onModifier={(modifier) => {
-                  onEditorChange(editor.insertModifier(modifier, view.id));
+                  onEditorChange(editor.insert(modifier, block.id));
                 }}
                 onRemove={() => {
-                  onEditorChange(editor.removeView(view.id));
+                  onEditorChange(editor.delete(block.id));
                 }}
               >
                 {modifiers}
