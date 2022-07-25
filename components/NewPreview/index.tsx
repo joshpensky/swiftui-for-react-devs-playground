@@ -1,7 +1,7 @@
 import get from "lodash.get";
 import Image from "next/image";
 import { CSSProperties, Fragment } from "react";
-import { IControl, IView } from "../../models/NewEditor.test";
+import { IControl, IView } from "../../models/NewEditor";
 import styles from "./styles.module.scss";
 
 export function Block({
@@ -56,7 +56,7 @@ export function Block({
         }
 
         case "ForEach": {
-          const { data: dataVariable, id, scopeVariable, content } = block.args;
+          const { data: dataVariable, id, content } = block.args;
 
           const data = get(scope, dataVariable);
           if (!Array.isArray(data)) {
@@ -67,7 +67,7 @@ export function Block({
           return (
             <div className={styles["foreach"]}>
               {data.map((item) => {
-                let scopeWithData = { ...scope, [scopeVariable]: item };
+                let scopeWithData = { ...scope, $0: item };
                 return (
                   <Fragment key={item[id]}>
                     {content.map((block) => (

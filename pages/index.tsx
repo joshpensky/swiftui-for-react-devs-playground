@@ -6,13 +6,102 @@ import styles from "./styles/index.module.scss";
 import { Preview } from "../components/NewPreview";
 import { Canvas } from "../components/Canvas";
 import { Editor } from "../models/Editor";
-import { exampleState } from "../models/NewEditor.test";
+import { EditorState } from "../models/NewEditor";
 
 const code = `
 <p style={{ color: 'blue' }}>
   This is my great text!
 </p>
 `.trim();
+
+const exampleState: EditorState = {
+  scope: {
+    items: [
+      { id: 1, title: "Do something", completed: true },
+      { id: 2, title: "Do something else", completed: false },
+    ],
+  },
+  tree: [
+    {
+      id: ":ab1:",
+      blockType: "view",
+      type: "ForEach",
+      args: {
+        data: "items",
+        id: "id",
+        scopeVariable: "item",
+        content: [
+          {
+            id: ":ab5:",
+            blockType: "view",
+            type: "HStack",
+            args: {
+              content: [
+                {
+                  id: ":ab2:",
+                  blockType: "control",
+                  type: "if",
+                  args: {
+                    condition: "$0.completed",
+                    content: [
+                      {
+                        id: ":ab3:",
+                        blockType: "view",
+                        type: "Image",
+                        args: {
+                          systemName: "checkmark",
+                        },
+                        modifiers: [],
+                      },
+                    ],
+                  },
+                },
+                {
+                  id: ":ab4:",
+                  blockType: "view",
+                  type: "Text",
+                  args: {
+                    value: "$0.title",
+                  },
+                  modifiers: [
+                    {
+                      id: ":cd1:",
+                      blockType: "modifier",
+                      type: "background",
+                      args: {
+                        content: [
+                          {
+                            id: ":ab9:",
+                            blockType: "view",
+                            type: "Color",
+                            args: {
+                              value: "red",
+                            },
+                            modifiers: [],
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      id: ":cd2:",
+                      blockType: "modifier",
+                      type: "font",
+                      args: {
+                        value: "body",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ],
+      },
+      modifiers: [],
+    },
+  ],
+};
 
 const Home: NextPage = () => {
   const [editor, setEditor] = useState(new Editor());
@@ -58,9 +147,17 @@ const Home: NextPage = () => {
 
         <div className={styles["previews"]}>
           <h2>Preview</h2>
-          {exampleState.tree.map((block) => (
-            <Preview key={block.id} block={block} scope={exampleState.scope} />
-          ))}
+          {exampleState.tree.length ? (
+            exampleState.tree.map((block) => (
+              <Preview
+                key={block.id}
+                block={block}
+                scope={exampleState.scope}
+              />
+            ))
+          ) : (
+            <Preview scope={exampleState.scope} />
+          )}
         </div>
       </div>
 
