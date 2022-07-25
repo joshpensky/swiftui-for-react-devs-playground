@@ -472,7 +472,11 @@ describe("NewEditor", () => {
     });
 
     test("checks whether a block exists within tree", () => {
-      expect(new Editor(exampleState).contains("Color", null)).toBeTruthy();
+      expect(new Editor(exampleState).contains("Image", null)).toBeTruthy();
+    });
+
+    test("doesn't check whether a block exists within a modifier", () => {
+      expect(new Editor(exampleState).contains("Color", null)).toBeFalsy();
     });
   });
 

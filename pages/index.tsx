@@ -65,36 +65,45 @@ const exampleState: EditorState = {
                   },
                   modifiers: [
                     {
-                      id: ":cd1:",
-                      blockType: "modifier",
-                      type: "background",
-                      args: {
-                        content: [
-                          {
-                            id: ":ab9:",
-                            blockType: "view",
-                            type: "Color",
-                            args: {
-                              value: "red",
-                            },
-                            modifiers: [],
-                          },
-                        ],
-                      },
-                    },
-                    {
                       id: ":cd2:",
                       blockType: "modifier",
                       type: "font",
                       args: {
-                        value: "body",
+                        value: "title",
                       },
                     },
                   ],
                 },
               ],
             },
-            modifiers: [],
+            modifiers: [
+              {
+                id: ":cd1:",
+                blockType: "modifier",
+                type: "background",
+                args: {
+                  content: [
+                    {
+                      id: ":ab9:",
+                      blockType: "view",
+                      type: "Color",
+                      args: {
+                        value: "green",
+                      },
+                      modifiers: [],
+                    },
+                  ],
+                },
+              },
+              {
+                id: ":cd3:",
+                blockType: "modifier",
+                type: "foregroundColor",
+                args: {
+                  color: "red",
+                },
+              },
+            ],
           },
         ],
       },

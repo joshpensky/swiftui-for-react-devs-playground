@@ -20,6 +20,13 @@ export interface IBaseViewModifier {
   blockType: "modifier";
 }
 
+export interface IForegroundColorViewModifier extends IBaseViewModifier {
+  type: "foregroundColor";
+  args: {
+    color: Color;
+  };
+}
+
 export interface IFontViewModifier extends IBaseViewModifier {
   type: "font";
   args: {
@@ -34,7 +41,10 @@ export interface IBackgroundViewModifier extends IBaseViewModifier {
   };
 }
 
-export type IViewModifier = IBackgroundViewModifier | IFontViewModifier;
+export type IViewModifier =
+  | IBackgroundViewModifier
+  | IFontViewModifier
+  | IForegroundColorViewModifier;
 
 //////////////////////////////
 // Views
@@ -187,6 +197,18 @@ export class Editor {
   }
 
   /**
+   * Sets the scope to the given one.
+   *
+   * @param scope the updated scope
+   * @returns a cloned editor with the updated scope
+   */
+  setScope(scope: Record<string, any>): Editor {
+    const state = cloneDeep(this._state);
+    state.scope = scope;
+    return new Editor(state);
+  }
+
+  /**
    * Inserts the given control, view, or view modifier into the specified parent.
    *
    * @param blockOrModifier the block or modifier to insert
@@ -324,7 +346,7 @@ export class Editor {
 
       if (blockOrModifier.type === type) {
         return true;
-      } else {
+      } else if (blockOrModifier.blockType !== "modifier") {
         if ("content" in blockOrModifier.args) {
           blocksToVisit.unshift(...blockOrModifier.args.content);
         }

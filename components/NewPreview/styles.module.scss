@@ -9,7 +9,7 @@
   margin: 0 8px;
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     right: -4px;
     top: 25%;
@@ -28,7 +28,7 @@
   background-color: black;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: -4px;
@@ -39,7 +39,7 @@
   }
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     bottom: -4px;
@@ -63,44 +63,51 @@
   overflow: hidden;
 }
 
+._flex {
+  flex: 1;
+}
+
 .color {
   display: flex;
-  // flex: 1;
+  flex: 1;
   background-color: var(--color, transparent);
 }
 
 .foreach {
   display: flex;
   flex-direction: column;
-  // flex: 1;
-  // width: 100%;
+  width: 100%;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
 .hstack {
   display: flex;
   flex-direction: row;
-  // flex: 1;
-  // width: 100%;
+  width: 100%;
   align-items: center;
+  justify-content: center;
   gap: 8px;
 }
 
 .text {
   margin: 0;
+  font: var(--font, 16px sans-serif);
+  color: var(--color, black);
 }
 
 .zstack {
   display: flex;
-  // flex: 1;
-  // width: 100%;
-  // height: 100%;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
   position: relative;
 
   .zstack__child {
     display: flex;
-    // flex: 1;
+    flex: 1;
 
     &:not(:first-child) {
       position: absolute;
@@ -108,5 +115,25 @@
       left: 50%;
       transform: translate(-50%, -50%);
     }
+  }
+}
+
+.background__root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+
+  &._flex {
+    width: 100%;
+    height: 100%;
+  }
+
+  .background__element {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex: 1;
+    z-index: -1;
   }
 }
