@@ -3,9 +3,10 @@ import { useMemo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import styles from "./styles/index.module.scss";
-import { Preview } from "../components/Preview";
+import { Preview } from "../components/NewPreview";
 import { Canvas } from "../components/Canvas";
 import { Editor } from "../models/Editor";
+import { exampleState } from "../models/NewEditor.test";
 
 const code = `
 <p style={{ color: 'blue' }}>
@@ -57,13 +58,9 @@ const Home: NextPage = () => {
 
         <div className={styles["previews"]}>
           <h2>Preview</h2>
-          {editor.views.length ? (
-            editor.views.map((view, index) => (
-              <Preview editor={editor} key={index} view={view} />
-            ))
-          ) : (
-            <Preview editor={editor} />
-          )}
+          {exampleState.tree.map((block) => (
+            <Preview key={block.id} block={block} scope={exampleState.scope} />
+          ))}
         </div>
       </div>
 

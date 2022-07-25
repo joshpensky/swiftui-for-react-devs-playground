@@ -1,5 +1,6 @@
-export type SystemImage = "checkmark";
+export type Color = "red" | "green" | "blue";
 export type Font = "body" | "title";
+export type SystemImage = "checkmark";
 
 export interface IBaseViewModifier {
   id: string;
@@ -9,7 +10,7 @@ export interface IBaseViewModifier {
 export interface IFontViewModifier extends IBaseViewModifier {
   type: "font";
   args: {
-    font: Font;
+    value: Font;
   };
 }
 
@@ -20,12 +21,26 @@ export interface IBackgroundViewModifier extends IBaseViewModifier {
   };
 }
 
-export type IViewModifier = IFontViewModifier;
+export type IViewModifier = IBackgroundViewModifier | IFontViewModifier;
 
 export interface IBaseView {
   id: string;
   blockType: "view";
   modifiers: IViewModifier[];
+}
+
+export interface IZStackView extends IBaseView {
+  type: "ZStack";
+  args: {
+    content: (IControl | IView)[];
+  };
+}
+
+export interface IVStackView extends IBaseView {
+  type: "VStack";
+  args: {
+    content: (IControl | IView)[];
+  };
 }
 
 export interface ITextView extends IBaseView {
@@ -59,7 +74,21 @@ export interface IForEachView extends IBaseView {
   };
 }
 
-export type IView = IForEachView | IHStackView | IImageView | ITextView;
+export interface IColorView extends IBaseView {
+  type: "Color";
+  args: {
+    value: Color;
+  };
+}
+
+export type IView =
+  | IColorView
+  | IForEachView
+  | IHStackView
+  | IImageView
+  | ITextView
+  | IVStackView
+  | IZStackView;
 
 export interface IBaseControl {
   id: string;
@@ -70,22 +99,22 @@ export interface IIfControl extends IBaseControl {
   type: "if";
   args: {
     condition: string;
-    content: IView[];
+    content: (IControl | IView)[];
   };
 }
 
 export type IControl = IIfControl;
 
 export interface EditorState {
-  $scope: Record<string, any>;
+  scope: Record<string, any>;
   tree: (IControl | IView)[];
 }
 
-const exampleState: EditorState = {
-  $scope: {
+export const exampleState: EditorState = {
+  scope: {
     items: [
-      { id: 1, title: "Do something", completed: false },
-      { id: 2, title: "Do something", completed: false },
+      { id: 1, title: "Do something", completed: true },
+      { id: 2, title: "Do something else", completed: false },
     ],
   },
   tree: [
@@ -130,7 +159,34 @@ const exampleState: EditorState = {
                   args: {
                     value: "item.title",
                   },
-                  modifiers: [],
+                  modifiers: [
+                    {
+                      id: ":cd1:",
+                      blockType: "modifier",
+                      type: "background",
+                      args: {
+                        content: [
+                          {
+                            id: ":ab9:",
+                            blockType: "view",
+                            type: "Color",
+                            args: {
+                              value: "red",
+                            },
+                            modifiers: [],
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      id: ":cd2:",
+                      blockType: "modifier",
+                      type: "font",
+                      args: {
+                        value: "body",
+                      },
+                    },
+                  ],
                 },
               ],
             },
