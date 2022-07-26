@@ -15,7 +15,6 @@ export const exampleState: EditorState = {
       args: {
         data: "items",
         id: "id",
-        scopeVariable: "item",
         content: [
           {
             id: ":ab5:",
@@ -611,7 +610,6 @@ describe("NewEditor", () => {
               args: {
                 data: "items",
                 id: "id",
-                scopeVariable: "item",
                 content: [
                   {
                     id: ":ab5:",
@@ -712,7 +710,6 @@ describe("NewEditor", () => {
               args: {
                 data: "items",
                 id: "id",
-                scopeVariable: "item",
                 content: [
                   {
                     id: ":ab5:",
@@ -781,7 +778,6 @@ describe("NewEditor", () => {
               args: {
                 data: "items",
                 id: "id",
-                scopeVariable: "item",
                 content: [
                   {
                     id: ":ab5:",
@@ -859,7 +855,6 @@ describe("NewEditor", () => {
               args: {
                 data: "items",
                 id: "id",
-                scopeVariable: "item",
                 content: [
                   {
                     id: ":ab5:",
@@ -946,7 +941,6 @@ describe("NewEditor", () => {
                 args: {
                   data: "items",
                   id: "id",
-                  scopeVariable: "item",
                   content: [
                     {
                       id: "::ab5::",

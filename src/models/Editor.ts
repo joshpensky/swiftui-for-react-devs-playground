@@ -101,7 +101,6 @@ export interface IForEachView extends IBaseView {
   args: {
     data: string;
     id: string;
-    scopeVariable: string;
     content: (IControl | IView)[];
   };
 }

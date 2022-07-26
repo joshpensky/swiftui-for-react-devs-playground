@@ -31,8 +31,9 @@ const Home: NextPage = () => {
       scope: {
         items: [
           { id: 1, title: "Do something", completed: true },
-          { id: 2, title: "Do something else", completed: false },
+          { id: 2, title: "Do something", completed: false },
         ],
+        // example: { subtext: { grandchildText: "text" } },
       },
       tree: [],
     })

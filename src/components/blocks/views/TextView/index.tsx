@@ -1,8 +1,17 @@
-import { Fragment, PropsWithChildren, useContext, useId, useRef } from "react";
+import {
+  Fragment,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from "react";
+import { TextField } from "@src/components/TextField";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
 import { EditorContext } from "@src/context/EditorContext";
 import { ITextView } from "@src/models/Editor";
-import styles from "./styles.module.scss";
+import { findStringKeys } from "@src/utils/findStringKeys";
 
 export function TextView({
   block,
@@ -17,7 +26,6 @@ export function TextView({
   const _id = useId();
   let id = block?.id ?? _id;
 
-  const inputRef = useRef<HTMLInputElement>(null);
   const [editor, onEditorChange] = useContext(EditorContext);
 
   const defaultBlock: ITextView = {
@@ -30,23 +38,21 @@ export function TextView({
     modifiers: [],
   };
 
+  // const [value, setValue] = useState("");
+
+  // Select choices from scope
+  const choicesFromScope = findStringKeys(scope);
+
   return (
     <BaseBlock
       block={block ?? defaultBlock}
       preview={!block}
       configuration={
         <Fragment>
-          <pre>Text(&quot;</pre>
-          <div className={styles["input"]}>
-            <pre aria-hidden="true">
-              {(block ?? defaultBlock).args.value || "Content"}
-            </pre>
-            <input
-              ref={inputRef}
+          <pre>Text(</pre>
+          {choicesFromScope.length ? (
+            <select
               id={id}
-              name={id}
-              type="text"
-              placeholder="Content"
               value={(block ?? defaultBlock).args.value}
               onChange={(evt) => {
                 if (block) {
@@ -61,9 +67,35 @@ export function TextView({
                 }
               }}
               disabled={!block}
+            >
+              <option value="">&quot;Custom&quot;</option>
+              {choicesFromScope.map((key) => (
+                <option key={key} value={key}>
+                  {key}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <TextField
+              id={id}
+              value={(block ?? defaultBlock).args.value}
+              disabled={!block}
+              placeholder="Content"
+              onChange={(value) => {
+                if (block) {
+                  onEditorChange(
+                    editor.update(block.id, {
+                      ...block,
+                      args: {
+                        value,
+                      },
+                    })
+                  );
+                }
+              }}
             />
-          </div>
-          <pre>&quot;)</pre>
+          )}
+          <pre>)</pre>
         </Fragment>
       }
       getChildScope={() => scope}
@@ -75,6 +107,8 @@ export function TextView({
             if (input instanceof HTMLInputElement) {
               input.focus();
               input.setSelectionRange(0, input.value.length);
+            } else if (input instanceof HTMLSelectElement) {
+              input.focus();
             }
           }, 10);
         }

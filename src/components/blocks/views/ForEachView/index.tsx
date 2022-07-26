@@ -25,7 +25,6 @@ export function ForEachView({
     args: {
       data: "",
       id: "",
-      scopeVariable: "",
       content: [],
     },
     modifiers: [],
@@ -110,28 +109,10 @@ export function ForEachView({
           </select>
 
           <pre>{`) { `}</pre>
-          <input
-            value={(block ?? defaultBlock).args.scopeVariable}
-            onChange={(evt) => {
-              if (block) {
-                onEditorChange(
-                  editor.update(block.id, {
-                    ...block,
-                    args: {
-                      ...block.args,
-                      scopeVariable: evt.target.value,
-                    },
-                  })
-                );
-              }
-            }}
-            placeholder="$0"
-          />
-          <pre> {`in `}</pre>
         </Fragment>
       }
       getChildScope={(child, index) => {
-        const { scopeVariable, data: dataKey } = (block ?? defaultBlock).args;
+        const { data: dataKey } = (block ?? defaultBlock).args;
         const data = dataOptions[dataKey];
         if (!data) {
           return scope;
@@ -139,7 +120,7 @@ export function ForEachView({
 
         return {
           ...scope,
-          [`${scopeVariable || "$0"}`]: data[index],
+          $0: data[index],
         };
       }}
       onDrag={onDrag}

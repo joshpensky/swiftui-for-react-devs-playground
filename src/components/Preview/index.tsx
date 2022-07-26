@@ -137,7 +137,11 @@ export function Block({
             if (!Array.isArray(data)) {
               // TODO: throw up error;
               return <Fragment />;
+            } else if (!id) {
+              return <Fragment />;
             }
+
+            let visitedKeys = new Set<string>();
 
             return (
               <div
@@ -145,6 +149,12 @@ export function Block({
                 style={modifierStyle}
               >
                 {data.map((item) => {
+                  if (visitedKeys.has(item[id])) {
+                    return null;
+                  } else {
+                    visitedKeys.add(item[id]);
+                  }
+
                   let scopeWithData = { ...scope, $0: item };
                   return (
                     <Fragment key={item[id]}>
