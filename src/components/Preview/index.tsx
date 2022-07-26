@@ -1,7 +1,7 @@
-import get from "lodash.get";
+import { CSSProperties, Fragment } from "react";
 import Image from "next/image";
 import cx from "classnames";
-import { CSSProperties, Fragment } from "react";
+import get from "lodash.get";
 import {
   Editor,
   IBackgroundViewModifier,
@@ -11,7 +11,10 @@ import {
 } from "@src/models/Editor";
 import styles from "./styles.module.scss";
 
-const flexTypes: (IControl | IView | IViewModifier)["type"][] = ["Color"];
+const flexTypes: (IControl | IView | IViewModifier)["type"][] = [
+  "Color",
+  "Spacer",
+];
 
 export function withBackground(
   scope: Record<string, any>,

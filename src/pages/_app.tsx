@@ -1,7 +1,7 @@
-import "./styles/globals.css";
 import type { AppProps } from "next/app";
 import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
+import "./styles/globals.scss";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (

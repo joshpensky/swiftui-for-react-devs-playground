@@ -6,14 +6,14 @@ import {
   useContext,
   useEffect,
 } from "react";
-import { DragSourceMonitor, useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
 import { motion } from "framer-motion";
+import { DragSourceMonitor, useDrag, useDrop } from "react-dnd";
+import { Block } from "@src/components/Block";
 import { EditorContext } from "@src/context/EditorContext";
 import { ZIndexContext } from "@src/context/ZIndexContext";
 import { IControl, IView, IViewModifier } from "@src/models/Editor";
 import styles from "./styles.module.scss";
-import { Block } from "@src/components/Block";
 
 export function BaseBlock<B extends IControl | IView | IViewModifier>({
   block,

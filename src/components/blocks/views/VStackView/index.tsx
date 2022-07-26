@@ -1,6 +1,6 @@
 import { PropsWithChildren, useId } from "react";
-import { IVStackView } from "@src/models/Editor";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
+import { IVStackView } from "@src/models/Editor";
 
 export function VStackView({
   block,

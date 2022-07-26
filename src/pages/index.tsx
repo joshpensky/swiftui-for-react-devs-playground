@@ -1,5 +1,5 @@
-import type { NextPage } from "next";
 import { useMemo, useState } from "react";
+import type { NextPage } from "next";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Canvas } from "@src/components/Canvas";

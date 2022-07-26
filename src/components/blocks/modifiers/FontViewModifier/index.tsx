@@ -1,8 +1,8 @@
 import { Fragment, useContext, useId } from "react";
-import styles from "./styles.module.scss";
-import { Font, IFontViewModifier } from "@src/models/Editor";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
 import { EditorContext } from "@src/context/EditorContext";
+import { Font, IFontViewModifier } from "@src/models/Editor";
+import styles from "./styles.module.scss";
 
 export function FontViewModifier({
   block,

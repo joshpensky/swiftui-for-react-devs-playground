@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { useDrop } from "react-dnd";
 import cx from "classnames";
-import styles from "./styles.module.scss";
-import { Library } from "./Library";
-import { DragLayer } from "./DragLayer";
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
+import { useDrop } from "react-dnd";
 import { Block } from "@src/components/Block";
-import { Editor, IView } from "@src/models/Editor";
 import { EditorContext } from "@src/context/EditorContext";
+import { Editor, IView } from "@src/models/Editor";
+import { DragLayer } from "./DragLayer";
+import { Library } from "./Library";
+import styles from "./styles.module.scss";
 
 export function Canvas({
   editor,

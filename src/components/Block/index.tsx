@@ -1,14 +1,14 @@
 import { useContext } from "react";
-import { IControl, IView } from "@src/models/Editor";
-import { TextView } from "@src/components/blocks/views/TextView";
-import { VStackView } from "@src/components/blocks/views/VStackView";
 import { motion } from "framer-motion";
-import styles from "./styles.module.scss";
 import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModifier";
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
 import { SpacerView } from "@src/components/blocks/views/SpacerView";
+import { TextView } from "@src/components/blocks/views/TextView";
+import { VStackView } from "@src/components/blocks/views/VStackView";
 import { ZIndexContext } from "@src/context/ZIndexContext";
+import { IControl, IView } from "@src/models/Editor";
+import styles from "./styles.module.scss";
 
 export function Block({ block }: { block: IControl | IView }) {
   let modifiers = null;

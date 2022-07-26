@@ -1,6 +1,6 @@
 import { PropsWithChildren, useId } from "react";
-import { ISpacerView } from "@src/models/Editor";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
+import { ISpacerView } from "@src/models/Editor";
 
 export function SpacerView({
   block,
