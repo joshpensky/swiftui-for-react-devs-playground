@@ -13,8 +13,8 @@
   }
 
   &.dropping {
-    box-shadow: inset 0 0 0 3px #2868E4;
-    background-color: rgba(#2868E4, 0.1);
+    box-shadow: inset 0 0 0 3px #2868e4;
+    background-color: rgba(#2868e4, 0.1);
   }
 }
 
@@ -37,6 +37,10 @@
   list-style: none;
   margin: 0;
   padding: 0;
+
+  li {
+    transform-origin: top left;
+  }
 }
 
 .view {
@@ -49,7 +53,7 @@
     transform: translate(-50%, -50%);
     width: 50px;
     height: 50px;
-    background-image: url('/poof.png');
+    background-image: url("/poof.png");
     background-size: 100%;
     background-position: 0px 0px;
     background-repeat: no-repeat;

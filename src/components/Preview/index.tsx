@@ -141,6 +141,7 @@ export function Block({
               return <Fragment />;
             }
 
+            // Only render once per key.
             let visitedKeys = new Set<string>();
 
             return (
@@ -206,7 +207,7 @@ export function Block({
 
           case "Text": {
             const { value } = block.args;
-            let displayValue = value;
+            let displayValue = value.replace(/(^\")|(\"$)/g, "");
             if (typeof get(scope, value) === "string") {
               displayValue = get(scope, value);
             }

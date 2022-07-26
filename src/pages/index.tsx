@@ -32,6 +32,7 @@ const Home: NextPage = () => {
         items: [
           { id: 1, title: "Do something", completed: true },
           { id: 2, title: "Do something", completed: false },
+          { id: 3, title: "Do something", completed: false },
         ],
         // example: { subtext: { grandchildText: "text" } },
       },

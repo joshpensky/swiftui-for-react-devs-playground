@@ -175,6 +175,10 @@
   margin: 0;
   padding: 0;
   z-index: 4;
+
+  li {
+    transform-origin: top left;
+  }
 }
 
 .modifiers {
