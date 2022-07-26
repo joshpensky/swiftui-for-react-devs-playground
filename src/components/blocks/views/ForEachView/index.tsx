@@ -58,7 +58,9 @@ export function ForEachView({
         <Fragment>
           <pre>ForEach(</pre>
           <select
+            id={`${id}-data`}
             value={(block ?? defaultBlock).args.data}
+            disabled={!block}
             onChange={(evt) => {
               if (block) {
                 onEditorChange(
@@ -84,7 +86,9 @@ export function ForEachView({
 
           <pre>, id: \.</pre>
           <select
+            id={`${id}-id`}
             value={(block ?? defaultBlock).args.id}
+            disabled={!(block ?? defaultBlock).args.data}
             onChange={(evt) => {
               if (block) {
                 onEditorChange(
@@ -98,7 +102,6 @@ export function ForEachView({
                 );
               }
             }}
-            disabled={!(block ?? defaultBlock).args.data}
           >
             <option value=""></option>
             {idOptions.map((key) => (
@@ -124,6 +127,16 @@ export function ForEachView({
         };
       }}
       onDrag={onDrag}
+      onDragEnd={(monitor) => {
+        if (monitor.didDrop()) {
+          setTimeout(() => {
+            const select = document.getElementById(`${id}-data`);
+            if (select instanceof HTMLSelectElement) {
+              select.focus();
+            }
+          }, 10);
+        }
+      }}
       preview={!block}
     >
       {children}

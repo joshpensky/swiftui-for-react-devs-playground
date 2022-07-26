@@ -4,6 +4,10 @@
   align-items: flex-start;
   position: relative;
 
+  &:focus-within {
+    z-index: 10;
+  }
+
   &.control {
     --color: #db8dff;
     &.modifier-dropping {
@@ -31,6 +35,7 @@
   flex-direction: column;
   align-items: flex-start;
   position: relative;
+  z-index: 3;
 }
 
 .container {
@@ -63,7 +68,7 @@
     margin: 0;
   }
 
-  button {
+  .delete {
     position: absolute;
     top: 50%;
     right: -5px;
@@ -95,18 +100,6 @@
   .block:not(.dropping) &:hover {
     button {
       opacity: 1;
-    }
-  }
-
-  div[aria-hidden="true"] {
-    position: absolute;
-    user-select: none;
-    pointer-events: none;
-    opacity: 0;
-
-    pre {
-      font-size: 13.5px;
-      font-family: inherit;
     }
   }
 }
@@ -184,4 +177,5 @@
 .modifiers {
   margin-left: 15px;
   margin-top: 3px;
+  z-index: 2;
 }

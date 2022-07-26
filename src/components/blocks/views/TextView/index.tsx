@@ -4,14 +4,16 @@ import {
   useContext,
   useEffect,
   useId,
-  useRef,
+  useLayoutEffect,
   useState,
 } from "react";
+import { CheckIcon, TriangleDownIcon } from "@radix-ui/react-icons";
+import * as Select from "@radix-ui/react-select";
 import { TextField } from "@src/components/TextField";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
 import { EditorContext } from "@src/context/EditorContext";
 import { ITextView } from "@src/models/Editor";
-import { findStringKeys } from "@src/utils/findStringKeys";
+import { findKeysForType } from "@src/utils/findKeysForType";
 import styles from "./styles.module.scss";
 
 export function TextView({
@@ -40,14 +42,14 @@ export function TextView({
   };
 
   const [value, setValue] = useState((block ?? defaultBlock).args.value);
-  const [choice, setChoice] = useState("custom");
-  // Select choices from scope
-  const choicesFromScope = findStringKeys(scope);
-  useEffect(() => {
+  const [choice, setChoice] = useState("__custom");
+  // Select string choices from scope
+  const choicesFromScope = findKeysForType(scope, "string");
+  useLayoutEffect(() => {
     const inDOM = !!block && !!editor.select(block.id);
     if (inDOM) {
       let blockValue = choice;
-      if (choice === "custom") {
+      if (choice === "__custom") {
         blockValue = value;
       }
       onEditorChange((editor) => {
@@ -75,23 +77,76 @@ export function TextView({
           <pre>Text(</pre>
           {choicesFromScope.length ? (
             <div className={styles["selector"]}>
-              <select
-                id={id}
-                value={choice}
-                onChange={(evt) => {
-                  setChoice(evt.target.value);
-                }}
-                disabled={!block}
-              >
-                <option value="custom">&quot;Custom&quot;</option>
-                {choicesFromScope.map((key) => (
-                  <option key={key} value={key}>
-                    {key}
-                  </option>
-                ))}
-              </select>
-              {choice === "custom" && (
-                <Fragment>
+              <Select.Root name={id} value={choice} onValueChange={setChoice}>
+                <Select.Trigger
+                  id={id}
+                  className={styles["select-trigger"]}
+                  aria-label="Text Input"
+                  disabled={!block}
+                >
+                  <Select.Value
+                    aria-label={choice === "__custom" ? "Custom" : choice}
+                  >
+                    {choice === "__custom" ? (
+                      <pre className={styles["select-value"]}>
+                        &quot;{value.replace(/(^")|("$)/g, "") || "Content"}
+                        &quot;
+                      </pre>
+                    ) : (
+                      choice
+                    )}
+                  </Select.Value>
+                  <Select.Icon className={styles["select-icon"]}>
+                    <TriangleDownIcon />
+                  </Select.Icon>
+                </Select.Trigger>
+
+                <Select.Content className={styles["select-content"]}>
+                  <Select.Viewport>
+                    <Select.Item
+                      className={styles["select-content__item"]}
+                      value="__custom"
+                      textValue="Custom"
+                    >
+                      <div className={styles["select-content__item__inner"]}>
+                        <Select.ItemText>
+                          &quot;
+                          <span className={styles["placeholder"]}>Custom</span>
+                          &quot;
+                        </Select.ItemText>
+                        <Select.ItemIndicator
+                          className={styles["select-content__item__indicator"]}
+                        >
+                          <CheckIcon />
+                        </Select.ItemIndicator>
+                      </div>
+                    </Select.Item>
+
+                    {choicesFromScope.map((key) => (
+                      <Select.Item
+                        className={styles["select-content__item"]}
+                        key={key}
+                        value={key}
+                        textValue={key}
+                      >
+                        <div className={styles["select-content__item__inner"]}>
+                          <Select.ItemText>{key}</Select.ItemText>
+                          <Select.ItemIndicator
+                            className={
+                              styles["select-content__item__indicator"]
+                            }
+                          >
+                            <CheckIcon />
+                          </Select.ItemIndicator>
+                        </div>
+                      </Select.Item>
+                    ))}
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Root>
+
+              {choice === "__custom" && (
+                <div className={styles["select-input"]}>
                   <pre>&quot;</pre>
                   <TextField
                     id={`${id}-input`}
@@ -106,11 +161,11 @@ export function TextView({
                     }}
                   />
                   <pre>&quot;</pre>
-                </Fragment>
+                </div>
               )}
             </div>
           ) : (
-            <Fragment>
+            <div className={styles["input"]}>
               <pre>&quot;</pre>
               <TextField
                 id={id}
@@ -134,7 +189,7 @@ export function TextView({
                 }}
               />
               <pre>&quot;</pre>
-            </Fragment>
+            </div>
           )}
           <pre>)</pre>
         </Fragment>

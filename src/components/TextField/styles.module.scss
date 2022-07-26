@@ -1,24 +1,22 @@
 .input {
   position: relative;
-  margin-inline: 5px;
 
   pre {
     font-size: 13.5px;
-    padding: 5px;
-    font-family: inherit;
+    font-family: monospace;
     user-select: none;
     pointer-events: none;
     opacity: 0;
   }
 
   input {
-    padding: 5px;
+    padding: 0;
     position: absolute;
     inset: 0;
     border: none;
     background-color: white;
-    border-radius: 5px;
     font-size: 13.5px;
+    font-family: monospace;
 
     &::placeholder {
       color: lightgray;

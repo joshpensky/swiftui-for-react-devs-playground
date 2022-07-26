@@ -1,11 +1,15 @@
 /**
- * Searches an object for its keys that have string values.
+ * Searches an object for its keys that have values of the given type.
  * Does _not_ search arrays.
  *
  * @param object the object to search
- * @returns a list of keys with string values
+ * @param type the type of value to search for
+ * @returns a list of keys with values of the given type
  */
-export function findStringKeys(object: Record<string, any>): string[] {
+export function findKeysForType(
+  object: Record<string, any>,
+  type: "string" | "number" | "boolean"
+): string[] {
   const keys: string[] = [];
 
   const keyValuesToVisit: [string, unknown][] = Object.entries(object);
@@ -15,7 +19,7 @@ export function findStringKeys(object: Record<string, any>): string[] {
       break;
     }
     const [key, value] = keyValue;
-    if (typeof value === "string") {
+    if (typeof value === type) {
       keys.push(key);
     } else if (value && !Array.isArray(value) && typeof value === "object") {
       keyValuesToVisit.push(
