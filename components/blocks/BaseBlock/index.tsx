@@ -9,11 +9,11 @@ import {
 import { DragSourceMonitor, useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
 import { motion } from "framer-motion";
-import { EditorContext } from "../../context/EditorContext";
-import { ZIndexContext } from "../../context/ZIndexContext";
-import { IControl, IView, IViewModifier } from "../../models/Editor";
+import { EditorContext } from "../../../context/EditorContext";
+import { ZIndexContext } from "../../../context/ZIndexContext";
+import { IControl, IView, IViewModifier } from "../../../models/Editor";
 import styles from "./styles.module.scss";
-import { Block } from "../Block";
+import { Block } from "../../Block";
 
 export function BaseBlock<B extends IControl | IView | IViewModifier>({
   block,

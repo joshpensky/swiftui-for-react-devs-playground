@@ -1,18 +1,8 @@
-import {
-  Children,
-  Fragment,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useId,
-  useRef,
-} from "react";
-import { useDrag, useDrop } from "react-dnd";
-import cx from "classnames";
+import { Fragment, PropsWithChildren, useContext, useId, useRef } from "react";
 import styles from "./styles.module.scss";
-import { ITextView, IViewModifier } from "../../models/Editor";
-import { BaseBlock } from "../BaseBlock";
-import { EditorContext } from "../../context/EditorContext";
+import { ITextView } from "../../../../models/Editor";
+import { BaseBlock } from "../../BaseBlock";
+import { EditorContext } from "../../../../context/EditorContext";
 
 export function TextView({
   block,

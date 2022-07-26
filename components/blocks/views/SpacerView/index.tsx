@@ -1,32 +1,32 @@
 import { PropsWithChildren, useId } from "react";
-import { IVStackView } from "../../models/Editor";
-import { BaseBlock } from "../BaseBlock";
+import { ISpacerView } from "../../../../models/Editor";
+import { BaseBlock } from "../../BaseBlock";
 
-export function VStackView({
+export function SpacerView({
   block,
   children,
   onDrag,
 }: PropsWithChildren<{
-  block?: IVStackView;
+  block?: ISpacerView;
   onDrag?(): void;
 }>) {
   const _id = useId();
   let id = block?.id ?? _id;
 
-  const defaultBlock: IVStackView = {
+  const defaultBlock: ISpacerView = {
     id,
     blockType: "view",
-    type: "VStack",
-    args: { content: [] },
+    type: "Spacer",
+    args: {},
     modifiers: [],
   };
 
   return (
-    <BaseBlock<IVStackView>
+    <BaseBlock
       block={block ?? defaultBlock}
-      configuration={<pre>VStack {`{`}</pre>}
-      onDrag={onDrag}
       preview={!block}
+      configuration={<pre>Spacer{`()`}</pre>}
+      onDrag={onDrag}
     >
       {children}
     </BaseBlock>

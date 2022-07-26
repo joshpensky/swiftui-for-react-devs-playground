@@ -8,9 +8,9 @@ import {
 import cx from "classnames";
 import { useDrag } from "react-dnd";
 import styles from "./styles.module.scss";
-import { Color, IForegroundColorViewModifier } from "../../models/Editor";
-import { BaseBlock } from "../BaseBlock";
-import { EditorContext } from "../../context/EditorContext";
+import { Color, IForegroundColorViewModifier } from "../../../../models/Editor";
+import { BaseBlock } from "../../BaseBlock";
+import { EditorContext } from "../../../../context/EditorContext";
 
 export function ForegroundColorViewModifier({
   block,

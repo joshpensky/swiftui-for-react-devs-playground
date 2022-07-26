@@ -1,19 +1,16 @@
 import { useContext } from "react";
 import { IControl, IView } from "../../models/Editor";
-import { TextView } from "../TextView";
-import { VStackView } from "../VStackView";
+import { TextView } from "../blocks/views/TextView";
+import { VStackView } from "../blocks/views/VStackView";
 import { motion } from "framer-motion";
 import styles from "./styles.module.scss";
-import { FontViewModifier } from "../FontViewModifier";
-import { ForegroundColorViewModifier } from "../ForegroundColorViewModifier";
-import { EditorContext } from "../../context/EditorContext";
-import { ColorView } from "../ColorView";
-import { SpacerView } from "../SpacerView";
+import { FontViewModifier } from "../blocks/modifiers/FontViewModifier";
+import { ForegroundColorViewModifier } from "../blocks/modifiers/ForegroundColorViewModifier";
+import { ColorView } from "../blocks/views/ColorView";
+import { SpacerView } from "../blocks/views/SpacerView";
 import { ZIndexContext } from "../../context/ZIndexContext";
 
 export function Block({ block }: { block: IControl | IView }) {
-  const [editor, onEditorChange] = useContext(EditorContext);
-
   let modifiers = null;
   if (block.blockType === "view" && block.modifiers.length) {
     modifiers = (
@@ -35,11 +32,9 @@ export function Block({ block }: { block: IControl | IView }) {
                   case "font": {
                     return <FontViewModifier block={modifier} />;
                   }
-
                   case "foregroundColor": {
                     return <ForegroundColorViewModifier block={modifier} />;
                   }
-
                   default: {
                     return null;
                   }
@@ -61,19 +56,15 @@ export function Block({ block }: { block: IControl | IView }) {
           case "Color": {
             return <ColorView block={block}>{modifiers}</ColorView>;
           }
-
           case "Spacer": {
             return <SpacerView block={block}>{modifiers}</SpacerView>;
           }
-
           case "Text": {
             return <TextView block={block}>{modifiers}</TextView>;
           }
-
           case "VStack": {
             return <VStackView block={block}>{modifiers}</VStackView>;
           }
-
           default: {
             return null;
           }

@@ -7,16 +7,16 @@ import {
   useState,
 } from "react";
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
-import { ForegroundColorViewModifier } from "../../ForegroundColorViewModifier";
-import { TextView } from "../../TextView";
-import { VStackView } from "../../VStackView";
+import { ForegroundColorViewModifier } from "../../blocks/modifiers/ForegroundColorViewModifier";
+import { TextView } from "../../blocks/views/TextView";
+import { VStackView } from "../../blocks/views/VStackView";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Tabs from "@radix-ui/react-tabs";
 import styles from "./styles.module.scss";
-import { FontViewModifier } from "../../FontViewModifier";
+import { FontViewModifier } from "../../blocks/modifiers/FontViewModifier";
 import { LibraryPreview } from "./LibraryPreview";
-import { ColorView } from "../../ColorView";
-import { SpacerView } from "../../SpacerView";
+import { ColorView } from "../../blocks/views/ColorView";
+import { SpacerView } from "../../blocks/views/SpacerView";
 
 export function Library({
   open,

@@ -1,7 +1,7 @@
 import { Fragment, PropsWithChildren, useContext, useId } from "react";
-import { EditorContext } from "../../context/EditorContext";
-import { Color, IColorView } from "../../models/Editor";
-import { BaseBlock } from "../BaseBlock";
+import { EditorContext } from "../../../../context/EditorContext";
+import { Color, IColorView } from "../../../../models/Editor";
+import { BaseBlock } from "../../BaseBlock";
 import styles from "./styles.module.scss";
 
 export function ColorView({

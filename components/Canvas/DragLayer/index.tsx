@@ -1,15 +1,15 @@
 import { useDragLayer } from "react-dnd";
 import { IView, IViewModifier } from "../../../models/Editor";
-import { ForegroundColorViewModifier } from "../../ForegroundColorViewModifier";
-import { TextView } from "../../TextView";
+import { ForegroundColorViewModifier } from "../../blocks/modifiers/ForegroundColorViewModifier";
+import { TextView } from "../../blocks/views/TextView";
 import styles from "./styles.module.scss";
 import cx from "classnames";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import { FontViewModifier } from "../../FontViewModifier";
-import { VStackView } from "../../VStackView";
-import { ColorView } from "../../ColorView";
-import { SpacerView } from "../../SpacerView";
+import { FontViewModifier } from "../../blocks/modifiers/FontViewModifier";
+import { VStackView } from "../../blocks/views/VStackView";
+import { ColorView } from "../../blocks/views/ColorView";
+import { SpacerView } from "../../blocks/views/SpacerView";
 
 export function DragLayer() {
   const { itemType, isDragging, item, currentOffset } = useDragLayer(
