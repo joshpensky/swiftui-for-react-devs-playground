@@ -5,6 +5,7 @@ import { useDragLayer } from "react-dnd";
 import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModifier";
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
+import { ForEachView } from "@src/components/blocks/views/ForEachView";
 import { SpacerView } from "@src/components/blocks/views/SpacerView";
 import { TextView } from "@src/components/blocks/views/TextView";
 import { VStackView } from "@src/components/blocks/views/VStackView";
@@ -32,6 +33,9 @@ export function DragLayer() {
         switch (view.type) {
           case "Color": {
             return <ColorView block={view} />;
+          }
+          case "ForEach": {
+            return <ForEachView block={view} />;
           }
           case "Spacer": {
             return <SpacerView block={view} />;

@@ -9,8 +9,15 @@ import { VStackView } from "@src/components/blocks/views/VStackView";
 import { ZIndexContext } from "@src/context/ZIndexContext";
 import { IControl, IView } from "@src/models/Editor";
 import styles from "./styles.module.scss";
+import { ForEachView } from "../blocks/views/ForEachView";
 
-export function Block({ block }: { block: IControl | IView }) {
+export function Block({
+  block,
+  scope = {},
+}: {
+  block: IControl | IView;
+  scope: Record<string, any>;
+}) {
   let modifiers = null;
   if (block.blockType === "view" && block.modifiers.length) {
     modifiers = (
@@ -30,10 +37,15 @@ export function Block({ block }: { block: IControl | IView }) {
               {(() => {
                 switch (modifier.type) {
                   case "font": {
-                    return <FontViewModifier block={modifier} />;
+                    return <FontViewModifier block={modifier} scope={scope} />;
                   }
                   case "foregroundColor": {
-                    return <ForegroundColorViewModifier block={modifier} />;
+                    return (
+                      <ForegroundColorViewModifier
+                        block={modifier}
+                        scope={scope}
+                      />
+                    );
                   }
                   default: {
                     return null;
@@ -54,16 +66,39 @@ export function Block({ block }: { block: IControl | IView }) {
       {(() => {
         switch (block.type) {
           case "Color": {
-            return <ColorView block={block}>{modifiers}</ColorView>;
+            return (
+              <ColorView block={block} scope={scope}>
+                {modifiers}
+              </ColorView>
+            );
+          }
+          case "ForEach": {
+            return (
+              <ForEachView block={block} scope={scope}>
+                {modifiers}
+              </ForEachView>
+            );
           }
           case "Spacer": {
-            return <SpacerView block={block}>{modifiers}</SpacerView>;
+            return (
+              <SpacerView block={block} scope={scope}>
+                {modifiers}
+              </SpacerView>
+            );
           }
           case "Text": {
-            return <TextView block={block}>{modifiers}</TextView>;
+            return (
+              <TextView block={block} scope={scope}>
+                {modifiers}
+              </TextView>
+            );
           }
           case "VStack": {
-            return <VStackView block={block}>{modifiers}</VStackView>;
+            return (
+              <VStackView block={block} scope={scope}>
+                {modifiers}
+              </VStackView>
+            );
           }
           default: {
             return null;

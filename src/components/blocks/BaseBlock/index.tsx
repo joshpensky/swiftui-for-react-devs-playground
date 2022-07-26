@@ -19,12 +19,14 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
   block,
   children,
   configuration,
+  getChildScope,
   onDrag,
   onDragEnd,
   preview,
 }: PropsWithChildren<{
   block: B;
   configuration: ReactNode;
+  getChildScope(block: IControl | IView, index: number): Record<string, any>;
   onDrag?(): void;
   onDragEnd?(monitor: DragSourceMonitor<B, unknown>): void;
   preview?: boolean;
@@ -169,7 +171,10 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
                         duration: 0.25,
                       }}
                     >
-                      <Block block={block} />
+                      <Block
+                        block={block}
+                        scope={getChildScope(block, index)}
+                      />
                     </motion.li>
                   ))}
                 </motion.ul>

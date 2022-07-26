@@ -8,40 +8,38 @@ import { Editor } from "@src/models/Editor";
 import styles from "./styles/index.module.scss";
 
 const code = `
-<p style={{ color: 'blue' }}>
-  This is my great text!
-</p>
+const [items, setItems] = useState([
+  { id: 1, title: "Do something", completed: true },
+  { id: 2, title: "Do something else", completed: false },
+]);
+
+return (
+  <div>
+    {items.map(item => (
+      <div key={item.id}>
+        {item.completed && <img src="checkmark.png" />}
+        <p>{item.title}</p>
+      </div>
+    ))}
+  </div>
+);
 `.trim();
 
 const Home: NextPage = () => {
-  const [editor, setEditor] = useState(new Editor({ scope: {}, tree: [] }));
+  const [editor, setEditor] = useState(
+    new Editor({
+      scope: {
+        items: [
+          { id: 1, title: "Do something", completed: true },
+          { id: 2, title: "Do something else", completed: false },
+        ],
+      },
+      tree: [],
+    })
+  );
 
   const matched = useMemo(() => {
-    return editor.equals(
-      new Editor({
-        scope: {},
-        tree: [
-          {
-            id: "anon",
-            blockType: "view",
-            type: "Text",
-            args: {
-              value: "This is my great text!",
-            },
-            modifiers: [
-              {
-                id: "anon",
-                blockType: "modifier",
-                type: "foregroundColor",
-                args: {
-                  color: "blue",
-                },
-              },
-            ],
-          },
-        ],
-      })
-    );
+    return editor.equals(new Editor({ scope: {}, tree: [] }));
   }, [editor]);
 
   return (

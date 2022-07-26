@@ -4,10 +4,12 @@ import { IVStackView } from "@src/models/Editor";
 
 export function VStackView({
   block,
+  scope = {},
   children,
   onDrag,
 }: PropsWithChildren<{
   block?: IVStackView;
+  scope?: Record<string, any>;
   onDrag?(): void;
 }>) {
   const _id = useId();
@@ -25,6 +27,7 @@ export function VStackView({
     <BaseBlock<IVStackView>
       block={block ?? defaultBlock}
       configuration={<pre>VStack {`{`}</pre>}
+      getChildScope={() => scope}
       onDrag={onDrag}
       preview={!block}
     >

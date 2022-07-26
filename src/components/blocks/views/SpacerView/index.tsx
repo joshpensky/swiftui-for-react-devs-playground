@@ -5,9 +5,11 @@ import { ISpacerView } from "@src/models/Editor";
 export function SpacerView({
   block,
   children,
+  scope = {},
   onDrag,
 }: PropsWithChildren<{
   block?: ISpacerView;
+  scope?: Record<string, any>;
   onDrag?(): void;
 }>) {
   const _id = useId();
@@ -26,6 +28,7 @@ export function SpacerView({
       block={block ?? defaultBlock}
       preview={!block}
       configuration={<pre>Spacer{`()`}</pre>}
+      getChildScope={() => scope}
       onDrag={onDrag}
     >
       {children}

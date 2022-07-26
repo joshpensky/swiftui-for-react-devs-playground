@@ -11,6 +11,7 @@ import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModifier";
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
+import { ForEachView } from "@src/components/blocks/views/ForEachView";
 import { SpacerView } from "@src/components/blocks/views/SpacerView";
 import { TextView } from "@src/components/blocks/views/TextView";
 import { VStackView } from "@src/components/blocks/views/VStackView";
@@ -116,6 +117,7 @@ export function Library({
                     >
                       <Tabs.List className={styles["block-list"]}>
                         <Tabs.Trigger value="color">Color</Tabs.Trigger>
+                        <Tabs.Trigger value="foreach">For Each</Tabs.Trigger>
                         <Tabs.Trigger value="spacer">Spacer</Tabs.Trigger>
                         <Tabs.Trigger value="text">Text</Tabs.Trigger>
                         <Tabs.Trigger value="vstack">
@@ -131,6 +133,16 @@ export function Library({
                             docs="https://developer.apple.com/documentation/swiftui/color"
                           >
                             <ColorView onDrag={() => onOpenChange(false)} />
+                          </LibraryPreview>
+                        </Tabs.Content>
+
+                        <Tabs.Content value="foreach">
+                          <LibraryPreview
+                            title="For Each"
+                            description="A structure that computes views on demand from an underlying collection of identified data."
+                            docs="https://developer.apple.com/documentation/swiftui/foreach"
+                          >
+                            <ForEachView onDrag={() => onOpenChange(false)} />
                           </LibraryPreview>
                         </Tabs.Content>
 

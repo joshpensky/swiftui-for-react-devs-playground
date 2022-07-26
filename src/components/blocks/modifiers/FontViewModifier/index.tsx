@@ -7,9 +7,11 @@ import styles from "./styles.module.scss";
 export function FontViewModifier({
   block,
   onDrag,
+  scope = {},
 }: {
   block?: IFontViewModifier;
   onDrag?(): void;
+  scope?: Record<string, any>;
 }) {
   const _id = useId();
   const id = block?.id ?? _id;
@@ -58,6 +60,7 @@ export function FontViewModifier({
           <pre>)</pre>
         </Fragment>
       }
+      getChildScope={() => scope}
       onDrag={onDrag}
       onDragEnd={(monitor) => {
         if (monitor.didDrop()) {
@@ -71,52 +74,4 @@ export function FontViewModifier({
       }}
     />
   );
-
-  // const [{ isDragging }, drag] = useDrag<
-  //   IFontViewModifier,
-  //   unknown,
-  //   { isDragging: boolean }
-  // >(() => ({
-  //   type: "modifier",
-  //   item: {
-  //     id,
-  //     blockType: "modifier",
-  //     type: "font",
-  //     args: {
-  //       value: "body",
-  //     },
-  //   },
-  //   canDrag(monitor) {
-  //     return !!preview;
-  //   },
-  //   end(draggedItem, monitor) {
-  //   },
-  //   collect: (monitor) => ({
-  //     isDragging: monitor.isDragging(),
-  //   }),
-  // }));
-
-  // useEffect(() => {
-  //   if (isDragging) {
-  //     onDrag?.();
-  //   }
-  // }, [isDragging, onDrag]);
-
-  // return (
-  //   <div
-  //     ref={drag}
-  //     className={cx(styles["container"], preview && styles["preview"])}
-  //     style={{
-  //       cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
-  //     }}
-  //   >
-  //
-
-  //     {!preview && (
-  //       <button type="button" onClick={() => onRemove?.()}>
-  //         –
-  //       </button>
-  //     )}
-  //   </div>
-  // );
 }

@@ -7,9 +7,11 @@ import styles from "./styles.module.scss";
 export function ForegroundColorViewModifier({
   block,
   onDrag,
+  scope = {},
 }: {
   block?: IForegroundColorViewModifier;
   onDrag?(): void;
+  scope?: Record<string, any>;
 }) {
   const _id = useId();
   const id = block?.id ?? _id;
@@ -59,6 +61,7 @@ export function ForegroundColorViewModifier({
           <pre>)</pre>
         </Fragment>
       }
+      getChildScope={() => scope}
       onDrag={onDrag}
       onDragEnd={(monitor) => {
         if (monitor.didDrop()) {

@@ -7,9 +7,11 @@ import styles from "./styles.module.scss";
 export function TextView({
   block,
   children,
+  scope = {},
   onDrag,
 }: PropsWithChildren<{
   block?: ITextView;
+  scope?: Record<string, any>;
   onDrag?(): void;
 }>) {
   const _id = useId();
@@ -64,6 +66,7 @@ export function TextView({
           <pre>&quot;)</pre>
         </Fragment>
       }
+      getChildScope={() => scope}
       onDrag={onDrag}
       onDragEnd={(monitor) => {
         if (monitor.didDrop()) {

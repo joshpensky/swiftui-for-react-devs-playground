@@ -8,9 +8,11 @@ export function ColorView({
   block,
   children,
   onDrag,
+  scope = {},
 }: PropsWithChildren<{
   block?: IColorView;
   onDrag?(): void;
+  scope?: Record<string, any>;
 }>) {
   const _id = useId();
   let id = block?.id ?? _id;
@@ -60,6 +62,7 @@ export function ColorView({
           </select>
         </Fragment>
       }
+      getChildScope={() => scope}
       onDrag={onDrag}
       onDragEnd={(monitor) => {
         if (monitor.didDrop()) {

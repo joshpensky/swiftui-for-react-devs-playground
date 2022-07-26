@@ -92,7 +92,7 @@ export function Canvas({
                           },
                         }}
                       >
-                        <Block block={block} />
+                        <Block block={block} scope={editor.state.scope} />
                       </motion.div>
                     </motion.li>
                   );
