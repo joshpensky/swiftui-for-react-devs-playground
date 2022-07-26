@@ -1,47 +1,67 @@
-import { PropsWithChildren, useEffect, useId, useRef, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
-import cx from "classnames";
-import { Color, IColorView, IViewModifier } from "../../models/Editor";
+import { Fragment, PropsWithChildren, useContext, useId } from "react";
+import { EditorContext } from "../../context/EditorContext";
+import { Color, IColorView } from "../../models/Editor";
+import { BaseBlock } from "../BaseBlock";
 import styles from "./styles.module.scss";
 
 export function ColorView({
+  block,
   children,
-  onChange,
   onDrag,
-  onModifier,
-  onRemove,
-  value,
-  preview,
-  id: propsId,
 }: PropsWithChildren<{
-  id?: string;
-  preview?: boolean;
-  onChange?(value: Color): void;
+  block?: IColorView;
   onDrag?(): void;
-  onModifier?(modifier: IViewModifier): void;
-  onRemove?(): void;
-  value: Color;
 }>) {
   const _id = useId();
-  let id = propsId ?? _id;
+  let id = block?.id ?? _id;
 
-  const [{ isDragging }, drag] = useDrag<
-    IColorView,
-    unknown,
-    { isDragging: boolean }
-  >(
-    () => ({
-      type: "view",
-      item: {
-        id,
-        blockType: "view",
-        type: "Color",
-        args: {
-          value,
-        },
-        modifiers: [],
-      },
-      end(draggedItem, monitor) {
+  const [editor, onEditorChange] = useContext(EditorContext);
+
+  const defaultBlock: IColorView = {
+    id,
+    blockType: "view",
+    type: "Color",
+    args: {
+      value: "red",
+    },
+    modifiers: [],
+  };
+
+  return (
+    <BaseBlock
+      block={block ?? defaultBlock}
+      preview={!block}
+      configuration={
+        <Fragment>
+          <pre>Color.</pre>
+          <select
+            id={id}
+            className={styles["select"]}
+            name={id}
+            value={(block ?? defaultBlock).args.value}
+            onChange={(evt) => {
+              const color = evt.target.value as Color;
+              if (block) {
+                onEditorChange(
+                  editor.update(block.id, {
+                    ...block,
+                    args: {
+                      value: color,
+                    },
+                  })
+                );
+              }
+            }}
+            disabled={!block}
+          >
+            <option value="red">red</option>
+            <option value="green">green</option>
+            <option value="blue">blue</option>
+          </select>
+        </Fragment>
+      }
+      onDrag={onDrag}
+      onDragEnd={(monitor) => {
         if (monitor.didDrop()) {
           setTimeout(() => {
             const select = document.getElementById(id);
@@ -50,71 +70,9 @@ export function ColorView({
             }
           }, 10);
         }
-      },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-    }),
-    [value]
-  );
-
-  useEffect(() => {
-    if (isDragging) {
-      onDrag?.();
-    }
-  }, [isDragging, onDrag]);
-
-  const [{ isOver }, drop] = useDrop(
-    () => ({
-      accept: "modifier",
-      collect: (monitor) => ({
-        isOver: !preview && monitor.isOver(),
-      }),
-      drop(item, monitor) {
-        onModifier?.(item as IViewModifier);
-      },
-    }),
-    [onModifier]
-  );
-
-  return (
-    <div
-      ref={drag}
-      className={cx(
-        styles["view"],
-        preview && styles["preview"],
-        isDragging && styles["dragging"],
-        isOver && styles["dropping"]
-      )}
-      style={{
-        cursor: isDragging ? "grabbing" : "grab",
       }}
     >
-      <div
-        ref={drop}
-        className={cx(styles["container"], isOver && styles["dropping"])}
-      >
-        <pre>Color.</pre>
-        <select
-          id={id}
-          name={id}
-          value={value}
-          onChange={(evt) => onChange?.(evt.target.value as Color)}
-          disabled={preview}
-        >
-          <option value="red">red</option>
-          <option value="green">green</option>
-          <option value="blue">blue</option>
-        </select>
-
-        {!preview && (
-          <button type="button" onClick={() => onRemove?.()}>
-            –
-          </button>
-        )}
-      </div>
-
       {children}
-    </div>
+    </BaseBlock>
   );
 }

@@ -1,86 +1,122 @@
-import { PropsWithChildren, useEffect, useId } from "react";
-import cx from "classnames";
-import { useDrag } from "react-dnd";
+import { Fragment, useContext, useId } from "react";
 import styles from "./styles.module.scss";
-import { Font } from "../../models/Editor";
+import { Font, IFontViewModifier } from "../../models/Editor";
+import { BaseBlock } from "../BaseBlock";
+import { EditorContext } from "../../context/EditorContext";
 
 export function FontViewModifier({
-  value,
-  onChange,
+  block,
   onDrag,
-  onRemove,
-  preview,
-  id: propsId,
-}: PropsWithChildren<{
-  id?: string;
-  preview?: boolean;
-  value: Font;
-  onChange?(value: Font): void;
+}: {
+  block?: IFontViewModifier;
   onDrag?(): void;
-  onRemove?(): void;
-}>) {
+}) {
   const _id = useId();
-  const id = propsId ?? _id;
+  const id = block?.id ?? _id;
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "modifier",
-    item: {
-      id,
-      type: "font",
-      props: {
-        value: "body",
-      },
-    },
-    canDrag(monitor) {
-      return !!preview;
-    },
-    end(draggedItem, monitor) {
-      if (monitor.didDrop()) {
-        setTimeout(() => {
-          const select = document.getElementById(id);
-          if (select instanceof HTMLSelectElement) {
-            select.focus();
-          }
-        }, 10);
-      }
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }));
+  const [editor, onEditorChange] = useContext(EditorContext);
 
-  useEffect(() => {
-    if (isDragging) {
-      onDrag?.();
-    }
-  }, [isDragging, onDrag]);
+  const defaultBlock: IFontViewModifier = {
+    id,
+    blockType: "modifier",
+    type: "font",
+    args: {
+      value: "body",
+    },
+  };
 
   return (
-    <div
-      ref={drag}
-      className={cx(styles["container"], preview && styles["preview"])}
-      style={{
-        cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
+    <BaseBlock
+      block={block ?? defaultBlock}
+      preview={!block}
+      configuration={
+        <Fragment>
+          <pre>.font(</pre>
+          <select
+            id={id}
+            className={styles["select"]}
+            name={id}
+            value={(block ?? defaultBlock).args.value}
+            onChange={(evt) => {
+              const font = evt.target.value as Font;
+              if (block) {
+                onEditorChange(
+                  editor.update(block.id, {
+                    ...block,
+                    args: {
+                      value: font,
+                    },
+                  })
+                );
+              }
+            }}
+            disabled={!block}
+          >
+            <option value="body">.body</option>
+            <option value="title">.title</option>
+          </select>
+          <pre>)</pre>
+        </Fragment>
+      }
+      onDrag={onDrag}
+      onDragEnd={(monitor) => {
+        if (monitor.didDrop()) {
+          setTimeout(() => {
+            const select = document.getElementById(id);
+            if (select instanceof HTMLSelectElement) {
+              select.focus();
+            }
+          }, 10);
+        }
       }}
-    >
-      <pre>.font(</pre>
-      <select
-        id={id}
-        name={id}
-        value={value}
-        onChange={(evt) => onChange?.(evt.target.value as Font)}
-        disabled={preview}
-      >
-        <option value="body">.body</option>
-        <option value="title">.title</option>
-      </select>
-      <pre>)</pre>
-
-      {!preview && (
-        <button type="button" onClick={() => onRemove?.()}>
-          –
-        </button>
-      )}
-    </div>
+    />
   );
+
+  // const [{ isDragging }, drag] = useDrag<
+  //   IFontViewModifier,
+  //   unknown,
+  //   { isDragging: boolean }
+  // >(() => ({
+  //   type: "modifier",
+  //   item: {
+  //     id,
+  //     blockType: "modifier",
+  //     type: "font",
+  //     args: {
+  //       value: "body",
+  //     },
+  //   },
+  //   canDrag(monitor) {
+  //     return !!preview;
+  //   },
+  //   end(draggedItem, monitor) {
+  //   },
+  //   collect: (monitor) => ({
+  //     isDragging: monitor.isDragging(),
+  //   }),
+  // }));
+
+  // useEffect(() => {
+  //   if (isDragging) {
+  //     onDrag?.();
+  //   }
+  // }, [isDragging, onDrag]);
+
+  // return (
+  //   <div
+  //     ref={drag}
+  //     className={cx(styles["container"], preview && styles["preview"])}
+  //     style={{
+  //       cursor: preview ? (isDragging ? "grabbing" : "grab") : "default",
+  //     }}
+  //   >
+  //
+
+  //     {!preview && (
+  //       <button type="button" onClick={() => onRemove?.()}>
+  //         –
+  //       </button>
+  //     )}
+  //   </div>
+  // );
 }

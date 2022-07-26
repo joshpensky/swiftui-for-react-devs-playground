@@ -1,49 +1,81 @@
-import { PropsWithChildren, useEffect, useId, useRef } from "react";
+import {
+  Children,
+  Fragment,
+  PropsWithChildren,
+  useContext,
+  useEffect,
+  useId,
+  useRef,
+} from "react";
 import { useDrag, useDrop } from "react-dnd";
 import cx from "classnames";
 import styles from "./styles.module.scss";
 import { ITextView, IViewModifier } from "../../models/Editor";
+import { BaseBlock } from "../BaseBlock";
+import { EditorContext } from "../../context/EditorContext";
 
 export function TextView({
+  block,
   children,
-  onChange,
   onDrag,
-  onModifier,
-  onRemove,
-  value,
-  preview,
-  id: propsId,
 }: PropsWithChildren<{
-  id?: string;
-  preview?: boolean;
-  onChange?(value: string): void;
+  block?: ITextView;
   onDrag?(): void;
-  onModifier?(modifier: IViewModifier): void;
-  onRemove?(): void;
-  value: string;
 }>) {
   const _id = useId();
-  let id = propsId ?? _id;
+  let id = block?.id ?? _id;
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const [editor, onEditorChange] = useContext(EditorContext);
 
-  const [{ isDragging }, drag] = useDrag<
-    ITextView,
-    unknown,
-    { isDragging: boolean }
-  >(
-    () => ({
-      type: "view",
-      item: {
-        id,
-        blockType: "view",
-        type: "Text",
-        args: {
-          value,
-        },
-        modifiers: [],
-      },
-      end(draggedItem, monitor) {
+  const defaultBlock: ITextView = {
+    id,
+    blockType: "view",
+    type: "Text",
+    args: {
+      value: "Text",
+    },
+    modifiers: [],
+  };
+
+  return (
+    <BaseBlock
+      block={block ?? defaultBlock}
+      preview={!block}
+      configuration={
+        <Fragment>
+          <pre>Text(&quot;</pre>
+          <div className={styles["input"]}>
+            <pre aria-hidden="true">
+              {(block ?? defaultBlock).args.value || "Content"}
+            </pre>
+            <input
+              ref={inputRef}
+              id={id}
+              name={id}
+              type="text"
+              placeholder="Content"
+              value={(block ?? defaultBlock).args.value}
+              onChange={(evt) => {
+                if (block) {
+                  onEditorChange(
+                    editor.update(block.id, {
+                      ...block,
+                      args: {
+                        value: evt.target.value,
+                      },
+                    })
+                  );
+                }
+              }}
+              disabled={!block}
+            />
+          </div>
+          <pre>&quot;)</pre>
+        </Fragment>
+      }
+      onDrag={onDrag}
+      onDragEnd={(monitor) => {
         if (monitor.didDrop()) {
           setTimeout(() => {
             const input = document.getElementById(id);
@@ -53,76 +85,9 @@ export function TextView({
             }
           }, 10);
         }
-      },
-      collect: (monitor) => ({
-        isDragging: monitor.isDragging(),
-      }),
-    }),
-    [value]
-  );
-
-  useEffect(() => {
-    if (isDragging) {
-      onDrag?.();
-    }
-  }, [isDragging, onDrag]);
-
-  const [{ isOver }, drop] = useDrop(
-    () => ({
-      accept: "modifier",
-      collect: (monitor) => ({
-        isOver: !preview && monitor.isOver(),
-      }),
-      drop(item, monitor) {
-        onModifier?.(item as IViewModifier);
-      },
-    }),
-    [onModifier]
-  );
-
-  return (
-    <div
-      ref={drag}
-      className={cx(
-        styles["view"],
-        preview && styles["preview"],
-        isDragging && styles["dragging"],
-        isOver && styles["dropping"]
-      )}
-      style={{
-        cursor: isDragging ? "grabbing" : "grab",
       }}
     >
-      <div
-        ref={drop}
-        className={cx(styles["container"], isOver && styles["dropping"])}
-      >
-        <pre>Text(&quot;</pre>
-        <div className={styles["input"]}>
-          <pre aria-hidden="true">{value || "Content"}</pre>
-          <input
-            ref={inputRef}
-            id={id}
-            name={id}
-            type="text"
-            placeholder="Content"
-            value={value}
-            onChange={(evt) => {
-              onChange?.(evt.target.value);
-            }}
-            disabled={preview}
-          />
-        </div>
-        <pre>&quot;)</pre>
-
-        {!preview && (
-          <button type="button" onClick={() => onRemove?.()}>
-            –
-          </button>
-        )}
-      </div>
-
       {children}
-    </div>
+    </BaseBlock>
   );
 }

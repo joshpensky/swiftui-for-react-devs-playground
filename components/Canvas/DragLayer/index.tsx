@@ -31,16 +31,16 @@ export function DragLayer() {
         const view = item as IView;
         switch (view.type) {
           case "Color": {
-            return <ColorView preview value={view.args.value} />;
+            return <ColorView block={view} />;
           }
           case "Spacer": {
-            return <SpacerView preview />;
+            return <SpacerView block={view} />;
           }
           case "Text": {
-            return <TextView preview value={view.args.value} />;
+            return <TextView block={view} />;
           }
           case "VStack": {
-            return <VStackView preview content={view.args.content} />;
+            return <VStackView block={view} />;
           }
         }
       }
@@ -49,10 +49,10 @@ export function DragLayer() {
         const modifier = item as IViewModifier;
         switch (modifier.type) {
           case "font": {
-            return <FontViewModifier preview value="body" />;
+            return <FontViewModifier />;
           }
           case "foregroundColor": {
-            return <ForegroundColorViewModifier preview color="red" />;
+            return <ForegroundColorViewModifier />;
           }
         }
       }

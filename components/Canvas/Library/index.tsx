@@ -131,11 +131,7 @@ export function Library({
                             description="A representation of a color that adapts to a given context."
                             docs="https://developer.apple.com/documentation/swiftui/color"
                           >
-                            <ColorView
-                              preview
-                              value="red"
-                              onDrag={() => onOpenChange(false)}
-                            />
+                            <ColorView onDrag={() => onOpenChange(false)} />
                           </LibraryPreview>
                         </Tabs.Content>
 
@@ -145,10 +141,7 @@ export function Library({
                             description="A flexible space that expands along the major axis of its containing stack layout, or on both axes if not contained in a stack."
                             docs="https://developer.apple.com/documentation/swiftui/spacer"
                           >
-                            <SpacerView
-                              preview
-                              onDrag={() => onOpenChange(false)}
-                            />
+                            <SpacerView onDrag={() => onOpenChange(false)} />
                           </LibraryPreview>
                         </Tabs.Content>
 
@@ -158,11 +151,7 @@ export function Library({
                             description="A view that displays one or more lines of read-only text."
                             docs="https://developer.apple.com/documentation/swiftui/text"
                           >
-                            <TextView
-                              preview
-                              value="Text"
-                              onDrag={() => onOpenChange(false)}
-                            />
+                            <TextView onDrag={() => onOpenChange(false)} />
                           </LibraryPreview>
                         </Tabs.Content>
 
@@ -172,11 +161,7 @@ export function Library({
                             description="A view that arranges its children in a vertical line."
                             docs="https://developer.apple.com/documentation/swiftui/vstack"
                           >
-                            <VStackView
-                              preview
-                              content={[]}
-                              onDrag={() => onOpenChange(false)}
-                            />
+                            <VStackView onDrag={() => onOpenChange(false)} />
                           </LibraryPreview>
                         </Tabs.Content>
                       </div>
@@ -205,8 +190,6 @@ export function Library({
                             docs="https://developer.apple.com/documentation/swiftui/view/font(_:)"
                           >
                             <FontViewModifier
-                              preview
-                              value="body"
                               onDrag={() => onOpenChange(false)}
                             />
                           </LibraryPreview>
@@ -219,8 +202,6 @@ export function Library({
                             docs="https://developer.apple.com/documentation/SwiftUI/View/foregroundColor(_:)"
                           >
                             <ForegroundColorViewModifier
-                              preview
-                              color="red"
                               onDrag={() => onOpenChange(false)}
                             />
                           </LibraryPreview>
