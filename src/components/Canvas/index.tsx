@@ -7,6 +7,7 @@ import { EditorContext } from "@src/context/EditorContext";
 import { Editor, IView } from "@src/models/Editor";
 import { DragLayer } from "./DragLayer";
 import { Library } from "./Library";
+import { Trash } from "./Trash";
 import styles from "./styles.module.scss";
 
 export function Canvas({
@@ -76,24 +77,7 @@ export function Canvas({
                         duration: 0.25,
                       }}
                     >
-                      {/* <motion.div
-                        aria-hidden="true"
-                        className={styles["poof"]}
-                        exit={{
-                          animation: `${styles["poof"]} 0.5s steps(7, end) forwards`,
-                        }}
-                      /> */}
-
-                      {/* <motion.div
-                        exit={{
-                          opacity: 0,
-                          transition: {
-                            duration: 0.25,
-                          },
-                        }}
-                      > */}
                       <Block block={block} scope={editor.state.scope} />
-                      {/* </motion.div> */}
                     </motion.li>
                   );
                 })}
@@ -103,6 +87,8 @@ export function Canvas({
           {/* )}
           </AnimatePresence> */}
         </LayoutGroup>
+
+        <Trash />
 
         <Library open={toolbarOpen} onOpenChange={setToolbarOpen} />
       </div>

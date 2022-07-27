@@ -139,20 +139,7 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
       <div className={styles["wrapper"]}>
         <div ref={modifierDropTop} className={cx(styles["container"])}>
           <div className={styles["dropzone"]} />
-
           {configuration}
-
-          {!preview && (
-            <button
-              className={styles["delete"]}
-              type="button"
-              onClick={() => {
-                onEditorChange(editor.delete(block.id));
-              }}
-            >
-              –
-            </button>
-          )}
         </div>
 
         {"content" in block.args && (

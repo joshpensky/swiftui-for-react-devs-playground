@@ -6,6 +6,7 @@ import {
   useState,
 } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { PlusIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModifier";
@@ -36,7 +37,7 @@ export function Library({
     <Dialog.Root open={open} onOpenChange={onOpenChange} modal={false}>
       <Dialog.Trigger asChild>
         <button className={styles["modal-trigger"]} aria-label="Open library">
-          +
+          <PlusIcon />
         </button>
       </Dialog.Trigger>
 

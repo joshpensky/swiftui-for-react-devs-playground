@@ -4,6 +4,10 @@
   align-items: flex-start;
   position: relative;
 
+  &:focus-within {
+    z-index: 10;
+  }
+
   &.control {
     --color: #db8dff;
     &.modifier-dropping {
@@ -70,35 +74,6 @@
 
   pre {
     margin: 0;
-  }
-
-  .delete {
-    position: absolute;
-    top: 50%;
-    right: -5px;
-    transform: translate(100%, -50%);
-    background-color: red;
-    border: none;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    color: white;
-    cursor: pointer;
-    opacity: 0;
-    transition: ease-out 100ms;
-
-    &::before {
-      content: "";
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      left: -5px;
-      top: 0;
-    }
-
-    &:focus {
-      opacity: 1;
-    }
   }
 
   .block:not(.dropping) &:hover {
