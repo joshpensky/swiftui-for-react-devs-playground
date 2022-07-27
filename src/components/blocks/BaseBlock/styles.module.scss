@@ -1,0 +1,164 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  z-index: calc(3 + var(--z-index, 0));
+
+  &:focus-within {
+    z-index: 10;
+  }
+
+  &.control {
+    --color: #db8dff;
+    &.modifier-dropping {
+      --color: #{mix(#2868e4, #db8dff, 25%)};
+    }
+  }
+
+  &.view {
+    --color: #ffc328;
+    &.modifier-dropping {
+      --color: #{mix(#2868e4, #ffc328, 25%)};
+    }
+  }
+
+  &.modifier {
+    --color: #97d05f;
+    &.modifier-dropping {
+      --color: #{mix(#2868e4, #97d05f, 25%)};
+    }
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  z-index: 3;
+}
+
+.container {
+  align-items: center;
+  background-color: var(--color);
+  display: flex;
+  padding: 12px 15px;
+  border-radius: 15px;
+  min-width: 18px + 30px;
+  position: relative;
+  z-index: 2;
+
+  &:focus-within {
+    z-index: 10;
+  }
+
+  .dragging & {
+    opacity: 0;
+  }
+
+  .block--with-content > .wrapper > &:nth-child(1) {
+    border-bottom-left-radius: 0;
+  }
+
+  li:not(:last-child) > .modifier > .wrapper > &:nth-child(1) {
+    border-bottom-left-radius: 0;
+  }
+
+  .modifier > .wrapper > &:nth-child(1) {
+    border-top-left-radius: 0;
+  }
+
+  &:nth-child(3) {
+    border-top-left-radius: 0;
+  }
+
+  pre {
+    margin: 0;
+  }
+
+  .block:not(.dropping) &:hover {
+    button {
+      opacity: 1;
+    }
+  }
+}
+
+.content {
+  border-left: 15px solid var(--color);
+  padding: 3px;
+  position: relative;
+  width: 100%;
+
+  .dragging & {
+    opacity: 0;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 36px;
+    width: 18px;
+    border-radius: 18px 0 0 0;
+    box-shadow: 0px -18px 0 0 var(--color);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 36px;
+    width: 18px;
+    border-radius: 0 0 0 18px;
+    box-shadow: 0px 18px 0 0 var(--color);
+  }
+}
+
+.content-drop {
+  width: 100%;
+  min-height: 36px;
+  position: relative;
+
+  &.dropping {
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      box-shadow: inset 0 0 0 3px #2868e4;
+      background-color: rgba(#2868e4, 0.25);
+      border-radius: 15px;
+      width: 100%;
+      z-index: inherit;
+    }
+  }
+}
+
+.views {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 3px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 4;
+
+  li {
+    transform-origin: top left;
+  }
+}
+
+.modifiers {
+  margin-left: 15px;
+  margin-top: 3px;
+  z-index: 2;
+
+  &:focus-within {
+    z-index: 10;
+  }
+}

@@ -1,0 +1,113 @@
+.container {
+  position: relative;
+  z-index: 1000;
+
+  .select-trigger {
+    align-items: center;
+    justify-content: flex-end;
+    display: flex;
+    border: none;
+    padding: 0;
+    background-color: white;
+    font-size: 13.5px;
+    padding: 8px;
+    border-radius: 8px;
+    font-family: monospace;
+    min-width: 50px;
+  }
+
+  .select-input {
+    background-color: white;
+    position: absolute;
+    left: 8px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    display: flex;
+
+    .select-input__field {
+      border-left: 1px solid #c0c0c0;
+      border-right: 1px solid #c0c0c0;
+      padding: 0 5px;
+      margin: 0 5px;
+      height: 100%;
+
+      input {
+        outline: none;
+        padding: 0 5px;
+      }
+    }
+
+    pre {
+      font-size: 13.5px;
+      font-family: monospace;
+    }
+  }
+
+  .select-value {
+    font-size: inherit;
+    font-family: monospace;
+    padding: 0 11px;
+  }
+
+  .select-icon {
+    margin-left: 5px;
+  }
+
+  .select-content {
+    background-color: white;
+    border: 1px solid #a5a5a5;
+    border-radius: 8px;
+    z-index: 10000;
+  }
+
+  .select-content__item {
+    width: 100%;
+    padding: 3px;
+    font-size: 13.5px;
+    outline: none;
+    cursor: default;
+
+    &:not(:first-child) {
+      padding-top: 0;
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 0;
+    }
+
+    .select-content__item__inner {
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding: 8px;
+      padding-left: 25px;
+      border-radius: 5px;
+      width: 100%;
+      font-family: monospace;
+
+      .placeholder {
+        color: #8a8a8a;
+      }
+    }
+
+    .select-content__item__indicator {
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &:focus {
+      .select-content__item__inner {
+        background-color: #3d64ef;
+        color: white;
+
+        .placeholder {
+          color: #b6c5f9;
+        }
+      }
+    }
+  }
+}

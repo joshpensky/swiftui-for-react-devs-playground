@@ -1,0 +1,56 @@
+.wrapper {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  width: 44px;
+  height: 44px;
+}
+
+.drop {
+  width: 100%;
+  height: 100%;
+  background-color: #ef5d3d;
+  border-radius: 50%;
+  color: white;
+  font-size: 25px;
+  border: none;
+  cursor: pointer;
+
+  &.dropping {
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      box-shadow: inset 0 0 0 3px #2868e4;
+      background-color: rgba(#2868e4, 0.1);
+    }
+  }
+}
+
+.poof {
+  animation: poof 0.5s steps(7, end) forwards;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 50px;
+  height: 50px;
+  background-image: url("/poof.png");
+  background-size: 100%;
+  background-position: 0px 0px;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 100;
+}
+
+@keyframes poof {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    background-position: 0px -350px;
+    opacity: 1;
+  }
+}
