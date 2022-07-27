@@ -15,6 +15,8 @@ import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModif
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
 import { ForEachView } from "@src/components/blocks/views/ForEachView";
+import { HStackView } from "@src/components/blocks/views/HStackView";
+import { ImageView } from "@src/components/blocks/views/ImageView";
 import { SpacerView } from "@src/components/blocks/views/SpacerView";
 import { TextView } from "@src/components/blocks/views/TextView";
 import { VStackView } from "@src/components/blocks/views/VStackView";
@@ -121,6 +123,10 @@ export function Library({
                       <Tabs.List className={styles["block-list"]}>
                         <Tabs.Trigger value="color">Color</Tabs.Trigger>
                         <Tabs.Trigger value="foreach">For Each</Tabs.Trigger>
+                        <Tabs.Trigger value="hstack">
+                          Horizontal Stack
+                        </Tabs.Trigger>
+                        <Tabs.Trigger value="image">Image</Tabs.Trigger>
                         <Tabs.Trigger value="spacer">Spacer</Tabs.Trigger>
                         <Tabs.Trigger value="text">Text</Tabs.Trigger>
                         <Tabs.Trigger value="vstack">
@@ -146,6 +152,26 @@ export function Library({
                             docs="https://developer.apple.com/documentation/swiftui/foreach"
                           >
                             <ForEachView onDrag={() => onOpenChange(false)} />
+                          </LibraryPreview>
+                        </Tabs.Content>
+
+                        <Tabs.Content value="hstack">
+                          <LibraryPreview
+                            title="Horizontal Stack"
+                            description="A view that arranges its children in a horizontal line."
+                            docs="https://developer.apple.com/documentation/swiftui/hstack"
+                          >
+                            <HStackView onDrag={() => onOpenChange(false)} />
+                          </LibraryPreview>
+                        </Tabs.Content>
+
+                        <Tabs.Content value="image">
+                          <LibraryPreview
+                            title="Image"
+                            description="A view that displays an image."
+                            docs="https://developer.apple.com/documentation/swiftui/image"
+                          >
+                            <ImageView onDrag={() => onOpenChange(false)} />
                           </LibraryPreview>
                         </Tabs.Content>
 

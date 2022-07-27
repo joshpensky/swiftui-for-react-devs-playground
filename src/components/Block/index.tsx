@@ -12,6 +12,8 @@ import styles from "./styles.module.scss";
 import { IfControl } from "../blocks/controls/IfControl";
 import { BackgroundViewModifier } from "../blocks/modifiers/BackgroundViewModifier";
 import { ForEachView } from "../blocks/views/ForEachView";
+import { HStackView } from "../blocks/views/HStackView";
+import { ImageView } from "../blocks/views/ImageView";
 
 export function Block({
   block,
@@ -90,6 +92,20 @@ export function Block({
               <ForEachView block={block} scope={scope}>
                 {modifiers}
               </ForEachView>
+            );
+          }
+          case "HStack": {
+            return (
+              <HStackView block={block} scope={scope}>
+                {modifiers}
+              </HStackView>
+            );
+          }
+          case "Image": {
+            return (
+              <ImageView block={block} scope={scope}>
+                {modifiers}
+              </ImageView>
             );
           }
           case "Spacer": {

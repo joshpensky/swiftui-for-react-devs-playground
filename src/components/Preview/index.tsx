@@ -1,5 +1,6 @@
 import { CSSProperties, Fragment } from "react";
 import Image from "next/image";
+import { CheckIcon } from "@radix-ui/react-icons";
 import cx from "classnames";
 import get from "lodash.get";
 import {
@@ -189,16 +190,11 @@ export function Block({
 
           case "Image": {
             const { systemName } = block.args;
-            // TODO: convert to SVG so they work with `--color`!
-            return (
-              <Image
-                style={modifierStyle}
-                src={`/systemImages/${systemName}.png`}
-                alt=""
-                width={20}
-                height={20}
-              />
-            );
+            switch (systemName) {
+              case "checkmark": {
+                return <CheckIcon />;
+              }
+            }
           }
 
           case "Spacer": {

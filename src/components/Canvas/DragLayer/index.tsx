@@ -8,6 +8,8 @@ import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModif
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
 import { ForEachView } from "@src/components/blocks/views/ForEachView";
+import { HStackView } from "@src/components/blocks/views/HStackView";
+import { ImageView } from "@src/components/blocks/views/ImageView";
 import { SpacerView } from "@src/components/blocks/views/SpacerView";
 import { TextView } from "@src/components/blocks/views/TextView";
 import { VStackView } from "@src/components/blocks/views/VStackView";
@@ -47,6 +49,12 @@ export function DragLayer() {
           }
           case "ForEach": {
             return <ForEachView block={view} />;
+          }
+          case "HStack": {
+            return <HStackView block={view} />;
+          }
+          case "Image": {
+            return <ImageView block={view} />;
           }
           case "Spacer": {
             return <SpacerView block={view} />;

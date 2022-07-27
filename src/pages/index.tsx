@@ -14,9 +14,9 @@ const [items, setItems] = useState([
 ]);
 
 return (
-  <div>
+  <div style={{ display: 'flex', flex-direction: 'column' }}>
     {items.map(item => (
-      <div key={item.id}>
+      <div key={item.id} style={{ display: 'flex' }}>
         {item.completed && <img src="checkmark.png" />}
         <p>{item.title}</p>
       </div>
@@ -34,14 +34,79 @@ const Home: NextPage = () => {
           { id: 2, title: "Do something", completed: false },
           { id: 3, title: "Do something", completed: false },
         ],
-        // example: { subtext: { grandchildText: "text" } },
       },
       tree: [],
     })
   );
 
   const matched = useMemo(() => {
-    return editor.equals(new Editor({ scope: {}, tree: [] }));
+    return editor.equals(
+      new Editor({
+        scope: {},
+        tree: [
+          {
+            id: "",
+            blockType: "view",
+            type: "VStack",
+            args: {
+              content: [
+                {
+                  id: "",
+                  blockType: "view",
+                  type: "ForEach",
+                  args: {
+                    data: "items",
+                    id: "id",
+                    content: [
+                      {
+                        id: "",
+                        blockType: "view",
+                        type: "HStack",
+                        args: {
+                          content: [
+                            {
+                              id: "",
+                              blockType: "control",
+                              type: "if",
+                              args: {
+                                condition: "$0.completed",
+                                content: [
+                                  {
+                                    id: "",
+                                    blockType: "view",
+                                    type: "Image",
+                                    args: {
+                                      systemName: "checkmark",
+                                    },
+                                    modifiers: [],
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              id: "",
+                              blockType: "view",
+                              type: "Text",
+                              args: {
+                                value: "$0.title",
+                              },
+                              modifiers: [],
+                            },
+                          ],
+                        },
+                        modifiers: [],
+                      },
+                    ],
+                  },
+                  modifiers: [],
+                },
+              ],
+            },
+            modifiers: [],
+          },
+        ],
+      })
+    );
   }, [editor]);
 
   return (
