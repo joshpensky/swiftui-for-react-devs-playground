@@ -35,7 +35,7 @@ export function ImageView({
       preview={!block}
       configuration={
         <Fragment>
-          <pre>Image(systemName: .</pre>
+          <pre>Image(systemName: </pre>
           <Select.Root
             id={id}
             option={(block ?? defaultBlock).args.systemName}

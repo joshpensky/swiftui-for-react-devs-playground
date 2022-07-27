@@ -133,7 +133,8 @@
       background-color: rgba(#2868e4, 0.25);
       border-radius: 15px;
       width: 100%;
-      z-index: inherit;
+      z-index: 1000;
+      pointer-events: none;
     }
   }
 }
