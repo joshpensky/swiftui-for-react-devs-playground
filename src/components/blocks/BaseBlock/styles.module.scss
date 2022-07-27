@@ -157,4 +157,8 @@
   margin-left: 15px;
   margin-top: 3px;
   z-index: 2;
+
+  &:focus-within {
+    z-index: 10;
+  }
 }

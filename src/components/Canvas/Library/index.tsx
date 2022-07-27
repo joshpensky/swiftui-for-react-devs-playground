@@ -10,6 +10,7 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
 import { IfControl } from "@src/components/blocks/controls/IfControl";
+import { BackgroundViewModifier } from "@src/components/blocks/modifiers/BackgroundViewModifier";
 import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModifier";
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
@@ -31,7 +32,7 @@ export function Library({
   const controls = useDragControls();
   const [tab, setTab] = useState("views");
   const [viewTab, setViewTab] = useState("color");
-  const [viewModifierTab, setViewModifierTab] = useState("font");
+  const [viewModifierTab, setViewModifierTab] = useState("background");
   const [controlTab, setControlTab] = useState("if");
 
   return (
@@ -189,6 +190,9 @@ export function Library({
                       orientation="vertical"
                     >
                       <Tabs.List className={styles["block-list"]}>
+                        <Tabs.Trigger value="background">
+                          Background
+                        </Tabs.Trigger>
                         <Tabs.Trigger value="font">Font</Tabs.Trigger>
                         <Tabs.Trigger value="foregroundColor">
                           Foreground Color
@@ -196,6 +200,18 @@ export function Library({
                       </Tabs.List>
 
                       <div className={styles["block-preview"]}>
+                        <Tabs.Content value="background">
+                          <LibraryPreview
+                            title="Background"
+                            description="Layers the given view behind this view."
+                            docs="https://developer.apple.com/documentation/swiftui/presentedwindowcontent/background(_:alignment:)"
+                          >
+                            <BackgroundViewModifier
+                              onDrag={() => onOpenChange(false)}
+                            />
+                          </LibraryPreview>
+                        </Tabs.Content>
+
                         <Tabs.Content value="font">
                           <LibraryPreview
                             title="Font"

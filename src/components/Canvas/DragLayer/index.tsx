@@ -3,6 +3,7 @@ import cx from "classnames";
 import { motion } from "framer-motion";
 import { useDragLayer } from "react-dnd";
 import { IfControl } from "@src/components/blocks/controls/IfControl";
+import { BackgroundViewModifier } from "@src/components/blocks/modifiers/BackgroundViewModifier";
 import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModifier";
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
@@ -62,11 +63,14 @@ export function DragLayer() {
       case "modifier": {
         const modifier = item as IViewModifier;
         switch (modifier.type) {
+          case "background": {
+            return <BackgroundViewModifier block={modifier} />;
+          }
           case "font": {
-            return <FontViewModifier />;
+            return <FontViewModifier block={modifier} />;
           }
           case "foregroundColor": {
-            return <ForegroundColorViewModifier />;
+            return <ForegroundColorViewModifier block={modifier} />;
           }
         }
       }

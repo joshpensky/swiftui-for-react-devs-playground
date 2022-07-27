@@ -10,6 +10,7 @@ import { ZIndexContext } from "@src/context/ZIndexContext";
 import { IControl, IView } from "@src/models/Editor";
 import styles from "./styles.module.scss";
 import { IfControl } from "../blocks/controls/IfControl";
+import { BackgroundViewModifier } from "../blocks/modifiers/BackgroundViewModifier";
 import { ForEachView } from "../blocks/views/ForEachView";
 
 export function Block({
@@ -37,6 +38,11 @@ export function Block({
             >
               {(() => {
                 switch (modifier.type) {
+                  case "background": {
+                    return (
+                      <BackgroundViewModifier block={modifier} scope={scope} />
+                    );
+                  }
                   case "font": {
                     return <FontViewModifier block={modifier} scope={scope} />;
                   }
