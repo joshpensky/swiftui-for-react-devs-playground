@@ -1,11 +1,20 @@
 .input {
   background-color: white;
-  padding: 8px;
+  padding: 0 8px;
   border-radius: 8px;
   display: flex;
+  align-items: center;
 
-  input {
-    outline: none;
+  .field {
+    border-left: 1px solid #c0c0c0;
+    border-right: 1px solid #c0c0c0;
+    padding: 8px 5px;
+    margin: 0 5px;
+
+    input {
+      outline: none;
+      padding: 0 5px;
+    }
   }
 }
 

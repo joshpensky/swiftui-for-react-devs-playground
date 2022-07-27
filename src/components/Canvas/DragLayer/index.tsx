@@ -80,7 +80,7 @@ export function DragLayer() {
           opacity: 0.9,
         }}
         transition={{ duration: 0 }}
-        // layoutId={item.id}
+        layoutId={item.id}
         hidden={!currentOffset}
       >
         {renderItem()}

@@ -24,7 +24,7 @@ export function Root({
   };
 }>) {
   return (
-    <div className={styles["selector"]}>
+    <div className={styles["container"]}>
       <Select.Root name={id} value={option} onValueChange={setOption}>
         <Select.Trigger
           id={id}
@@ -67,6 +67,7 @@ export function Root({
           <pre>&quot;</pre>
           <TextField
             id={`${id}-input`}
+            className={styles["select-input__field"]}
             value={writeInOptions.value}
             disabled={disabled}
             placeholder="Content"

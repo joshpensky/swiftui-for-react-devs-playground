@@ -153,11 +153,11 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
                 )}
                 style={{ "--z-index": zIndex } as CSSProperties}
               >
-                <motion.ul className={styles["views"]} /*layout="position"*/>
+                <motion.ul className={styles["views"]} layout="position">
                   {block.args.content.map((block, index) => (
                     <motion.li
                       key={block.id}
-                      // layoutId={block.id}
+                      layoutId={block.id}
                       exit={{ opacity: 0 }}
                       transition={{
                         type: "spring",

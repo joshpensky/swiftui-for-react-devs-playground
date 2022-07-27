@@ -1,12 +1,15 @@
+import cx from "classnames";
 import styles from "./styles.module.scss";
 
 export function TextField({
+  className,
   id,
   placeholder,
   value,
   disabled,
   onChange,
 }: {
+  className?: string;
   id: string;
   placeholder: string;
   value: string;
@@ -14,7 +17,7 @@ export function TextField({
   onChange(value: string): void;
 }) {
   return (
-    <div className={styles["input"]}>
+    <div className={cx(styles["input"], className)}>
       <pre aria-hidden="true">{value || placeholder}</pre>
       <input
         id={id}

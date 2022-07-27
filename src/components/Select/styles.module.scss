@@ -1,15 +1,4 @@
-.input {
-  background-color: white;
-  padding: 8px;
-  border-radius: 8px;
-  display: flex;
-
-  input {
-    outline: none;
-  }
-}
-
-.selector {
+.container {
   position: relative;
   z-index: 1000;
 
@@ -31,12 +20,23 @@
     background-color: white;
     position: absolute;
     left: 8px;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
     display: flex;
 
-    input {
-      outline: none;
+    .select-input__field {
+      border-left: 1px solid #c0c0c0;
+      border-right: 1px solid #c0c0c0;
+      padding: 0 5px;
+      margin: 0 5px;
+      height: 100%;
+
+      input {
+        outline: none;
+        padding: 0 5px;
+      }
     }
 
     pre {
@@ -48,6 +48,11 @@
   .select-value {
     font-size: inherit;
     font-family: monospace;
+    padding: 0 11px;
+  }
+
+  .select-icon {
+    margin-left: 5px;
   }
 
   .select-content {

@@ -21,13 +21,13 @@ export function Block({
   let modifiers = null;
   if (block.blockType === "view" && block.modifiers.length) {
     modifiers = (
-      <motion.ul className={styles["modifiers"]} /*layout="position"*/>
+      <motion.ul className={styles["modifiers"]} layout="position">
         {block.modifiers.map((modifier, mIndex) => {
           return (
             <motion.li
               key={modifier.id}
               className="vm-container"
-              // layoutId={modifier.id}
+              layoutId={modifier.id}
               transition={{
                 type: "spring",
                 bounce: 0,

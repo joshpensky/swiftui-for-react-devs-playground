@@ -63,14 +63,14 @@ export function Canvas({
               transition: { duration: 0.25, when: "afterChildren" },
             }}
           >
-            <motion.ul className={styles["views"]} /*layout="position"*/>
+            <motion.ul className={styles["views"]} layout="position">
               <AnimatePresence>
                 {editor.state.tree.map((block) => {
                   return (
                     <motion.li
                       key={block.id}
                       className={styles["view"]}
-                      // layoutId={block.id}
+                      layoutId={block.id}
                       transition={{
                         type: "spring",
                         bounce: 0,

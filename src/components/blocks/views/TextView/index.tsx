@@ -114,6 +114,7 @@ export function TextView({
               <pre>&quot;</pre>
               <TextField
                 id={id}
+                className={styles["field"]}
                 value={(block ?? defaultBlock).args.value.replace(
                   /(^\")|(\"$)/g,
                   ""
