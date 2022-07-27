@@ -19,7 +19,7 @@ export function Canvas({
 }) {
   const [{ isOver }, drop] = useDrop(
     () => ({
-      accept: "view",
+      accept: ["view", "control"],
       collect: (monitor) => ({
         isOver: monitor.isOver({ shallow: true }),
       }),

@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import cx from "classnames";
 import { motion } from "framer-motion";
 import { useDragLayer } from "react-dnd";
+import { IfControl } from "@src/components/blocks/controls/IfControl";
 import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModifier";
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
@@ -9,7 +10,7 @@ import { ForEachView } from "@src/components/blocks/views/ForEachView";
 import { SpacerView } from "@src/components/blocks/views/SpacerView";
 import { TextView } from "@src/components/blocks/views/TextView";
 import { VStackView } from "@src/components/blocks/views/VStackView";
-import { IView, IViewModifier } from "@src/models/Editor";
+import { IControl, IView, IViewModifier } from "@src/models/Editor";
 import styles from "./styles.module.scss";
 
 export function DragLayer() {
@@ -28,6 +29,15 @@ export function DragLayer() {
 
   function renderItem() {
     switch (itemType) {
+      case "control": {
+        const control = item as IControl;
+        switch (control.type) {
+          case "if": {
+            return <IfControl block={control} />;
+          }
+        }
+      }
+
       case "view": {
         const view = item as IView;
         switch (view.type) {

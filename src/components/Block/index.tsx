@@ -9,6 +9,7 @@ import { VStackView } from "@src/components/blocks/views/VStackView";
 import { ZIndexContext } from "@src/context/ZIndexContext";
 import { IControl, IView } from "@src/models/Editor";
 import styles from "./styles.module.scss";
+import { IfControl } from "../blocks/controls/IfControl";
 import { ForEachView } from "../blocks/views/ForEachView";
 
 export function Block({
@@ -65,6 +66,12 @@ export function Block({
     <ZIndexContext.Provider value={zIndex + 1}>
       {(() => {
         switch (block.type) {
+          // Controls
+          case "if": {
+            return <IfControl block={block} scope={scope} />;
+          }
+
+          // Views
           case "Color": {
             return (
               <ColorView block={block} scope={scope}>

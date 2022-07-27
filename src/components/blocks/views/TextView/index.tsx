@@ -2,13 +2,10 @@ import {
   Fragment,
   PropsWithChildren,
   useContext,
-  useEffect,
   useId,
   useLayoutEffect,
   useState,
 } from "react";
-import { CheckIcon, TriangleDownIcon } from "@radix-ui/react-icons";
-// import * as Select from "@radix-ui/react-select";
 import * as Select from "@src/components/Select";
 import { TextField } from "@src/components/TextField";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";

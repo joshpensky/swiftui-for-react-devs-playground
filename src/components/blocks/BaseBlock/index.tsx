@@ -55,7 +55,7 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
 
   const [{ isBlockOver }, contentDrop] = useDrop(
     () => ({
-      accept: "view",
+      accept: ["view", "control"],
       collect: (monitor) => ({
         isBlockOver: !preview && monitor.isOver({ shallow: true }),
       }),
@@ -132,9 +132,12 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
         isDragging && styles["dragging"],
         isModifierOver && styles["modifier-dropping"]
       )}
-      style={{
-        cursor: isDragging ? "grabbing" : "grab",
-      }}
+      style={
+        {
+          cursor: isDragging ? "grabbing" : "grab",
+          "--z-index": zIndex,
+        } as CSSProperties
+      }
     >
       <div className={styles["wrapper"]}>
         <div ref={modifierDropTop} className={cx(styles["container"])}>
@@ -151,7 +154,6 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
                   styles["content-drop"],
                   isBlockOver && styles["dropping"]
                 )}
-                style={{ "--z-index": zIndex } as CSSProperties}
               >
                 <motion.ul className={styles["views"]} /*layout="position"*/>
                   {block.args.content.map((block, index) => (

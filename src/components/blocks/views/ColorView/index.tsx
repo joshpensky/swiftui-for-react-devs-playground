@@ -3,7 +3,6 @@ import * as Select from "@src/components/Select";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
 import { EditorContext } from "@src/context/EditorContext";
 import { Color, IColorView } from "@src/models/Editor";
-import styles from "./styles.module.scss";
 
 export function ColorView({
   block,

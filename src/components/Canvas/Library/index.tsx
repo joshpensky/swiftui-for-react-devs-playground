@@ -9,6 +9,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { PlusIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import { AnimatePresence, motion, useDragControls } from "framer-motion";
+import { IfControl } from "@src/components/blocks/controls/IfControl";
 import { FontViewModifier } from "@src/components/blocks/modifiers/FontViewModifier";
 import { ForegroundColorViewModifier } from "@src/components/blocks/modifiers/ForegroundColorViewModifier";
 import { ColorView } from "@src/components/blocks/views/ColorView";
@@ -233,7 +234,17 @@ export function Library({
                         <Tabs.Trigger value="if">If Statement</Tabs.Trigger>
                       </Tabs.List>
 
-                      <div className={styles["block-preview"]} />
+                      <div className={styles["block-preview"]}>
+                        <Tabs.Content value="if">
+                          <LibraryPreview
+                            title="If Statement"
+                            description="Used for executing code based on the evaluation of a condition."
+                            docs="https://docs.swift.org/swift-book/ReferenceManual/Statements.html#ID435"
+                          >
+                            <IfControl onDrag={() => onOpenChange(false)} />
+                          </LibraryPreview>
+                        </Tabs.Content>
+                      </div>
                     </Tabs.Root>
                   </Tabs.Content>
                 </Tabs.Root>
