@@ -1,4 +1,5 @@
 import { Fragment, useContext, useId } from "react";
+import * as Select from "@src/components/Select";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
 import { EditorContext } from "@src/context/EditorContext";
 import { Color, IForegroundColorViewModifier } from "@src/models/Editor";
@@ -34,13 +35,12 @@ export function ForegroundColorViewModifier({
       configuration={
         <Fragment>
           <pre>.foregroundColor(.</pre>
-          <select
+          <Select.Root
             id={id}
-            className={styles["select"]}
-            name={id}
-            value={(block ?? defaultBlock).args.color}
-            onChange={(evt) => {
-              const color = evt.target.value as Color;
+            option={(block ?? defaultBlock).args.color}
+            disabled={!block}
+            setOption={(option) => {
+              const color = option as Color;
               if (block) {
                 onEditorChange(
                   editor.update(block.id, {
@@ -52,12 +52,17 @@ export function ForegroundColorViewModifier({
                 );
               }
             }}
-            disabled={!block}
           >
-            <option value="red">red</option>
-            <option value="green">green</option>
-            <option value="blue">blue</option>
-          </select>
+            <Select.Option value="red" textValue="red">
+              red
+            </Select.Option>
+            <Select.Option value="green" textValue="green">
+              green
+            </Select.Option>
+            <Select.Option value="blue" textValue="blue">
+              blue
+            </Select.Option>
+          </Select.Root>
           <pre>)</pre>
         </Fragment>
       }

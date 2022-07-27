@@ -4,10 +4,6 @@
   align-items: flex-start;
   position: relative;
 
-  &:focus-within {
-    z-index: 10;
-  }
-
   &.control {
     --color: #db8dff;
     &.modifier-dropping {
@@ -48,11 +44,19 @@
   position: relative;
   z-index: 2;
 
+  &:focus-within {
+    z-index: 10;
+  }
+
   .dragging & {
     opacity: 0;
   }
 
   .block--with-content > .wrapper > &:nth-child(1) {
+    border-bottom-left-radius: 0;
+  }
+
+  li:not(:last-child) > .modifier > .wrapper > &:nth-child(1) {
     border-bottom-left-radius: 0;
   }
 

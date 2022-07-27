@@ -1,4 +1,5 @@
 import { Fragment, useContext, useId } from "react";
+import * as Select from "@src/components/Select";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
 import { EditorContext } from "@src/context/EditorContext";
 import { Font, IFontViewModifier } from "@src/models/Editor";
@@ -33,14 +34,13 @@ export function FontViewModifier({
       preview={!block}
       configuration={
         <Fragment>
-          <pre>.font(</pre>
-          <select
+          <pre>.font(.</pre>
+          <Select.Root
             id={id}
-            className={styles["select"]}
-            name={id}
-            value={(block ?? defaultBlock).args.value}
-            onChange={(evt) => {
-              const font = evt.target.value as Font;
+            option={(block ?? defaultBlock).args.value}
+            disabled={!block}
+            setOption={(option) => {
+              const font = option as Font;
               if (block) {
                 onEditorChange(
                   editor.update(block.id, {
@@ -52,11 +52,14 @@ export function FontViewModifier({
                 );
               }
             }}
-            disabled={!block}
           >
-            <option value="body">.body</option>
-            <option value="title">.title</option>
-          </select>
+            <Select.Option value="body" textValue="body">
+              body
+            </Select.Option>
+            <Select.Option value="title" textValue="title">
+              title
+            </Select.Option>
+          </Select.Root>
           <pre>)</pre>
         </Fragment>
       }

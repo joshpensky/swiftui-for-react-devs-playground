@@ -1,4 +1,5 @@
 import { Fragment, PropsWithChildren, useContext, useId } from "react";
+import * as Select from "@src/components/Select";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
 import { EditorContext } from "@src/context/EditorContext";
 import { Color, IColorView } from "@src/models/Editor";
@@ -36,13 +37,12 @@ export function ColorView({
       configuration={
         <Fragment>
           <pre>Color.</pre>
-          <select
+          <Select.Root
             id={id}
-            className={styles["select"]}
-            name={id}
-            value={(block ?? defaultBlock).args.value}
-            onChange={(evt) => {
-              const color = evt.target.value as Color;
+            option={(block ?? defaultBlock).args.value}
+            disabled={!block}
+            setOption={(option) => {
+              const color = option as Color;
               if (block) {
                 onEditorChange(
                   editor.update(block.id, {
@@ -54,12 +54,17 @@ export function ColorView({
                 );
               }
             }}
-            disabled={!block}
           >
-            <option value="red">red</option>
-            <option value="green">green</option>
-            <option value="blue">blue</option>
-          </select>
+            <Select.Option value="red" textValue="red">
+              red
+            </Select.Option>
+            <Select.Option value="green" textValue="green">
+              green
+            </Select.Option>
+            <Select.Option value="blue" textValue="blue">
+              blue
+            </Select.Option>
+          </Select.Root>
         </Fragment>
       }
       getChildScope={() => scope}

@@ -1,4 +1,5 @@
 import { Fragment, PropsWithChildren, useContext, useId } from "react";
+import * as Select from "@src/components/Select";
 import { BaseBlock } from "@src/components/blocks/BaseBlock";
 import { EditorContext } from "@src/context/EditorContext";
 import { IForEachView } from "@src/models/Editor";
@@ -57,18 +58,18 @@ export function ForEachView({
       configuration={
         <Fragment>
           <pre>ForEach(</pre>
-          <select
+          <Select.Root
             id={`${id}-data`}
-            value={(block ?? defaultBlock).args.data}
+            option={(block ?? defaultBlock).args.data}
             disabled={!block}
-            onChange={(evt) => {
+            setOption={(option) => {
               if (block) {
                 onEditorChange(
                   editor.update(block.id, {
                     ...block,
                     args: {
                       ...block.args,
-                      data: evt.target.value,
+                      data: option,
                       id: "",
                     },
                   })
@@ -76,40 +77,44 @@ export function ForEachView({
               }
             }}
           >
-            <option value=""></option>
+            <Select.Option value="" textValue="">
+              &nbsp;
+            </Select.Option>
             {Object.keys(dataOptions).map((key) => (
-              <option key={key} value={key}>
+              <Select.Option key={key} value={key} textValue={key}>
                 {key}
-              </option>
+              </Select.Option>
             ))}
-          </select>
+          </Select.Root>
 
           <pre>, id: \.</pre>
-          <select
+          <Select.Root
             id={`${id}-id`}
-            value={(block ?? defaultBlock).args.id}
+            option={(block ?? defaultBlock).args.id}
             disabled={!(block ?? defaultBlock).args.data}
-            onChange={(evt) => {
+            setOption={(option) => {
               if (block) {
                 onEditorChange(
                   editor.update(block.id, {
                     ...block,
                     args: {
                       ...block.args,
-                      id: evt.target.value,
+                      id: option,
                     },
                   })
                 );
               }
             }}
           >
-            <option value=""></option>
+            <Select.Option value="" textValue="">
+              &nbsp;
+            </Select.Option>
             {idOptions.map((key) => (
-              <option key={key} value={key}>
+              <Select.Option key={key} value={key} textValue={key}>
                 {key}
-              </option>
+              </Select.Option>
             ))}
-          </select>
+          </Select.Root>
 
           <pre>{`) { `}</pre>
         </Fragment>

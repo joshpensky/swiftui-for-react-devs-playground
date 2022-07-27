@@ -78,7 +78,10 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
     () => ({
       accept: "modifier",
       collect: (monitor) => ({
-        isModifierOver: !preview && monitor.isOver({ shallow: true }),
+        isModifierOver:
+          block.blockType === "view" &&
+          !preview &&
+          monitor.isOver({ shallow: true }),
       }),
       canDrop(item, monitor) {
         return block.blockType === "view" && monitor.isOver({ shallow: true });
@@ -96,7 +99,10 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
       () => ({
         accept: "modifier",
         collect: (monitor) => ({
-          isModifierOver: !preview && monitor.isOver({ shallow: true }),
+          isModifierOver:
+            block.blockType === "view" &&
+            !preview &&
+            monitor.isOver({ shallow: true }),
         }),
         canDrop(item, monitor) {
           return (
