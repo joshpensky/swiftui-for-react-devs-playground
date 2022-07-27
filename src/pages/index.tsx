@@ -127,14 +127,12 @@ const Home: NextPage = () => {
 
         <div className={styles["previews"]}>
           <h2>Preview</h2>
-          {editor.state.tree.length ? (
-            editor.state.tree.map((block) => (
-              <Preview
-                key={block.id}
-                block={block}
-                scope={editor.state.scope}
-              />
-            ))
+          {editor.state.tree.length > 0 ? (
+            <Preview
+              key={editor.state.tree[0].id}
+              block={editor.state.tree[0]}
+              scope={editor.state.scope}
+            />
           ) : (
             <Preview scope={editor.state.scope} />
           )}

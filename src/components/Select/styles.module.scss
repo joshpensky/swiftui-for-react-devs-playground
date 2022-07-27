@@ -25,17 +25,14 @@
     align-items: center;
     height: 100%;
     display: flex;
+    padding-right: 5px;
+    border-right: 1px solid #d4d4d4;
 
     .select-input__field {
-      border-left: 1px solid #c0c0c0;
-      border-right: 1px solid #c0c0c0;
-      padding: 0 5px;
-      margin: 0 5px;
       height: 100%;
 
       input {
         outline: none;
-        padding: 0 5px;
       }
     }
 
@@ -48,7 +45,7 @@
   .select-value {
     font-size: inherit;
     font-family: monospace;
-    padding: 0 11px;
+    padding-right: 6px;
   }
 
   .select-icon {
