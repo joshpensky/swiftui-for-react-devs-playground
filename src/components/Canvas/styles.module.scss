@@ -2,10 +2,9 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: 60px 20px 20px;
+  padding: 20px;
   overflow: hidden;
-  border-top-left-radius: 19px;
-  border-bottom-left-radius: 19px;
+  border-radius: 20px;
 
   > p {
     margin: auto;
@@ -22,11 +21,8 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px 20px;
-  position: absolute;
-  inset: 0;
+  align-items: flex-start;
+  padding: 20px;
 }
 
 .views {
@@ -40,35 +36,5 @@
 
   li {
     transform-origin: top left;
-  }
-}
-
-.view {
-  position: relative;
-
-  .poof {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 50px;
-    height: 50px;
-    background-image: url("/poof.png");
-    background-size: 100%;
-    background-position: 0px 0px;
-    background-repeat: no-repeat;
-    pointer-events: none;
-    opacity: 0;
-    z-index: 100;
-  }
-}
-
-@keyframes poof {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    background-position: 0px -350px;
-    opacity: 1;
   }
 }

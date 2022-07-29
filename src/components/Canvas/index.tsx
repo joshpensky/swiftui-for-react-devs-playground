@@ -89,8 +89,6 @@ export function Canvas({
         </LayoutGroup>
 
         <Trash />
-
-        <Library open={toolbarOpen} onOpenChange={setToolbarOpen} />
       </div>
     </EditorContext.Provider>
   );

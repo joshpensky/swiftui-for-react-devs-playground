@@ -37,6 +37,10 @@
   align-items: flex-start;
   position: relative;
   z-index: 3;
+
+  .dragging & {
+    opacity: 0.3;
+  }
 }
 
 .container {
@@ -53,16 +57,17 @@
     z-index: 10;
   }
 
-  .dragging & {
-    opacity: 0;
-  }
-
   .block--with-content > .wrapper > &:nth-child(1) {
     border-bottom-left-radius: 0;
   }
 
-  li:not(:last-child) > .modifier > .wrapper > &:nth-child(1) {
-    border-bottom-left-radius: 0;
+  .modifiers li:not(:last-child) > .modifier > .wrapper > & {
+    &:nth-child(1) {
+      border-bottom-left-radius: 0;
+    }
+    &:nth-child(3) {
+      border-bottom-left-radius: 0;
+    }
   }
 
   .modifier > .wrapper > &:nth-child(1) {
@@ -89,10 +94,6 @@
   padding: 3px;
   position: relative;
   width: 100%;
-
-  .dragging & {
-    opacity: 0;
-  }
 
   &::before {
     content: "";
