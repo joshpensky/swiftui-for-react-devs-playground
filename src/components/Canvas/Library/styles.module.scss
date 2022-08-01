@@ -3,6 +3,16 @@
   flex-direction: column;
 }
 
+.header {
+  padding: 10px;
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+  background-color: #ededed;
+  border-bottom: 1px solid #a6a6a6;
+  margin-bottom: 10px;
+}
+
 .tabs {
   display: flex;
   flex: 1;
@@ -10,7 +20,6 @@
   padding: 3px;
   border-radius: 15px;
   position: relative;
-  margin: 10px;
 
   &::before {
     content: "";

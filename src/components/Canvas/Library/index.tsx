@@ -23,25 +23,28 @@ export function Library() {
   return (
     <div className={styles["content"]}>
       <Tabs.Root value={tab} onValueChange={setTab} orientation="horizontal">
-        <Tabs.List
-          className={styles["tabs"]}
-          aria-label="Block Types"
-          style={
-            {
-              "--active-tab": tab === "views" ? 0 : tab === "controls" ? 1 : 2,
-            } as CSSProperties
-          }
-        >
-          <Tabs.Trigger className={styles["tab-item"]} value="views">
-            Views
-          </Tabs.Trigger>
-          <Tabs.Trigger className={styles["tab-item"]} value="controls">
-            Controls
-          </Tabs.Trigger>
-          <Tabs.Trigger className={styles["tab-item"]} value="modifiers">
-            Modifiers
-          </Tabs.Trigger>
-        </Tabs.List>
+        <div className={styles["header"]}>
+          <Tabs.List
+            className={styles["tabs"]}
+            aria-label="Block Types"
+            style={
+              {
+                "--active-tab":
+                  tab === "views" ? 0 : tab === "controls" ? 1 : 2,
+              } as CSSProperties
+            }
+          >
+            <Tabs.Trigger className={styles["tab-item"]} value="views">
+              Views
+            </Tabs.Trigger>
+            <Tabs.Trigger className={styles["tab-item"]} value="controls">
+              Controls
+            </Tabs.Trigger>
+            <Tabs.Trigger className={styles["tab-item"]} value="modifiers">
+              Modifiers
+            </Tabs.Trigger>
+          </Tabs.List>
+        </div>
 
         <Tabs.Content value="views">
           <ul className={styles["block-list"]}>
