@@ -12,10 +12,12 @@ import { DragSourceMonitor, useDrag, useDrop } from "react-dnd";
 import { Block } from "@src/components/Block";
 import { EditorContext } from "@src/context/EditorContext";
 import { ZIndexContext } from "@src/context/ZIndexContext";
-import { IControl, IView, IViewModifier } from "@src/models/Editor";
+import { IControl, ITemplate, IView, IViewModifier } from "@src/models/Editor";
 import styles from "./styles.module.scss";
 
-export function BaseBlock<B extends IControl | IView | IViewModifier>({
+export function BaseBlock<
+  B extends ITemplate | IControl | IView | IViewModifier
+>({
   block,
   children,
   configuration,
@@ -26,21 +28,32 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
 }: PropsWithChildren<{
   block: B;
   configuration: ReactNode;
-  getChildScope(block: IControl | IView, index: number): Record<string, any>;
+  getChildScope(
+    block: ITemplate | IControl | IView,
+    index: number
+  ): Record<string, any>;
   onDrag?(): void;
   onDragEnd?(monitor: DragSourceMonitor<B, unknown>): void;
   preview?: boolean;
 }>) {
   const [editor, onEditorChange] = useContext(EditorContext);
 
-  const [{ isDragging }, drag] = useDrag<B, unknown, { isDragging: boolean }>(
+  const [{ canDrag, isDragging }, drag] = useDrag<
+    B,
+    unknown,
+    { canDrag: boolean; isDragging: boolean }
+  >(
     () => ({
       type: block.blockType,
       item: block,
+      canDrag(monitor) {
+        return block.blockType !== "template";
+      },
       end(draggedItem, monitor) {
         onDragEnd?.(monitor);
       },
       collect: (monitor) => ({
+        canDrag: monitor.canDrag(),
         isDragging: monitor.isDragging(),
       }),
     }),
@@ -57,10 +70,15 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
     () => ({
       accept: ["view", "control"],
       collect: (monitor) => ({
-        isBlockOver: !preview && monitor.isOver({ shallow: true }),
+        isBlockOver: !preview && monitor.canDrop(),
       }),
       canDrop(item, monitor) {
-        return monitor.isOver({ shallow: true });
+        let isOver = monitor.isOver({ shallow: true });
+        if ("canDrop" in block.args) {
+          return isOver && block.args.canDrop;
+        } else {
+          return isOver;
+        }
       },
       drop(item, monitor) {
         let contentBlock = item as IControl | IView;
@@ -134,7 +152,7 @@ export function BaseBlock<B extends IControl | IView | IViewModifier>({
       )}
       style={
         {
-          cursor: isDragging ? "grabbing" : "grab",
+          cursor: canDrag ? (isDragging ? "grabbing" : "grab") : undefined,
           "--z-index": zIndex,
         } as CSSProperties
       }

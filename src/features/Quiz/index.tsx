@@ -42,7 +42,40 @@ export function Quiz() {
           { id: 3, title: "Do something", completed: false },
         ],
       },
-      tree: [],
+      tree: [
+        {
+          id: "template:1:",
+          blockType: "template",
+          type: "content",
+          args: {
+            code: `struct TodoList: View {`,
+            canDrop: false,
+            content: [
+              {
+                id: "template:2:",
+                blockType: "template",
+                type: "code",
+                args: {
+                  code: `@State var todoItems = [
+  Item(id: 1, title: “Do something”, completed: false),
+  Item(id: 2, title: “Do something else”, completed: true)
+]`,
+                },
+              },
+              {
+                id: "template:3:",
+                blockType: "template",
+                type: "content",
+                args: {
+                  code: `var body: some View {`,
+                  canDrop: true,
+                  content: [],
+                },
+              },
+            ],
+          },
+        },
+      ],
     })
   );
   return (

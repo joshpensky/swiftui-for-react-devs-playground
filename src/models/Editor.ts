@@ -37,7 +37,7 @@ export interface IFontViewModifier extends IBaseViewModifier {
 export interface IBackgroundViewModifier extends IBaseViewModifier {
   type: "background";
   args: {
-    content: (IControl | IView)[];
+    content: (ITemplate | IControl | IView)[];
   };
 }
 
@@ -59,14 +59,14 @@ export interface IBaseView {
 export interface IZStackView extends IBaseView {
   type: "ZStack";
   args: {
-    content: (IControl | IView)[];
+    content: (ITemplate | IControl | IView)[];
   };
 }
 
 export interface IVStackView extends IBaseView {
   type: "VStack";
   args: {
-    content: (IControl | IView)[];
+    content: (ITemplate | IControl | IView)[];
   };
 }
 
@@ -92,7 +92,7 @@ export interface IImageView extends IBaseView {
 export interface IHStackView extends IBaseView {
   type: "HStack";
   args: {
-    content: (IControl | IView)[];
+    content: (ITemplate | IControl | IView)[];
   };
 }
 
@@ -101,7 +101,7 @@ export interface IForEachView extends IBaseView {
   args: {
     data: string;
     id: string;
-    content: (IControl | IView)[];
+    content: (ITemplate | IControl | IView)[];
   };
 }
 
@@ -135,11 +135,38 @@ export interface IIfControl extends IBaseControl {
   type: "if";
   args: {
     condition: string;
-    content: (IControl | IView)[];
+    content: (ITemplate | IControl | IView)[];
   };
 }
 
 export type IControl = IIfControl;
+
+//////////////////////////////
+// Templates
+//////////////////////////////
+
+export interface IBaseTemplate {
+  id: string;
+  blockType: "template";
+}
+
+export interface IContentTemplate extends IBaseTemplate {
+  type: "content";
+  args: {
+    code: string;
+    content: (ITemplate | IControl | IView)[];
+    canDrop: boolean;
+  };
+}
+
+export interface ICodeTemplate extends IBaseTemplate {
+  type: "code";
+  args: {
+    code: string;
+  };
+}
+
+export type ITemplate = ICodeTemplate | IContentTemplate;
 
 //////////////////////////////
 // Editor Types
@@ -147,12 +174,12 @@ export type IControl = IIfControl;
 
 export interface EditorState {
   scope: Record<string, any>;
-  tree: (IControl | IView)[];
+  tree: (ITemplate | IControl | IView)[];
 }
 
 interface FindResponse {
   path: { type: "block" | "modifier"; index: number }[];
-  item: IControl | IView | IViewModifier;
+  item: ITemplate | IControl | IView | IViewModifier;
 }
 
 type IAnonymousViewModifier = Omit<IViewModifier, "id">;
@@ -162,6 +189,8 @@ type IAnonymousView = Omit<IView, "id" | "modifiers"> & {
 };
 
 type IAnonymousControl = Omit<IControl, "id">;
+
+type IAnonymousTemplate = Omit<ITemplate, "id">;
 
 export class Editor {
   private _state: EditorState;
@@ -178,10 +207,16 @@ export class Editor {
    * Removes IDs from all blocks and modifiers in the tree to produce
    * an "anonymous" tree for equality comparison.
    */
-  private get anonymousTree(): (IAnonymousControl | IAnonymousView)[] {
+  private get anonymousTree(): (
+    | IAnonymousTemplate
+    | IAnonymousControl
+    | IAnonymousView
+  )[] {
     const tree = cloneDeep(this._state.tree);
 
-    let blocksToVisit: (IControl | IView | IViewModifier)[] = [...tree];
+    let blocksToVisit: (ITemplate | IControl | IView | IViewModifier)[] = [
+      ...tree,
+    ];
     while (blocksToVisit.length) {
       const blockOrModifier = blocksToVisit.pop();
       if (!blockOrModifier) {
@@ -246,6 +281,8 @@ export class Editor {
           throw new Error("Cannot add modifier to modifier.");
         } else if (parent.item.blockType === "control") {
           throw new Error("Cannot add modifier to control.");
+        } else if (parent.item.blockType === "template") {
+          throw new Error("Cannot add modifier to template.");
         } else {
           parent.item.modifiers.push(modifier);
         }
@@ -325,7 +362,7 @@ export class Editor {
     type: (IControl | IView | IViewModifier)["type"],
     parentId: string | null
   ): boolean {
-    let blocksToVisit: (IControl | IView | IViewModifier)[];
+    let blocksToVisit: (ITemplate | IControl | IView | IViewModifier)[];
     if (!parentId) {
       blocksToVisit = [...this._state.tree];
     } else {
@@ -381,6 +418,8 @@ export class Editor {
     const response = editor.select(id);
     if (!response) {
       throw new Error("Not found.");
+    } else if (response.item.blockType === "template") {
+      throw new Error("Cannot update template block.");
     }
 
     if (response.item.blockType !== blockOrModifier.blockType) {
@@ -406,6 +445,8 @@ export class Editor {
     let response = this.select(id);
     if (!response) {
       throw new Error("Not found.");
+    } else if (response.item.blockType === "template") {
+      throw new Error("Cannot move template block.");
     }
 
     let editor = this.delete(id);
@@ -423,11 +464,14 @@ export class Editor {
     const response = this.select(id);
     if (!response) {
       throw new Error("Not found.");
+    } else if (response.item.blockType === "template") {
+      throw new Error("Cannot delete template block.");
     }
 
     const state = cloneDeep(this._state);
 
-    let currentLevel: (IControl | IView | IViewModifier)[] = state.tree;
+    let currentLevel: (ITemplate | IControl | IView | IViewModifier)[] =
+      state.tree;
     response.path.forEach(({ type, index }, i) => {
       const isLast = i === response.path.length - 1;
       if (isLast) {

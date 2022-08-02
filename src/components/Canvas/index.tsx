@@ -6,7 +6,6 @@ import { Block } from "@src/components/Block";
 import { EditorContext } from "@src/context/EditorContext";
 import { Editor, IView } from "@src/models/Editor";
 import { DragLayer } from "./DragLayer";
-import { Library } from "./Library";
 import { Trash } from "./Trash";
 import styles from "./styles.module.scss";
 
@@ -17,43 +16,11 @@ export function Canvas({
   editor: Editor;
   onEditorChange: Dispatch<SetStateAction<Editor>>;
 }) {
-  const [{ isOver }, drop] = useDrop(
-    () => ({
-      accept: ["view", "control"],
-      collect: (monitor) => ({
-        isOver: monitor.isOver({ shallow: true }),
-      }),
-      canDrop(item, monitor) {
-        return monitor.isOver({ shallow: true });
-      },
-      drop(item, monitor) {
-        let view = item as IView;
-        if (editor.select(view.id)) {
-          onEditorChange(editor.move(view.id, null));
-        } else {
-          onEditorChange(editor.insert(view, null));
-        }
-      },
-    }),
-    [editor]
-  );
-
-  const [toolbarOpen, setToolbarOpen] = useState(false);
-
   return (
     <EditorContext.Provider value={[editor, onEditorChange]}>
-      <div
-        ref={drop}
-        className={cx(styles["canvas"], isOver && styles["dropping"])}
-      >
+      <div className={styles["canvas"]}>
         <LayoutGroup id="canvas">
           <DragLayer />
-
-          {!editor.state.tree.length && (
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              Drag views onto the canvas.
-            </motion.p>
-          )}
 
           <motion.div
             className={styles["views-container"]}

@@ -7,10 +7,12 @@ import { SpacerView } from "@src/components/blocks/views/SpacerView";
 import { TextView } from "@src/components/blocks/views/TextView";
 import { VStackView } from "@src/components/blocks/views/VStackView";
 import { ZIndexContext } from "@src/context/ZIndexContext";
-import { IControl, IView } from "@src/models/Editor";
+import { IControl, ITemplate, IView } from "@src/models/Editor";
 import styles from "./styles.module.scss";
 import { IfControl } from "../blocks/controls/IfControl";
 import { BackgroundViewModifier } from "../blocks/modifiers/BackgroundViewModifier";
+import { CodeTemplate } from "../blocks/templates/CodeTemplate";
+import { ContentTemplate } from "../blocks/templates/ContentTemplate";
 import { ForEachView } from "../blocks/views/ForEachView";
 import { HStackView } from "../blocks/views/HStackView";
 import { ImageView } from "../blocks/views/ImageView";
@@ -19,7 +21,7 @@ export function Block({
   block,
   scope = {},
 }: {
-  block: IControl | IView;
+  block: ITemplate | IControl | IView;
   scope: Record<string, any>;
 }) {
   let modifiers = null;
@@ -74,6 +76,14 @@ export function Block({
     <ZIndexContext.Provider value={zIndex + 1}>
       {(() => {
         switch (block.type) {
+          // Templates
+          case "code": {
+            return <CodeTemplate block={block} scope={scope} />;
+          }
+          case "content": {
+            return <ContentTemplate block={block} scope={scope} />;
+          }
+
           // Controls
           case "if": {
             return <IfControl block={block} scope={scope} />;
@@ -129,6 +139,7 @@ export function Block({
               </VStackView>
             );
           }
+
           default: {
             return null;
           }

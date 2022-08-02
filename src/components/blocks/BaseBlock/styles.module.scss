@@ -9,11 +9,12 @@
     z-index: 10;
   }
 
+  &.template {
+    --color: #d2d2d2;
+  }
+
   &.control {
     --color: #db8dff;
-    &.modifier-dropping {
-      --color: #{mix(#2868e4, #db8dff, 25%)};
-    }
   }
 
   &.view {
@@ -25,9 +26,6 @@
 
   &.modifier {
     --color: #97d05f;
-    &.modifier-dropping {
-      --color: #{mix(#2868e4, #97d05f, 25%)};
-    }
   }
 }
 
