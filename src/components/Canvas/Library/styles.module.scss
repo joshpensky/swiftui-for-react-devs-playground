@@ -1,82 +1,28 @@
-.modal-trigger {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 44px;
-  height: 44px;
-  background-color: #3D64EF;
-  border-radius: 50%;
-  color: white;
-  font-size: 25px;
-  border: none;
-  cursor: pointer;
-}
-
-.modal-overlay {
-  background-color: rgba(0, 0, 0, 0.3);
-  position: absolute;
-  inset: 0;
-  z-index: 100;
-}
-
-.modal {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #EDEDED;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  z-index: 200;
-
-  &::after {
-    content: '';
-    height: 100px;
-    width: 100%;
-    position: absolute;
-    bottom: 1px;
-    left: 0;
-    transform: translateY(100%);
-    background-color: #EDEDED;
-  }
-}
-
-.handle {
-  cursor: grab;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-
-  &:active {
-    cursor: grabbing;
-  }
-
-  &::before {
-    content: '';
-    height: 4px;
-    width: 80px;
-    border-radius: 2px;
-    background-color: #929292;
-  }
-}
-
 .content {
   display: flex;
   flex-direction: column;
 }
 
+.header {
+  padding: 10px;
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+  background-color: #ededed;
+  border-bottom: 1px solid #a6a6a6;
+  margin-bottom: 10px;
+}
+
 .tabs {
   display: flex;
   flex: 1;
-  background-color: #D2D2D2;
+  background-color: #d2d2d2;
   padding: 3px;
   border-radius: 15px;
   position: relative;
-  margin: 10px;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 3px;
     left: 3px;
@@ -102,45 +48,15 @@
 }
 
 .tab-view {
-  height: 350px;
-  overflow: auto;
   display: flex;
 }
 
 .block-list {
   display: flex;
+  align-items: flex-start;
   flex-direction: column;
-  flex: 1;
-  padding: 10px;
-
-  button {
-    font-weight: 600;
-    text-align: left;
-    padding: 15px;
-    border-radius: 15px;
-    border: 0;
-    background-color: transparent;
-    cursor: pointer;
-
-    &[data-state="active"] {
-      background-color: #3D64EF;
-      color: white;
-    }
-  }
-}
-
-.block-preview {
-  display: flex;
-  flex-direction: column;
-  flex: 2;
-  margin: 10px 10px 10px 0;
-  background-color: white;
-  border-radius: 15px;
-
-  > div:not([hidden]) {
-    align-items: flex-start;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
+  gap: 10px;
+  margin: 0;
+  padding: 0 10px 10px;
+  list-style: none;
 }

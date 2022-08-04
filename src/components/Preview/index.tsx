@@ -7,6 +7,7 @@ import {
   Editor,
   IBackgroundViewModifier,
   IControl,
+  ITemplate,
   IView,
   IViewModifier,
 } from "@src/models/Editor";
@@ -45,7 +46,7 @@ export function Block({
   block,
   scope,
 }: {
-  block: IControl | IView;
+  block: ITemplate | IControl | IView;
   scope: Record<string, any>;
 }) {
   const scopedEditor = new Editor({ scope, tree: [block] });
@@ -88,6 +89,21 @@ export function Block({
 
   function renderBlock() {
     switch (block.blockType) {
+      case "template": {
+        switch (block.type) {
+          case "content": {
+            const { content } = block.args;
+            return (
+              <Fragment>
+                {content.map((block) => (
+                  <Block key={block.id} block={block} scope={scope} />
+                ))}
+              </Fragment>
+            );
+          }
+        }
+      }
+
       case "control": {
         switch (block.type) {
           case "if": {
@@ -257,7 +273,7 @@ export function Preview({
   block,
   scope,
 }: {
-  block?: IControl | IView;
+  block?: ITemplate | IControl | IView;
   scope: Record<string, any>;
 }) {
   return (
